@@ -10,7 +10,9 @@ PDIR = os.path.join(SITE, "product"); os.makedirs(PDIR, exist_ok=True)
 UPDATED = "2026-07-18"
 SITE_NAME = "コスパナビ"
 SITE_URL = "https://cospa-navi.com"
-ADSENSE = ""  # AdSense承認後にスクリプトを入れる
+# AdSense（rankingsjpと同一アカウント pub-8706760047070867。審査用に全ページ<head>へ設置）
+ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
+ADSENSE_PUB = "pub-8706760047070867"
 SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 
 # --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
@@ -274,6 +276,9 @@ def build_seo():
     open(os.path.join(SITE, "sitemap.xml"), "w", encoding="utf-8").write(xml)
     robots = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
     open(os.path.join(SITE, "robots.txt"), "w", encoding="utf-8").write(robots)
+    # AdSense認証用 ads.txt（f08c47fec0942fa0はGoogle固定の認証局ID）
+    open(os.path.join(SITE, "ads.txt"), "w", encoding="utf-8").write(
+        f"google.com, {ADSENSE_PUB}, DIRECT, f08c47fec0942fa0\n")
 
 CSS = r"""
 :root{--bg:#f6f7f9;--card:#fff;--ink:#1a2130;--sub:#5a6478;--line:#e6e9ef;--accent:#ff5a1f;--accent2:#2563eb;--bar:#ffe0d3;--chip:#fff1eb}
