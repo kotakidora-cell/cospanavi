@@ -53,10 +53,12 @@ if __name__ == "__main__":
     # ⚠キーワード検索は関連品ノイズ（対応マット/交換フィルター等）を大量に拾うため必ずジャンルで絞る。
     from categories import CATEGORIES
     slug = sys.argv[1] if len(sys.argv) > 1 else "robot-cleaner"
-    genre = CATEGORIES[slug]["yahoo_genre"]
+    cfg = CATEGORIES[slug]
+    genre = cfg["yahoo_genre"]
+    q = cfg.get("yahoo_query")   # ジャンルが広い場合(掃除機/発電機混在等)にキーワード併用で絞る
     pages = int(sys.argv[2]) if len(sys.argv) > 2 else 20
-    print(f"取得(Yahoo): {slug} genre_category_id={genre} pages={pages}")
-    items = fetch(None, pages=pages, genre=genre)
+    print(f"取得(Yahoo): {slug} genre_category_id={genre} query={q} pages={pages}")
+    items = fetch(q, pages=pages, genre=genre)
     json.dump(items, open(os.path.join(DATA, slug + "_yahoo_raw.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     print(f"保存: {slug}_yahoo_raw.json  {len(items)}件")
