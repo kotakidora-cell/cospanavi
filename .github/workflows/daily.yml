@@ -1,0 +1,52 @@
+name: Daily fetch & deploy (cospa-navi)
+
+on:
+  schedule:
+    - cron: "30 21 * * *"   # 毎日 21:30 UTC = 06:30 JST
+  workflow_dispatch:        # 手動実行も可
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Fetch products (Rakuten)
+        working-directory: scripts
+        env:
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          REFERER: "https://cospa-navi.com/"
+        run: python fetch_rakuten.py robot-cleaner 562638 20
+
+      - name: Normalize & score
+        working-directory: scripts
+        run: python normalize_score.py robot-cleaner
+
+      - name: Build site
+        working-directory: scripts
+        run: python build_site.py
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name cospanavi --commit-dirty=true

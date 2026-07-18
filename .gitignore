@@ -1,0 +1,14 @@
+# 秘密情報（絶対にコミットしない）
+scripts/secrets.py
+# Python
+__pycache__/
+*.pyc
+.venv/
+# 取得データ（GitHub Actionsで再取得するため任意。ローカル確認用）
+data/*_raw.json
+# wrangler ローカルキャッシュ
+.wrangler/
+# OS
+Thumbs.db
+.DS_Store
+node_modules/
