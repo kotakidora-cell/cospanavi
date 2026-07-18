@@ -6,6 +6,14 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 slug = sys.argv[1] if len(sys.argv) > 1 else "robot-cleaner"
 raw = json.load(open(os.path.join(DATA, slug + "_raw.json"), encoding="utf-8"))
+for r in raw:
+    r.setdefault("mall", "rakuten")
+# Yahoo取得分があれば統合（複数モール最安値比較）
+_yahoo = os.path.join(DATA, slug + "_yahoo_raw.json")
+if os.path.exists(_yahoo):
+    _yr = json.load(open(_yahoo, encoding="utf-8"))
+    raw += _yr
+    print(f"Yahoo統合: +{len(_yr)}件")
 
 # 付属品・消耗品・非本体を除外
 EXCLUDE = ["交換", "互換", "バッテリー", "電池", "メンテナンス", "フィルター", "ブラシ", "モップパッド",
@@ -65,17 +73,26 @@ models = []
 for k, g in groups.items():
     ls = g["listings"]
     rep = max(ls, key=lambda x: x["reviewCount"])   # レビュー最多を代表に
-    minp = min(l["price"] for l in ls)
-    best = min(ls, key=lambda x: x["price"])          # 最安listing（アフィリ先）
     tot_rc = sum(l["reviewCount"] for l in ls)
     # レビュー加重平均（listingをまとめる）
     if tot_rc > 0:
         avg = sum(l["review"] * l["reviewCount"] for l in ls if l["reviewCount"]) / tot_rc
     else:
         avg = rep["review"]
-    models.append({"brand": g["brand"], "name": clean(rep["name"])[:60], "minPrice": minp,
+    # モール別に最安listingを1件ずつ → offers（最安値比較）
+    offers = {}
+    for l in ls:
+        mall = l.get("mall", "rakuten")
+        if mall not in offers or l["price"] < offers[mall]["price"]:
+            offers[mall] = {"mall": mall, "price": l["price"], "url": l["url"], "affiliate": l["affiliate"]}
+    offer_list = sorted(offers.values(), key=lambda o: o["price"])
+    best = offer_list[0]   # 全モール横断の最安（アフィリ主導線）
+    # 代表画像は楽天優先（画像URLが安定）→無ければ最初
+    img = next((l["image"] for l in ls if l.get("mall") == "rakuten" and l.get("image")), rep.get("image", ""))
+    models.append({"brand": g["brand"], "name": clean(rep["name"])[:60], "minPrice": best["price"],
                    "review": round(avg, 2), "reviewCount": tot_rc,
-                   "affiliate": best["affiliate"], "image": rep["image"], "url": best["url"]})
+                   "affiliate": best["affiliate"], "image": img, "url": best["url"],
+                   "offers": offer_list})
 
 # レビューが極端に少ない/無い機種は除外（信頼性）
 models = [m for m in models if m["reviewCount"] >= 5]

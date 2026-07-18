@@ -68,7 +68,9 @@ def build_category(cfg):
     data = load(cfg["slug"])
     slim = [{"id": m["id"], "brand": m["brand"], "name": m["name"], "sat": m["sat"],
              "cheap": m["cheap"], "review": m["review"], "rc": m["reviewCount"],
-             "price": m["minPrice"], "img": m["image"], "aff": m["affiliate"]} for m in data]
+             "price": m["minPrice"], "img": m["image"], "aff": m["affiliate"],
+             "offers": [{"m": o["mall"], "p": o["price"], "a": o["affiliate"]} for o in m.get("offers", [])]}
+            for m in data]
     DATA_JSON = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
     body = f"""
@@ -110,6 +112,16 @@ TOOL_JS = r"""
 const D=JSON.parse(document.getElementById('data').textContent);
 const list=document.getElementById('list');
 const yen=v=>'¥'+v.toLocaleString();
+const MALL={rakuten:'楽天',yahoo:'Yahoo!',amazon:'Amazon'};
+function mallsHtml(offers){
+ if(!offers||offers.length<2)return '';
+ const min=Math.min(...offers.map(o=>o.p));
+ return '<div class="malls">'+offers.map(o=>'<span class="'+(o.p===min?'mlow':'')+'">'+(MALL[o.m]||o.m)+' '+yen(o.p)+'</span>').join('')+'</div>';
+}
+function buyLabel(offers){
+ if(offers&&offers.length>=2){const min=Math.min(...offers.map(o=>o.p));const b=offers.find(o=>o.p===min);return '最安 '+(MALL[b.m]||b.m)+'で見る';}
+ const m=offers&&offers[0]?MALL[offers[0].m]||offers[0].m:'楽天';return m+'で価格を見る';
+}
 const wEl=document.getElementById('w'),bEl=document.getElementById('b');
 let sortKey='cospa';
 function starHtml(v){let s='';for(let i=1;i<=5;i++){s+= v>=i?'★':(v>=i-0.5?'⯨':'☆');}return s;}
@@ -130,8 +142,9 @@ function render(){
    '<a class="cname" href="product/'+x.id+'.html">'+x.name+'</a>'+
    '<div class="cstars">'+starHtml(x.review)+' <span class="muted">'+x.review.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>'+
    '<div class="cprice">'+yen(x.price)+'<span class="muted">〜（最安）</span></div>'+
+   mallsHtml(x.offers)+
    '<div class="ccospa">コスパ <b>'+x.cospa.toFixed(0)+'</b><span class="bar"><i style="width:'+Math.max(3,x.cospa)+'%"></i></span></div>'+
-   '<a class="buy" href="'+x.aff+'" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る<span class="pr">PR</span></a></div>';
+   '<a class="buy" href="'+x.aff+'" target="_blank" rel="nofollow sponsored noopener">'+buyLabel(x.offers)+'<span class="pr">PR</span></a></div>';
   list.appendChild(c);});
 }
 wEl.oninput=render; bEl.oninput=render;
@@ -145,10 +158,23 @@ def build_products(cfg, data):
     N = len(data)
     data_sorted = sorted(data, key=lambda m: m["cospa"], reverse=True)
     rank_of = {m["id"]: i + 1 for i, m in enumerate(data_sorted)}
+    MALL = {"rakuten": "楽天市場", "yahoo": "Yahoo!ショッピング", "amazon": "Amazon"}
     for m in data:
         rid = m["id"]; r = rank_of[rid]
         rel = [o for o in data_sorted if o["id"] != rid][:6]
         rel_html = "".join(f'<a href="{o["id"]}.html">{H.escape(o["name"][:24])}</a>' for o in rel)
+        offers = m.get("offers", [])
+        if len(offers) >= 2:
+            lowest = min(o["price"] for o in offers)
+            rows = "".join(
+                f'<tr class="{"mlow" if o["price"]==lowest else ""}"><td>{MALL.get(o["mall"],o["mall"])}</td>'
+                f'<td>¥{o["price"]:,}{"　最安" if o["price"]==lowest else ""}</td>'
+                f'<td><a class="buy sm" href="{o["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">見る<span class="pr">PR</span></a></td></tr>'
+                for o in offers)
+            price_cmp = f'<h2>最安値を比較</h2><table class="kv cmp"><tr><th>モール</th><th>価格</th><th></th></tr>{rows}</table>'
+        else:
+            price_cmp = ""
+        low_mall = MALL.get(offers[0]["mall"], "楽天市場") if offers else "楽天市場"
         body = f"""
 <nav class="crumb"><a href="../index.html">コスパナビ</a> › <a href="../{cfg['file']}">{cfg['label']}</a> › {H.escape(m['name'][:20])}</nav>
 <div class="pdetail">
@@ -158,10 +184,11 @@ def build_products(cfg, data):
     <h1>{H.escape(m['name'])}</h1>
     <p class="prank">{cfg['label']} コスパ <b>{r}位</b> / {N}機種中</p>
     <div class="pstars">{stars(m['review'])} {m['review']:.2f}（{m['reviewCount']:,}件）</div>
-    <div class="pprice">{('¥{:,}'.format(m['minPrice']))}<span class="muted">〜（楽天最安）</span></div>
-    <a class="buy big" href="{m['affiliate']}" target="_blank" rel="nofollow sponsored noopener">楽天で価格・在庫を見る<span class="pr">PR</span></a>
+    <div class="pprice">{('¥{:,}'.format(m['minPrice']))}<span class="muted">〜（{low_mall}最安）</span></div>
+    <a class="buy big" href="{m['affiliate']}" target="_blank" rel="nofollow sponsored noopener">{low_mall}で価格・在庫を見る<span class="pr">PR</span></a>
   </div>
 </div>
+{price_cmp}
 {AD}
 <h2>コスパ内訳</h2>
 <table class="kv">
@@ -279,6 +306,10 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .cname:hover{color:var(--accent2)}
 .cstars{color:#f5a623;font-size:.85rem}.cstars .muted{color:var(--sub)}
 .cprice{font-weight:800;font-size:1.05rem;margin:2px 0}.cprice .muted{font-weight:400;font-size:.75rem}
+.malls{display:flex;flex-wrap:wrap;gap:4px 8px;margin:2px 0}.malls span{font-size:.72rem;color:var(--sub)}.malls .mlow{color:var(--accent);font-weight:700}
+.buy.sm{padding:4px 12px;font-size:.8rem;margin:0}
+.cmp th{text-align:left;color:var(--sub);font-size:.8rem;padding:6px 8px;border-bottom:1px solid var(--line)}
+.cmp tr.mlow td{color:var(--accent);font-weight:700}
 .ccospa{font-size:.82rem;color:var(--sub);display:flex;align-items:center;gap:6px}.ccospa b{color:var(--accent);font-size:1rem}
 .bar{flex:1;height:6px;background:var(--bar);border-radius:4px;overflow:hidden;max-width:120px}.bar i{display:block;height:100%;background:var(--accent)}
 .buy{display:inline-block;margin-top:6px;background:var(--accent);color:#fff;text-decoration:none;padding:7px 14px;border-radius:8px;font-weight:700;font-size:.88rem;position:relative}
