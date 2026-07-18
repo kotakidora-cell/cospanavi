@@ -9,7 +9,7 @@ CATEGORIES = {
     "robot-cleaner": {
         "label": "ロボット掃除機", "genre": "掃除・家事", "icon": "🤖",
         "rakuten_genre": 562638, "yahoo_genre": "26212",
-        "desc": "満足度（レビュー）と価格から、本当にコスパの良いロボット掃除機を独自スコアでランキング。",
+        "desc": "ルンバ・Roborock・Eufy・SwitchBotなど人気モデルを、レビュー評価と実売価格で徹底比較。水拭き対応や予算で選べます。",
         "brands": [
             (["ルンバ", "Roomba", "アイロボット", "iRobot", "ブラーバ"], "iRobot（ルンバ）"),
             (["DEEBOT", "エコバックス", "Ecovacs"], "Ecovacs（DEEBOT）"),
@@ -39,7 +39,7 @@ CATEGORIES = {
     "air-purifier": {
         "label": "空気清浄機", "genre": "生活家電", "icon": "🌬️",
         "rakuten_genre": 204519, "yahoo_genre": "26319",
-        "desc": "満足度（レビュー）と価格から、本当にコスパの良い空気清浄機・加湿空気清浄機を独自スコアでランキング。",
+        "desc": "シャープ・ダイキン・Levoit・Blueairなど、花粉・PM2.5・タバコ対策の一台を適用畳数と価格で比較。加湿タイプも対応。",
         "brands": [
             (["シャープ", "SHARP", "プラズマクラスター"], "シャープ"),
             (["パナソニック", "Panasonic", "ナノイー"], "パナソニック"),
@@ -78,7 +78,7 @@ CATEGORIES = {
     "portable-power": {
         "label": "ポータブル電源", "genre": "アウトドア・防災", "icon": "🔋",
         "rakuten_genre": 568371, "yahoo_genre": "73273", "yahoo_query": "ポータブル電源",
-        "desc": "満足度（レビュー）と価格から、本当にコスパの良いポータブル電源を独自スコアでランキング。防災・キャンプに。",
+        "desc": "Jackery・EcoFlow・BLUETTIなど、防災・車中泊・キャンプ向けを容量と価格のバランスで比較。用途に合う一台が選べます。",
         "brands": [
             (["Jackery", "ジャクリ"], "Jackery"),
             (["EcoFlow", "エコフロー"], "EcoFlow"),
@@ -115,7 +115,7 @@ CATEGORIES = {
     "stick-cleaner": {
         "label": "スティック掃除機", "genre": "掃除・家事", "icon": "🧹",
         "rakuten_genre": 565105, "yahoo_genre": "26216", "yahoo_query": "スティック掃除機",
-        "desc": "満足度（レビュー）と価格から、本当にコスパの良いコードレス・スティック掃除機を独自スコアでランキング。",
+        "desc": "ダイソン・マキタ・シャークなど、コードレススティック掃除機を吸引力・軽さの評価と価格で比較。",
         "brands": [
             (["ダイソン", "Dyson"], "Dyson"),
             (["マキタ", "Makita"], "マキタ"),

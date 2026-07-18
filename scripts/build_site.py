@@ -109,7 +109,7 @@ def build_category(cfg):
 <script>{TOOL_JS}</script>
 """
     title = f"{cfg['label']}のコスパ最強ランキング2026｜満足度×価格で比較"
-    desc = f"{cfg['label']}を満足度（レビュー）と価格から独自コスパ値でランキング。重視ポイントや予算で自分に最適な1台が選べます。"
+    desc = f"{cfg['desc']} 楽天・Yahoo!の最安値も比較。{len(data)}機種を掲載。"
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"],
                                "url": f"{SITE_URL}/product/{m['id']}.html", "name": m["name"]} for m in data[:20]]}
