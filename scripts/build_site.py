@@ -13,6 +13,7 @@ SITE_URL = "https://cospa-navi.com"
 # AdSense（rankingsjpと同一アカウント pub-8706760047070867。審査用に全ページ<head>へ設置）
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
 ADSENSE_PUB = "pub-8706760047070867"
+SITE_VERIFY = "9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc"  # Search Console HTMLメタタグ認証
 SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 
 # --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
@@ -54,10 +55,11 @@ def shell(title, desc, body, base="", head="", path=None, image=None):
                  f'<meta property="og:title" content="{H.escape(title)}"><meta property="og:description" content="{H.escape(desc)}">'
                  f'<meta property="og:url" content="{url}"><meta property="og:image" content="{H.escape(img)}">'
                  f'<meta name="twitter:card" content="summary_large_image">')
+    verify = f'<meta name="google-site-verification" content="{SITE_VERIFY}">' if SITE_VERIFY else ""
     return ("<!doctype html><html lang=\"ja\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
-            f"{canon}<link rel=\"stylesheet\" href=\"{base}styles.css\">{ADSENSE}{head}</head><body>"
+            f"{verify}{canon}<link rel=\"stylesheet\" href=\"{base}styles.css\">{ADSENSE}{head}</head><body>"
             + nav(base) + "<main>" + body + "</main>" + foot(base) + "</body></html>")
 
 AD = '<div class="ad">広告スペース（Google AdSense）</div>'
