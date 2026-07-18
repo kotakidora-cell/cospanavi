@@ -22,7 +22,9 @@ CATS = [
 COMING = ["空気清浄機", "スティック掃除機", "ポータブル電源", "電子レンジ", "ドライヤー", "モニター", "ワイヤレスイヤホン"]
 
 def pid(m):
-    return "rc" + hashlib.md5((m["brand"] + m["name"]).encode("utf-8")).hexdigest()[:8]
+    # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
+    basis = m.get("key") or (m["brand"] + m["name"])
+    return "rc" + hashlib.md5(basis.encode("utf-8")).hexdigest()[:8]
 
 def stars(v):
     full = int(v); half = 1 if v - full >= 0.5 else 0

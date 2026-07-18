@@ -97,7 +97,7 @@ for k, g in groups.items():
     models.append({"brand": g["brand"], "name": clean(rep["name"])[:60], "minPrice": best["price"],
                    "review": round(avg, 2), "reviewCount": tot_rc,
                    "affiliate": best["affiliate"], "image": img, "url": best["url"],
-                   "offers": offer_list})
+                   "offers": offer_list, "key": k})   # key=ブランド+型番の安定キー(URL生成用。商品名変更に影響されない)
 
 # レビューが極端に少ない/無い機種は除外（信頼性）
 models = [m for m in models if m["reviewCount"] >= 5]
