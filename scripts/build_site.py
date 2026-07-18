@@ -14,6 +14,8 @@ SITE_URL = "https://cospa-navi.com"
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
 ADSENSE_PUB = "pub-8706760047070867"
 SITE_VERIFY = "9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc"  # Search Console HTMLメタタグ認証
+# Search ConsoleはメタタグSITE_VERIFYで認証済のためHTMLファイル方式は不要（空でOK）
+GOOGLE_VERIFY_FILES = []
 SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 
 # --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
@@ -281,6 +283,9 @@ def build_seo():
     # AdSense認証用 ads.txt（f08c47fec0942fa0はGoogle固定の認証局ID）
     open(os.path.join(SITE, "ads.txt"), "w", encoding="utf-8").write(
         f"google.com, {ADSENSE_PUB}, DIRECT, f08c47fec0942fa0\n")
+    # Search Console HTMLファイル認証（中身は "google-site-verification: <ファイル名>"）
+    for fn in GOOGLE_VERIFY_FILES:
+        open(os.path.join(SITE, fn), "w", encoding="utf-8").write(f"google-site-verification: {fn}\n")
 
 CSS = r"""
 :root{--bg:#f6f7f9;--card:#fff;--ink:#1a2130;--sub:#5a6478;--line:#e6e9ef;--accent:#ff5a1f;--accent2:#2563eb;--bar:#ffe0d3;--chip:#fff1eb}
