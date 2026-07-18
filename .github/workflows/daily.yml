@@ -36,6 +36,13 @@ jobs:
           REFERER: "https://cospa-navi.com/"
         run: python fetch_rakuten.py robot-cleaner 562638 20
 
+      - name: Fetch products (Yahoo)
+        working-directory: scripts
+        continue-on-error: true   # YAHOO_APP_ID未設定でも楽天のみで継続
+        env:
+          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
+        run: python fetch_yahoo.py robot-cleaner 26212 20
+
       - name: Normalize & score
         working-directory: scripts
         run: python normalize_score.py robot-cleaner

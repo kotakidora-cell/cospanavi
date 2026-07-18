@@ -49,13 +49,14 @@ def fetch(query, pages=20, genre=None, sort="-review_count"):
     return items
 
 if __name__ == "__main__":
-    # 使い方: python fetch_yahoo.py <slug> <query> [pages] [genre_category_id]
+    # 使い方: python fetch_yahoo.py <slug> <genre_category_id> [pages]
+    # ⚠キーワード検索は「ロボット掃除機対応マット」等の家具ノイズを大量に拾うため、
+    #   楽天のgenreId同様、必ずジャンルカテゴリで絞る。ロボット掃除機=26212(部品26221は除外)。
     slug = sys.argv[1] if len(sys.argv) > 1 else "robot-cleaner"
-    query = sys.argv[2] if len(sys.argv) > 2 else "ロボット掃除機"
+    genre = sys.argv[2] if len(sys.argv) > 2 else "26212"
     pages = int(sys.argv[3]) if len(sys.argv) > 3 else 20
-    genre = sys.argv[4] if len(sys.argv) > 4 else None
-    print(f"取得(Yahoo): query={query} pages={pages} genre={genre}")
-    items = fetch(query, pages=pages, genre=genre)
+    print(f"取得(Yahoo): genre_category_id={genre} pages={pages}")
+    items = fetch(None, pages=pages, genre=genre)
     json.dump(items, open(os.path.join(DATA, slug + "_yahoo_raw.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     print(f"保存: {slug}_yahoo_raw.json  {len(items)}件")
