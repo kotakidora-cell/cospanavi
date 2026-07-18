@@ -15,36 +15,15 @@ if os.path.exists(_yahoo):
     raw += _yr
     print(f"Yahoo統合: +{len(_yr)}件")
 
-# 付属品・消耗品・非本体を除外
-EXCLUDE = ["交換", "互換", "バッテリー", "電池", "メンテナンス", "フィルター", "ブラシ", "モップパッド",
-           "ダストボックス", "消耗品", "パーツ", "部品", "紙パック", "ダストバッグ", "洗浄液", "洗浄剤",
-           "アクセサリ", "対応 純正", "用 純正", "サイドブラシ", "ローラー", "水タンク",
-           "HOBOT", "窓用", "窓拭き", "ガラス用", "網戸", "兼用パッド", "収納", "スタンド", "替え",
-           "ゴミパック", "アタッチメント", "キット", "スペア", "専用洗", "モップクロス", "ネジ",
-           "リユース", "整備済", "中古", "再生品", "リファビッシュ", "アウトレット品"]
-# ブランド正規化（別名→正式表記）
-BRANDS = [
-    (["ルンバ", "Roomba", "アイロボット", "iRobot", "ブラーバ"], "iRobot（ルンバ）"),
-    (["DEEBOT", "エコバックス", "Ecovacs"], "Ecovacs（DEEBOT）"),
-    (["Eufy", "eufy", "ユーフィ", "Anker", "アンカー"], "Anker Eufy"),
-    (["SwitchBot", "スイッチボット"], "SwitchBot"),
-    (["Roborock", "ロボロック"], "Roborock"),
-    (["Dreame", "ドリーミー", "ドリーム"], "Dreame"),
-    (["narwal", "ナーワル", "Narwal"], "Narwal"),
-    (["ルーロ", "パナソニック", "Panasonic"], "Panasonic（ルーロ）"),
-    (["AIRROBO"], "AIRROBO"),
-    (["アイリスオーヤマ", "IRIS"], "アイリスオーヤマ"),
-    (["日立", "HITACHI"], "日立"),
-    (["SHARP", "シャープ", "COCOROBO"], "SHARP"),
-    (["Tapo", "TP-Link", "TPLink"], "TP-Link Tapo"),
-    (["ILIFE"], "ILIFE"),
-    (["proscenic", "プロセニック", "Proscenic"], "Proscenic"),
-    (["yeedi"], "yeedi"),
-    (["Lubluelu"], "Lubluelu"),
-]
+# 付属品除外語・ブランド正規化はカテゴリ毎に異なるためcategories.pyから取得
+from categories import CATEGORIES
+_cat = CATEGORIES[slug]
+EXCLUDE = _cat["exclude"]
+BRANDS = _cat["brands"]
 def brand_of(nm):
+    low = nm.lower()   # 大文字小文字を無視（levoit/Levoit/LEVOIT等を同一視）
     for al, canon in BRANDS:
-        if any(a in nm for a in al):
+        if any(a.lower() in low for a in al):
             return canon
     return "その他・ノーブランド"
 

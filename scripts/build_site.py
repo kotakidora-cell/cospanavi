@@ -13,13 +13,13 @@ SITE_URL = "https://cospa-navi.com"
 ADSENSE = ""  # AdSense承認後にスクリプトを入れる
 SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 
-# --- カテゴリ定義（拡張可） ---
-CATS = [
-    {"slug": "robot-cleaner", "file": "robot-cleaner.html", "icon": "🤖",
-     "label": "ロボット掃除機", "genre": "掃除・家事",
-     "desc": "満足度（レビュー）と価格から、本当にコスパの良いロボット掃除機を独自スコアでランキング。"},
-]
-COMING = ["空気清浄機", "スティック掃除機", "ポータブル電源", "電子レンジ", "ドライヤー", "モニター", "ワイヤレスイヤホン"]
+# --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
+from categories import CATEGORIES
+CAT_ORDER = ["robot-cleaner", "air-purifier"]
+CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
+         "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
+         "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
+COMING = ["スティック掃除機", "ポータブル電源", "電子レンジ", "ドライヤー", "モニター", "ワイヤレスイヤホン"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
@@ -31,8 +31,9 @@ def stars(v):
     return "★" * full + ("½" if half else "") + "☆" * (5 - full - half)
 
 def nav(base=""):
+    catlinks = "".join(f'<a href="{base}{c["file"]}">{c["label"]}</a>' for c in CATS)
     return (f'<header class="nav"><a class="brand" href="{base}index.html">コスパ<b>ナビ</b></a>'
-            f'<nav><a href="{base}index.html">ホーム</a><a href="{base}robot-cleaner.html">ロボット掃除機</a>'
+            f'<nav><a href="{base}index.html">ホーム</a>{catlinks}'
             f'<a href="{base}about.html">コスパ値とは</a><a href="{base}privacy.html">プライバシー</a></nav></header>')
 
 def foot(base=""):

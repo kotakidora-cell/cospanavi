@@ -27,29 +27,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Fetch products (Rakuten)
+      - name: Fetch, normalize & build all categories
         working-directory: scripts
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
           RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
-          REFERER: "https://cospa-navi.com/"
-        run: python fetch_rakuten.py robot-cleaner 562638 20
-
-      - name: Fetch products (Yahoo)
-        working-directory: scripts
-        continue-on-error: true   # YAHOO_APP_ID未設定でも楽天のみで継続
-        env:
           YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
-        run: python fetch_yahoo.py robot-cleaner 26212 20
-
-      - name: Normalize & score
-        working-directory: scripts
-        run: python normalize_score.py robot-cleaner
-
-      - name: Build site
-        working-directory: scripts
-        run: python build_site.py
+          REFERER: "https://cospa-navi.com/"
+        run: python update.py   # categories.pyの全カテゴリを取得→正規化→ビルド
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3

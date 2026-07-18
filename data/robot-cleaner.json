@@ -17,9 +17,9 @@
    }
   ],
   "key": "AIRROBO|P20",
-  "sat": 86.8,
-  "cheap": 61.2,
-  "cospa": 76.5,
+  "sat": 87.3,
+  "cheap": 61.3,
+  "cospa": 76.9,
   "bayes": 4.6,
   "rank": 1
  },
@@ -41,9 +41,9 @@
    }
   ],
   "key": "その他・ノーブランド|ロボット掃除機自動掃",
-  "sat": 85.2,
-  "cheap": 61.2,
-  "cospa": 75.6,
+  "sat": 85.6,
+  "cheap": 61.3,
+  "cospa": 75.9,
   "bayes": 4.58,
   "rank": 2
  },
@@ -71,9 +71,9 @@
    }
   ],
   "key": "Roborock|ロボロックRobor",
-  "sat": 95.5,
-  "cheap": 43.2,
-  "cospa": 74.6,
+  "sat": 95.6,
+  "cheap": 43.3,
+  "cospa": 74.7,
   "bayes": 4.67,
   "rank": 3
  },
@@ -102,8 +102,8 @@
   ],
   "key": "Roborock|SAROS10R",
   "sat": 100.0,
-  "cheap": 34.6,
-  "cospa": 73.8,
+  "cheap": 34.7,
+  "cospa": 73.9,
   "bayes": 4.71,
   "rank": 4
  },
@@ -125,10 +125,10 @@
    }
   ],
   "key": "TP-Link Tapo|RV20",
-  "sat": 86.8,
-  "cheap": 47.1,
-  "cospa": 70.9,
-  "bayes": 4.6,
+  "sat": 87.0,
+  "cheap": 47.3,
+  "cospa": 71.1,
+  "bayes": 4.59,
   "rank": 5
  },
  {
@@ -155,40 +155,40 @@
    }
   ],
   "key": "Anker Eufy|G30",
-  "sat": 79.8,
-  "cheap": 56.4,
-  "cospa": 70.5,
-  "bayes": 4.54,
+  "sat": 80.4,
+  "cheap": 56.5,
+  "cospa": 70.9,
+  "bayes": 4.53,
   "rank": 6
  },
  {
-  "brand": "SwitchBot",
-  "name": "SwitchBot スイッチボット ロボット掃除機 K11+ お掃除ロボット 掃除ロボット 掃除機 クリーナー 超小型 ",
-  "minPrice": 37800,
-  "review": 4.59,
-  "reviewCount": 560,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/switchbot/cabinet/09377790/11892401/13129054/imgrc0100726038.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "ILIFE",
+  "name": "ILIFE V3s Pro ロボット掃除機 ペットの毛に効果的 自動充電静音＆強力吸引落下防止と衝突防止 丸型 ホワイト",
+  "minPrice": 14480,
+  "review": 4.76,
+  "reviewCount": 42,
+  "affiliate": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/lifestyle-007/cabinet/new_thumbnail/70459_1.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html",
   "offers": [
    {
-    "mall": "rakuten",
-    "price": 37800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "mall": "yahoo",
+    "price": 14480,
+    "url": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html"
    },
    {
-    "mall": "yahoo",
-    "price": 45640,
-    "url": "https://store.shopping.yahoo.co.jp/switchbot/w3001000.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/switchbot/w3001000.html"
+    "mall": "rakuten",
+    "price": 15100,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00twnun.tiw95353.g00twnun.tiw96fe3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70459%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10000059%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twnun.tiw95353.g00twnun.tiw96fe3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70459%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10000059%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
    }
   ],
-  "key": "SwitchBot|K11+",
-  "sat": 83.3,
-  "cheap": 50.7,
-  "cospa": 70.3,
-  "bayes": 4.57,
+  "key": "ILIFE|V3S",
+  "sat": 76.2,
+  "cheap": 60.9,
+  "cospa": 70.1,
+  "bayes": 4.5,
   "rank": 7
  },
  {
@@ -209,9 +209,9 @@
    }
   ],
   "key": "AIRROBO|P30",
-  "sat": 76.0,
-  "cheap": 59.1,
-  "cospa": 69.3,
+  "sat": 76.6,
+  "cheap": 59.2,
+  "cospa": 69.7,
   "bayes": 4.5,
   "rank": 8
  },
@@ -239,10 +239,10 @@
    }
   ],
   "key": "Roborock|Q10P",
-  "sat": 83.4,
-  "cheap": 47.9,
-  "cospa": 69.2,
-  "bayes": 4.57,
+  "sat": 83.6,
+  "cheap": 48.0,
+  "cospa": 69.3,
+  "bayes": 4.56,
   "rank": 9
  },
  {
@@ -269,40 +269,40 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|T50",
-  "sat": 84.1,
-  "cheap": 45.8,
-  "cospa": 68.8,
+  "sat": 84.7,
+  "cheap": 46.0,
+  "cospa": 69.2,
   "bayes": 4.57,
   "rank": 10
  },
  {
-  "brand": "ILIFE",
-  "name": "ILIFE V3s Pro ロボット掃除機 ペットの毛に効果的 自動充電静音＆強力吸引落下防止と衝突防止 丸型 ホワイト",
-  "minPrice": 14480,
-  "review": 4.74,
-  "reviewCount": 34,
-  "affiliate": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/rusion/cabinet/1bn1980.jpg?_ex=128x128",
-  "url": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html",
+  "brand": "SwitchBot",
+  "name": "SwitchBot スイッチボット ロボット掃除機 K11+ お掃除ロボット 掃除ロボット 掃除機 クリーナー 超小型 ",
+  "minPrice": 37800,
+  "review": 4.56,
+  "reviewCount": 569,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/switchbot/cabinet/09377790/11892401/13129054/imgrc0100726038.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
   "offers": [
    {
-    "mall": "yahoo",
-    "price": 14480,
-    "url": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/lifestyle-007/70459.html"
+    "mall": "rakuten",
+    "price": 37800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc4wn.tiw95c9a.g00uc4wn.tiw965f1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fswitchbot%2Fk11%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fswitchbot%2Fi%2F10000273%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
    },
    {
-    "mall": "rakuten",
-    "price": 15100,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00tsj3n.tiw95c1d.g00tsj3n.tiw96b6a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frusion%2Fsdth_0608119649310%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frusion%2Fi%2F10000676%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00tsj3n.tiw95c1d.g00tsj3n.tiw96b6a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frusion%2Fsdth_0608119649310%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frusion%2Fi%2F10000676%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "mall": "yahoo",
+    "price": 45640,
+    "url": "https://store.shopping.yahoo.co.jp/switchbot/w3001000.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/switchbot/w3001000.html"
    }
   ],
-  "key": "ILIFE|V3S",
-  "sat": 73.3,
-  "cheap": 60.8,
-  "cospa": 68.3,
-  "bayes": 4.48,
+  "key": "SwitchBot|K11+",
+  "sat": 80.7,
+  "cheap": 50.8,
+  "cospa": 68.8,
+  "bayes": 4.54,
   "rank": 11
  },
  {
@@ -323,10 +323,10 @@
    }
   ],
   "key": "iRobot（ルンバ）|アイロボットiRob",
-  "sat": 65.6,
-  "cheap": 72.0,
-  "cospa": 68.2,
-  "bayes": 4.41,
+  "sat": 64.6,
+  "cheap": 72.2,
+  "cospa": 67.6,
+  "bayes": 4.39,
   "rank": 12
  },
  {
@@ -347,9 +347,9 @@
    }
   ],
   "key": "その他・ノーブランド|ロボット掃除機自動ゴ",
-  "sat": 73.6,
-  "cheap": 55.5,
-  "cospa": 66.4,
+  "sat": 74.4,
+  "cheap": 55.6,
+  "cospa": 66.9,
   "bayes": 4.48,
   "rank": 13
  },
@@ -377,9 +377,9 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|T80",
-  "sat": 86.4,
-  "cheap": 36.1,
-  "cospa": 66.3,
+  "sat": 86.8,
+  "cheap": 36.3,
+  "cospa": 66.6,
   "bayes": 4.59,
   "rank": 14
  },
@@ -407,9 +407,9 @@
    }
   ],
   "key": "Anker Eufy|X10",
-  "sat": 78.3,
-  "cheap": 46.2,
-  "cospa": 65.5,
+  "sat": 78.9,
+  "cheap": 46.3,
+  "cospa": 65.9,
   "bayes": 4.52,
   "rank": 15
  },
@@ -437,41 +437,11 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|N30",
-  "sat": 75.7,
-  "cheap": 50.1,
-  "cospa": 65.5,
+  "sat": 76.3,
+  "cheap": 50.3,
+  "cospa": 65.9,
   "bayes": 4.5,
   "rank": 16
- },
- {
-  "brand": "iRobot（ルンバ）",
-  "name": "5/15 新発売 公式 Roomba Plus 415 Combo + AutoWash ルンバ オンライン限定 アイロ",
-  "minPrice": 69990,
-  "review": 4.73,
-  "reviewCount": 60,
-  "affiliate": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_415c_tm.jpg?_ex=128x128",
-  "url": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 69990,
-    "url": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html"
-   },
-   {
-    "mall": "rakuten",
-    "price": 119800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fg285060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000588%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fg285060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000588%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "iRobot（ルンバ）|PLUS415",
-  "sat": 79.8,
-  "cheap": 44.2,
-  "cospa": 65.5,
-  "bayes": 4.54,
-  "rank": 17
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -497,10 +467,40 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|N20",
-  "sat": 75.4,
-  "cheap": 50.1,
-  "cospa": 65.3,
+  "sat": 76.2,
+  "cheap": 50.3,
+  "cospa": 65.8,
   "bayes": 4.5,
+  "rank": 17
+ },
+ {
+  "brand": "iRobot（ルンバ）",
+  "name": "5/15 新発売 公式 Roomba Plus 415 Combo + AutoWash ルンバ オンライン限定 アイロ",
+  "minPrice": 69990,
+  "review": 4.73,
+  "reviewCount": 60,
+  "affiliate": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_415c_tm.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 69990,
+    "url": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/harukaze-shouten/0885155054111.html"
+   },
+   {
+    "mall": "rakuten",
+    "price": 119800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fg285060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000588%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fg285060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000588%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "iRobot（ルンバ）|PLUS415",
+  "sat": 79.2,
+  "cheap": 44.3,
+  "cospa": 65.3,
+  "bayes": 4.52,
   "rank": 18
  },
  {
@@ -522,7 +522,7 @@
   ],
   "key": "その他・ノーブランド|2026新品ロボット",
   "sat": 63.6,
-  "cheap": 66.2,
+  "cheap": 66.3,
   "cospa": 64.7,
   "bayes": 4.39,
   "rank": 19
@@ -551,9 +551,9 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|T90",
-  "sat": 83.1,
-  "cheap": 36.2,
-  "cospa": 64.3,
+  "sat": 83.2,
+  "cheap": 36.3,
+  "cospa": 64.4,
   "bayes": 4.56,
   "rank": 20
  },
@@ -575,35 +575,11 @@
    }
   ],
   "key": "その他・ノーブランド|ロボット掃除機水拭き",
-  "sat": 67.4,
-  "cheap": 59.1,
-  "cospa": 64.1,
-  "bayes": 4.43,
+  "sat": 67.7,
+  "cheap": 59.2,
+  "cospa": 64.3,
+  "bayes": 4.42,
   "rank": 21
- },
- {
-  "brand": "AIRROBO",
-  "name": "ロボット掃除機 水拭き お掃除ロボット AIRROBO L50+ 自動ゴミ収集 強力吸引 5500Pa 自動掃除機 ロボ",
-  "minPrice": 38990,
-  "review": 4.56,
-  "reviewCount": 105,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/airrobo/cabinet/12291550/l50.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 38990,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "AIRROBO|L50+",
-  "sat": 73.0,
-  "cheap": 50.3,
-  "cospa": 64.0,
-  "bayes": 4.48,
-  "rank": 22
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -629,11 +605,59 @@
    }
   ],
   "key": "iRobot（ルンバ）|ROOMBA105",
-  "sat": 70.2,
-  "cheap": 53.3,
-  "cospa": 63.5,
+  "sat": 71.0,
+  "cheap": 53.5,
+  "cospa": 64.0,
   "bayes": 4.45,
+  "rank": 22
+ },
+ {
+  "brand": "AIRROBO",
+  "name": "ロボット掃除機 水拭き お掃除ロボット AIRROBO L50+ 自動ゴミ収集 強力吸引 5500Pa 自動掃除機 ロボ",
+  "minPrice": 38990,
+  "review": 4.56,
+  "reviewCount": 105,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/airrobo/cabinet/12291550/l50.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 38990,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-l50%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000131%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "AIRROBO|L50+",
+  "sat": 73.0,
+  "cheap": 50.5,
+  "cospa": 64.0,
+  "bayes": 4.47,
   "rank": 23
+ },
+ {
+  "brand": "AIRROBO",
+  "name": "ロボット掃除機 水拭き 薄型 AIRROBO G60 掃除ロボット 自動ゴミ収集 ロボットクリーナー 強力吸引 お掃除ロ",
+  "minPrice": 16990,
+  "review": 4.46,
+  "reviewCount": 129,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/airrobo/cabinet/12296417/g60-01.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 16990,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "AIRROBO|G60",
+  "sat": 66.3,
+  "cheap": 59.2,
+  "cospa": 63.5,
+  "bayes": 4.41,
+  "rank": 24
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -659,59 +683,11 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|X11",
-  "sat": 84.6,
-  "cheap": 31.6,
+  "sat": 84.4,
+  "cheap": 31.8,
   "cospa": 63.4,
-  "bayes": 4.58,
-  "rank": 24
- },
- {
-  "brand": "AIRROBO",
-  "name": "ロボット掃除機 水拭き 薄型 AIRROBO G60 掃除ロボット 自動ゴミ収集 ロボットクリーナー 強力吸引 お掃除ロ",
-  "minPrice": 16990,
-  "review": 4.46,
-  "reviewCount": 129,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/airrobo/cabinet/12296417/g60-01.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 16990,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ucbfn.tiw95859.g00ucbfn.tiw96e5b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fairrobo%2Fairrobo-g60%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fairrobo%2Fi%2F10000134%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "AIRROBO|G60",
-  "sat": 66.0,
-  "cheap": 59.1,
-  "cospa": 63.3,
-  "bayes": 4.42,
+  "bayes": 4.57,
   "rank": 25
- },
- {
-  "brand": "iRobot（ルンバ）",
-  "name": "iRobot アイロボット ルンバ コンボ Essential robot ロボット掃除機 (国内正規品) Y01126",
-  "minPrice": 14800,
-  "review": 4.79,
-  "reviewCount": 14,
-  "affiliate": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/y-kojima_0885155041845",
-  "url": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 14800,
-    "url": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html"
-   }
-  ],
-  "key": "iRobot（ルンバ）|Y0112",
-  "sat": 65.2,
-  "cheap": 60.6,
-  "cospa": 63.3,
-  "bayes": 4.41,
-  "rank": 26
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -737,11 +713,59 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|X8",
-  "sat": 82.4,
-  "cheap": 33.1,
-  "cospa": 62.6,
-  "bayes": 4.56,
+  "sat": 82.6,
+  "cheap": 33.2,
+  "cospa": 62.9,
+  "bayes": 4.55,
+  "rank": 26
+ },
+ {
+  "brand": "iRobot（ルンバ）",
+  "name": "ロボット掃除機 ルンバ お掃除ロボ 新発売 公式 Roomba Mini + AutoEmpty アイロボット ルンバミ",
+  "minPrice": 39800,
+  "review": 4.51,
+  "reviewCount": 152,
+  "affiliate": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/irobotstore-jp_f15",
+  "url": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 39800,
+    "url": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html"
+   }
+  ],
+  "key": "iRobot（ルンバ）|ロボット掃除機ルンバ",
+  "sat": 71.2,
+  "cheap": 50.3,
+  "cospa": 62.8,
+  "bayes": 4.45,
   "rank": 27
+ },
+ {
+  "brand": "iRobot（ルンバ）",
+  "name": "iRobot アイロボット ルンバ コンボ Essential robot ロボット掃除機 (国内正規品) Y01126",
+  "minPrice": 14800,
+  "review": 4.79,
+  "reviewCount": 14,
+  "affiliate": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/y-kojima_0885155041845",
+  "url": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 14800,
+    "url": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/sanwa-online/1237-260628-5500.html"
+   }
+  ],
+  "key": "iRobot（ルンバ）|Y0112",
+  "sat": 64.0,
+  "cheap": 60.7,
+  "cospa": 62.7,
+  "bayes": 4.39,
+  "rank": 28
  },
  {
   "brand": "Roborock",
@@ -767,65 +791,11 @@
    }
   ],
   "key": "Roborock|Q7B",
-  "sat": 68.6,
-  "cheap": 53.7,
-  "cospa": 62.6,
-  "bayes": 4.44,
-  "rank": 28
- },
- {
-  "brand": "Ecovacs（DEEBOT）",
-  "name": "ロボット掃除機 DEEBOT T50S OMNI エコバックス 公式 ECOVACS お掃除ロボット 掃除機 自動掃除機",
-  "minPrice": 109800,
-  "review": 4.8,
-  "reviewCount": 39,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/store-ecovacs-japan/cabinet/campaign/260717/ddx47-0401.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 109800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   },
-   {
-    "mall": "yahoo",
-    "price": 109800,
-    "url": "https://store.shopping.yahoo.co.jp/ecovacsjapan/ddx47.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/ecovacsjapan/ddx47.html"
-   }
-  ],
-  "key": "Ecovacs（DEEBOT）|T50S",
-  "sat": 78.0,
-  "cheap": 39.4,
-  "cospa": 62.6,
-  "bayes": 4.52,
+  "sat": 68.0,
+  "cheap": 53.8,
+  "cospa": 62.3,
+  "bayes": 4.42,
   "rank": 29
- },
- {
-  "brand": "iRobot（ルンバ）",
-  "name": "ロボット掃除機 ルンバ お掃除ロボ 新発売 公式 Roomba Mini + AutoEmpty アイロボット ルンバミ",
-  "minPrice": 39800,
-  "review": 4.51,
-  "reviewCount": 152,
-  "affiliate": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/irobotstore-jp_f15",
-  "url": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 39800,
-    "url": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/irobotstore-jp/f11.html"
-   }
-  ],
-  "key": "iRobot（ルンバ）|ロボット掃除機ルンバ",
-  "sat": 70.9,
-  "cheap": 50.1,
-  "cospa": 62.6,
-  "bayes": 4.46,
-  "rank": 30
  },
  {
   "brand": "TP-Link Tapo",
@@ -845,11 +815,11 @@
    }
   ],
   "key": "TP-Link Tapo|RV30",
-  "sat": 74.8,
-  "cheap": 43.7,
-  "cospa": 62.3,
-  "bayes": 4.49,
-  "rank": 31
+  "sat": 74.5,
+  "cheap": 43.9,
+  "cospa": 62.2,
+  "bayes": 4.48,
+  "rank": 30
  },
  {
   "brand": "SwitchBot",
@@ -875,35 +845,41 @@
    }
   ],
   "key": "SwitchBot|K10+PRO",
-  "sat": 71.7,
-  "cheap": 46.7,
-  "cospa": 61.7,
-  "bayes": 4.47,
-  "rank": 32
+  "sat": 72.2,
+  "cheap": 46.9,
+  "cospa": 62.1,
+  "bayes": 4.46,
+  "rank": 31
  },
  {
-  "brand": "その他・ノーブランド",
-  "name": "ilife v3s pro ロボット掃除機 薄型 自動充電 自動掃除機 自動掃除 掃除機 そうじき お掃除ロボット 掃除",
-  "minPrice": 15100,
-  "review": 4.88,
-  "reviewCount": 8,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twnun.tiw95353.g00twnun.tiw96fe3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70459%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10000059%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/lifestyle-007/cabinet/new_thumbnail/70459_1.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00twnun.tiw95353.g00twnun.tiw96fe3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70459%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10000059%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "ロボット掃除機 DEEBOT T50S OMNI エコバックス 公式 ECOVACS お掃除ロボット 掃除機 自動掃除機",
+  "minPrice": 109800,
+  "review": 4.8,
+  "reviewCount": 39,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/store-ecovacs-japan/cabinet/campaign/260717/ddx47-0401.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
   "offers": [
    {
     "mall": "rakuten",
-    "price": 15100,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00twnun.tiw95353.g00twnun.tiw96fe3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70459%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10000059%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twnun.tiw95353.g00twnun.tiw96fe3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flifestyle-007%2F70459%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flifestyle-007%2Fi%2F10000059%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "price": 109800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fddx47-0401%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000533%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   },
+   {
+    "mall": "yahoo",
+    "price": 109800,
+    "url": "https://store.shopping.yahoo.co.jp/ecovacsjapan/ddx47.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/ecovacsjapan/ddx47.html"
    }
   ],
-  "key": "その他・ノーブランド|V3S",
-  "sat": 62.1,
-  "cheap": 60.4,
-  "cospa": 61.4,
-  "bayes": 4.38,
-  "rank": 33
+  "key": "Ecovacs（DEEBOT）|T50S",
+  "sat": 77.2,
+  "cheap": 39.6,
+  "cospa": 62.1,
+  "bayes": 4.51,
+  "rank": 32
  },
  {
   "brand": "その他・ノーブランド",
@@ -929,11 +905,11 @@
    }
   ],
   "key": "その他・ノーブランド|RC41",
-  "sat": 63.9,
-  "cheap": 57.5,
-  "cospa": 61.3,
+  "sat": 64.9,
+  "cheap": 57.6,
+  "cospa": 62.0,
   "bayes": 4.4,
-  "rank": 34
+  "rank": 33
  },
  {
   "brand": "Roborock",
@@ -959,11 +935,11 @@
    }
   ],
   "key": "Roborock|Q7B+",
-  "sat": 68.5,
-  "cheap": 50.5,
-  "cospa": 61.3,
-  "bayes": 4.44,
-  "rank": 35
+  "sat": 69.1,
+  "cheap": 50.7,
+  "cospa": 61.7,
+  "bayes": 4.43,
+  "rank": 34
  },
  {
   "brand": "その他・ノーブランド",
@@ -989,10 +965,40 @@
    }
   ],
   "key": "その他・ノーブランド|RC32",
-  "sat": 58.3,
-  "cheap": 64.9,
-  "cospa": 60.9,
+  "sat": 59.3,
+  "cheap": 65.1,
+  "cospa": 61.6,
   "bayes": 4.35,
+  "rank": 35
+ },
+ {
+  "brand": "iRobot（ルンバ）",
+  "name": "公式 Roomba Plus 505 Combo + AutoWash ルンバ アイロボット ロボット掃除機 2025 ",
+  "minPrice": 80000,
+  "review": 4.47,
+  "reviewCount": 1903,
+  "affiliate": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_505c_tm.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 80000,
+    "url": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html"
+   },
+   {
+    "mall": "rakuten",
+    "price": 129577,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fn185060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000558%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fn185060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000558%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "iRobot（ルンバ）|PLUS505",
+  "sat": 72.6,
+  "cheap": 42.9,
+  "cospa": 60.7,
+  "bayes": 4.47,
   "rank": 36
  },
  {
@@ -1019,10 +1025,10 @@
    }
   ],
   "key": "iRobot（ルンバ）|J9+",
-  "sat": 71.2,
-  "cheap": 44.8,
-  "cospa": 60.7,
-  "bayes": 4.46,
+  "sat": 71.0,
+  "cheap": 44.9,
+  "cospa": 60.6,
+  "bayes": 4.45,
   "rank": 37
  },
  {
@@ -1049,65 +1055,11 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|MINI2",
-  "sat": 71.6,
-  "cheap": 44.2,
-  "cospa": 60.6,
-  "bayes": 4.46,
-  "rank": 38
- },
- {
-  "brand": "TP-Link Tapo",
-  "name": "Tapo RV50 Pro Omni 全自動 ロボット掃除機 水拭き 15000Pa ゴミ収集・モップ洗浄・乾燥・洗剤補",
-  "minPrice": 89990,
-  "review": 4.79,
-  "reviewCount": 28,
-  "affiliate": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/tplink_1210002608992",
-  "url": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 89990,
-    "url": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html"
-   }
-  ],
-  "key": "TP-Link Tapo|RV50",
-  "sat": 73.1,
-  "cheap": 41.5,
+  "sat": 71.1,
+  "cheap": 44.3,
   "cospa": 60.4,
-  "bayes": 4.48,
-  "rank": 39
- },
- {
-  "brand": "iRobot（ルンバ）",
-  "name": "公式 Roomba Plus 505 Combo + AutoWash ルンバ アイロボット ロボット掃除機 2025 ",
-  "minPrice": 80000,
-  "review": 4.47,
-  "reviewCount": 1903,
-  "affiliate": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_505c_tm.jpg?_ex=128x128",
-  "url": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 80000,
-    "url": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/easy-style2007/001x07643.html"
-   },
-   {
-    "mall": "rakuten",
-    "price": 129577,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fn185060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000558%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fn185060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000558%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "iRobot（ルンバ）|PLUS505",
-  "sat": 71.8,
-  "cheap": 42.8,
-  "cospa": 60.2,
-  "bayes": 4.47,
-  "rank": 40
+  "bayes": 4.45,
+  "rank": 38
  },
  {
   "brand": "Anker Eufy",
@@ -1133,11 +1085,11 @@
    }
   ],
   "key": "Anker Eufy|X8",
-  "sat": 70.6,
-  "cheap": 44.2,
-  "cospa": 60.0,
-  "bayes": 4.46,
-  "rank": 41
+  "sat": 71.0,
+  "cheap": 44.3,
+  "cospa": 60.3,
+  "bayes": 4.45,
+  "rank": 39
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1163,35 +1115,35 @@
    }
   ],
   "key": "iRobot（ルンバ）|PLUS405",
-  "sat": 72.6,
-  "cheap": 40.4,
-  "cospa": 59.7,
+  "sat": 73.3,
+  "cheap": 40.6,
+  "cospa": 60.2,
   "bayes": 4.47,
-  "rank": 42
+  "rank": 40
  },
  {
-  "brand": "Ecovacs（DEEBOT）",
-  "name": "新品 メーカー保証付き エコバックス 掃除機 DEEBOT N8 PRO 高性能 D-ToF マッピング機能 水拭き機能",
-  "minPrice": 14800,
-  "review": 4.8,
-  "reviewCount": 5,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/boundless/cabinet/10359033/11095980/imgrc0131475600.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "TP-Link Tapo",
+  "name": "Tapo RV50 Pro Omni 全自動 ロボット掃除機 水拭き 15000Pa ゴミ収集・モップ洗浄・乾燥・洗剤補",
+  "minPrice": 89990,
+  "review": 4.79,
+  "reviewCount": 28,
+  "affiliate": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/tplink_1210002608992",
+  "url": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html",
   "offers": [
    {
-    "mall": "rakuten",
-    "price": 14800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "mall": "yahoo",
+    "price": 89990,
+    "url": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/tplink/1210002608992.html"
    }
   ],
-  "key": "Ecovacs（DEEBOT）|N8",
-  "sat": 58.1,
-  "cheap": 60.6,
-  "cospa": 59.1,
-  "bayes": 4.35,
-  "rank": 43
+  "key": "TP-Link Tapo|RV50",
+  "sat": 72.1,
+  "cheap": 41.7,
+  "cospa": 59.9,
+  "bayes": 4.46,
+  "rank": 41
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1217,10 +1169,64 @@
    }
   ],
   "key": "iRobot（ルンバ）|I5",
-  "sat": 65.8,
-  "cheap": 48.8,
-  "cospa": 59.0,
-  "bayes": 4.41,
+  "sat": 65.1,
+  "cheap": 49.0,
+  "cospa": 58.7,
+  "bayes": 4.4,
+  "rank": 42
+ },
+ {
+  "brand": "その他・ノーブランド",
+  "name": "ロボット掃除機 ロボットクリーナー 掃除ロボット 全自動掃除機 自動モード/スポットモード 4000Pa強力吸引 静音設",
+  "minPrice": 7299,
+  "review": 4.28,
+  "reviewCount": 253,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/aidort/cabinet/09330427/1415-zhu.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 7299,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   },
+   {
+    "mall": "yahoo",
+    "price": 8020,
+    "url": "https://store.shopping.yahoo.co.jp/iristopmart123/135358-iris-01.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/iristopmart123/135358-iris-01.html"
+   }
+  ],
+  "key": "その他・ノーブランド|ロボット掃除機ロボッ",
+  "sat": 51.7,
+  "cheap": 68.2,
+  "cospa": 58.3,
+  "bayes": 4.28,
+  "rank": 43
+ },
+ {
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "新品 メーカー保証付き エコバックス 掃除機 DEEBOT N8 PRO 高性能 D-ToF マッピング機能 水拭き機能",
+  "minPrice": 14800,
+  "review": 4.8,
+  "reviewCount": 5,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/boundless/cabinet/10359033/11095980/imgrc0131475600.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 14800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u73vn.tiw95b6f.g00u73vn.tiw969f5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fboundless%2F4589914861762%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fboundless%2Fi%2F10002109%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "Ecovacs（DEEBOT）|N8",
+  "sat": 56.7,
+  "cheap": 60.7,
+  "cospa": 58.3,
+  "bayes": 4.32,
   "rank": 44
  },
  {
@@ -1247,65 +1253,11 @@
    }
   ],
   "key": "Roborock|SAROS20",
-  "sat": 76.0,
-  "cheap": 33.0,
-  "cospa": 58.8,
-  "bayes": 4.5,
+  "sat": 74.9,
+  "cheap": 33.2,
+  "cospa": 58.2,
+  "bayes": 4.49,
   "rank": 45
- },
- {
-  "brand": "TP-Link Tapo",
-  "name": "MagSlim LiDARナビゲーション搭載2in1 ロボット掃除機＆自動ゴミ収集機 自動充電アプリ対応 Tapo RV",
-  "minPrice": 52000,
-  "review": 4.54,
-  "reviewCount": 39,
-  "affiliate": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/tplink_4895252504385-1",
-  "url": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 52000,
-    "url": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html"
-   }
-  ],
-  "key": "TP-Link Tapo|IN1",
-  "sat": 64.9,
-  "cheap": 47.3,
-  "cospa": 57.9,
-  "bayes": 4.41,
-  "rank": 46
- },
- {
-  "brand": "その他・ノーブランド",
-  "name": "ロボット掃除機 ロボットクリーナー 掃除ロボット 全自動掃除機 自動モード/スポットモード 4000Pa強力吸引 静音設",
-  "minPrice": 7299,
-  "review": 4.28,
-  "reviewCount": 253,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/aidort/cabinet/09330427/1415-zhu.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 7299,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00uc07n.tiw9519d.g00uc07n.tiw964da/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsanononostore%2F3c-xx177%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsanononostore%2Fi%2F10004017%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   },
-   {
-    "mall": "yahoo",
-    "price": 8020,
-    "url": "https://store.shopping.yahoo.co.jp/iristopmart123/135358-iris-01.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/iristopmart123/135358-iris-01.html"
-   }
-  ],
-  "key": "その他・ノーブランド|ロボット掃除機ロボッ",
-  "sat": 50.9,
-  "cheap": 68.0,
-  "cospa": 57.7,
-  "bayes": 4.28,
-  "rank": 47
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -1331,59 +1283,35 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|Y1",
-  "sat": 64.4,
-  "cheap": 47.8,
-  "cospa": 57.7,
+  "sat": 65.0,
+  "cheap": 47.9,
+  "cospa": 58.1,
   "bayes": 4.4,
-  "rank": 48
+  "rank": 46
  },
  {
-  "brand": "Anker Eufy",
-  "name": "◆最大3000円CP＋P3倍！！7/20◆アンカー ロボット掃除機 eufy Eufy X10 Pro Omni T23",
-  "minPrice": 65500,
-  "review": 5.0,
-  "reviewCount": 10,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/d-shop1one/cabinet/point3/4571411226663.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "TP-Link Tapo",
+  "name": "MagSlim LiDARナビゲーション搭載2in1 ロボット掃除機＆自動ゴミ収集機 自動充電アプリ対応 Tapo RV",
+  "minPrice": 52000,
+  "review": 4.54,
+  "reviewCount": 39,
+  "affiliate": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/tplink_4895252504385-1",
+  "url": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html",
   "offers": [
    {
-    "mall": "rakuten",
-    "price": 65500,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "mall": "yahoo",
+    "price": 52000,
+    "url": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/tplink/4895252504385-1.html"
    }
   ],
-  "key": "Anker Eufy|P3",
-  "sat": 66.3,
-  "cheap": 44.9,
-  "cospa": 57.7,
-  "bayes": 4.42,
-  "rank": 49
- },
- {
-  "brand": "その他・ノーブランド",
-  "name": "ROCKUBOT ロックボット 除菌ロボット ウイルス 感染防止 除菌 ダニ対策 紫外線除菌 UV 完全自動 多機能 A",
-  "minPrice": 25300,
-  "review": 4.83,
-  "reviewCount": 6,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/offer1999/cabinet/gazou015/iso1501top01n.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 25300,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "その他・ノーブランド|ROCKUBOTロッ",
-  "sat": 59.4,
-  "cheap": 54.9,
+  "key": "TP-Link Tapo|IN1",
+  "sat": 64.4,
+  "cheap": 47.4,
   "cospa": 57.6,
-  "bayes": 4.36,
-  "rank": 50
+  "bayes": 4.39,
+  "rank": 47
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1403,11 +1331,11 @@
    }
   ],
   "key": "iRobot（ルンバ）|310新発売Room",
-  "sat": 61.7,
-  "cheap": 50.1,
-  "cospa": 57.1,
-  "bayes": 4.38,
-  "rank": 51
+  "sat": 62.4,
+  "cheap": 50.3,
+  "cospa": 57.5,
+  "bayes": 4.37,
+  "rank": 48
  },
  {
   "brand": "その他・ノーブランド",
@@ -1433,11 +1361,35 @@
    }
   ],
   "key": "その他・ノーブランド|ロボット掃除機お掃除",
-  "sat": 46.8,
-  "cheap": 72.1,
-  "cospa": 56.9,
-  "bayes": 4.25,
-  "rank": 52
+  "sat": 47.2,
+  "cheap": 72.2,
+  "cospa": 57.2,
+  "bayes": 4.24,
+  "rank": 49
+ },
+ {
+  "brand": "Anker Eufy",
+  "name": "◆最大3000円CP＋P3倍！！7/20◆アンカー ロボット掃除機 eufy Eufy X10 Pro Omni T23",
+  "minPrice": 65500,
+  "review": 5.0,
+  "reviewCount": 10,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/d-shop1one/cabinet/point3/4571411226663.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 65500,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00rtgfn.tiw957e1.g00rtgfn.tiw96688/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fd-shop1one%2F4571411226663%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fd-shop1one%2Fi%2F10241044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "Anker Eufy|P3",
+  "sat": 64.9,
+  "cheap": 45.0,
+  "cospa": 57.0,
+  "bayes": 4.4,
+  "rank": 50
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1457,35 +1409,35 @@
    }
   ],
   "key": "iRobot（ルンバ）|PLUS575",
-  "sat": 71.5,
-  "cheap": 34.8,
+  "sat": 71.4,
+  "cheap": 35.0,
   "cospa": 56.8,
-  "bayes": 4.46,
-  "rank": 53
+  "bayes": 4.45,
+  "rank": 51
  },
  {
-  "brand": "yeedi",
-  "name": "ロボット掃除機 yeedi Floor 3 / yeediフロア3 吸引掃除もモップがけもこの1台で充分！K960 音声",
-  "minPrice": 12800,
-  "review": 4.31,
-  "reviewCount": 13,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/yeedi/cabinet/08/6972790741408_1.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "その他・ノーブランド",
+  "name": "ROCKUBOT ロックボット 除菌ロボット ウイルス 感染防止 除菌 ダニ対策 紫外線除菌 UV 完全自動 多機能 A",
+  "minPrice": 25300,
+  "review": 4.83,
+  "reviewCount": 6,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/offer1999/cabinet/gazou015/iso1501top01n.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
   "offers": [
    {
     "mall": "rakuten",
-    "price": 12800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "price": 25300,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qfkpn.tiw953df.g00qfkpn.tiw963a9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foffer1999%2Fiso1501%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foffer1999%2Fi%2F10032800%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
    }
   ],
-  "key": "yeedi|FLOOR3",
-  "sat": 53.1,
-  "cheap": 62.1,
-  "cospa": 56.7,
-  "bayes": 4.3,
-  "rank": 54
+  "key": "その他・ノーブランド|ROCKUBOTロッ",
+  "sat": 58.0,
+  "cheap": 55.0,
+  "cospa": 56.8,
+  "bayes": 4.34,
+  "rank": 52
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1505,11 +1457,35 @@
    }
   ],
   "key": "iRobot（ルンバ）|新発売公式Roomb",
-  "sat": 61.9,
-  "cheap": 47.8,
-  "cospa": 56.2,
+  "sat": 62.6,
+  "cheap": 47.9,
+  "cospa": 56.7,
   "bayes": 4.38,
-  "rank": 55
+  "rank": 53
+ },
+ {
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "ロボット掃除機 yeedi Floor 3 / yeediフロア3 吸引掃除もモップがけもこの1台で充分！K960 音声",
+  "minPrice": 12800,
+  "review": 4.31,
+  "reviewCount": 13,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/yeedi/cabinet/08/6972790741408_1.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 12800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790741408%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000002%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "Ecovacs（DEEBOT）|FLOOR3",
+  "sat": 52.1,
+  "cheap": 62.2,
+  "cospa": 56.2,
+  "bayes": 4.28,
+  "rank": 54
  },
  {
   "brand": "Narwal",
@@ -1536,34 +1512,10 @@
   ],
   "key": "Narwal|Z10",
   "sat": 63.7,
-  "cheap": 44.2,
+  "cheap": 44.3,
   "cospa": 55.9,
   "bayes": 4.39,
-  "rank": 56
- },
- {
-  "brand": "Dreame",
-  "name": "ロボット掃除機 水拭き両用 Dreame X30 Ultra 8300Pa 強力吸引 自動ゴミ収集 モップ60℃温水洗浄",
-  "minPrice": 94800,
-  "review": 4.91,
-  "reviewCount": 11,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dreame-shop/cabinet/11006786/imgrc0151417959.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 94800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "Dreame|X30",
-  "sat": 65.5,
-  "cheap": 41.0,
-  "cospa": 55.7,
-  "bayes": 4.41,
-  "rank": 57
+  "rank": 55
  },
  {
   "brand": "その他・ノーブランド",
@@ -1589,11 +1541,35 @@
    }
   ],
   "key": "その他・ノーブランド|RC71",
-  "sat": 58.7,
-  "cheap": 50.1,
-  "cospa": 55.3,
-  "bayes": 4.35,
-  "rank": 58
+  "sat": 58.5,
+  "cheap": 50.3,
+  "cospa": 55.2,
+  "bayes": 4.34,
+  "rank": 56
+ },
+ {
+  "brand": "Dreame",
+  "name": "ロボット掃除機 水拭き両用 Dreame X30 Ultra 8300Pa 強力吸引 自動ゴミ収集 モップ60℃温水洗浄",
+  "minPrice": 94800,
+  "review": 4.91,
+  "reviewCount": 11,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dreame-shop/cabinet/11006786/imgrc0151417959.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 94800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00und8n.tiw95b0c.g00und8n.tiw96310/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdreame-shop%2Fdreame-x30%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdreame-shop%2Fi%2F10000004%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "Dreame|X30",
+  "sat": 64.2,
+  "cheap": 41.1,
+  "cospa": 55.0,
+  "bayes": 4.39,
+  "rank": 57
  },
  {
   "brand": "その他・ノーブランド",
@@ -1619,11 +1595,11 @@
    }
   ],
   "key": "その他・ノーブランド|RC33",
-  "sat": 50.1,
-  "cheap": 61.3,
-  "cospa": 54.6,
-  "bayes": 4.28,
-  "rank": 59
+  "sat": 50.3,
+  "cheap": 61.4,
+  "cospa": 54.7,
+  "bayes": 4.27,
+  "rank": 58
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -1643,11 +1619,59 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|ロボット掃除機エコバ",
-  "sat": 61.8,
-  "cheap": 42.8,
-  "cospa": 54.2,
-  "bayes": 4.38,
+  "sat": 61.2,
+  "cheap": 42.9,
+  "cospa": 53.9,
+  "bayes": 4.36,
+  "rank": 59
+ },
+ {
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "ロボット掃除機 水拭き両用 8,000pa エコバックス DEEBOT mini 高性能 水拭 自動掃除機 メーカー保証",
+  "minPrice": 39800,
+  "review": 4.34,
+  "reviewCount": 101,
+  "affiliate": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/ecovacsjapan_djx11",
+  "url": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 39800,
+    "url": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html"
+   }
+  ],
+  "key": "Ecovacs（DEEBOT）|ロボット掃除機水拭き",
+  "sat": 56.2,
+  "cheap": 50.3,
+  "cospa": 53.8,
+  "bayes": 4.32,
   "rank": 60
+ },
+ {
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "ロボット掃除機 DEEBOT mini エコバックス 公式 ECOVACS お掃除ロボット 掃除機 自動掃除機 掃除ロボ",
+  "minPrice": 69800,
+  "review": 4.36,
+  "reviewCount": 229,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/store-ecovacs-japan/cabinet/campaign/260717/djx11-11ee.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 69800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "Ecovacs（DEEBOT）|ロボット掃除機DEE",
+  "sat": 59.1,
+  "cheap": 44.3,
+  "cospa": 53.2,
+  "bayes": 4.35,
+  "rank": 61
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -1673,11 +1697,11 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|X2",
-  "sat": 53.9,
-  "cheap": 53.9,
-  "cospa": 53.9,
-  "bayes": 4.31,
-  "rank": 61
+  "sat": 52.6,
+  "cheap": 54.0,
+  "cospa": 53.2,
+  "bayes": 4.29,
+  "rank": 62
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1703,59 +1727,11 @@
    }
   ],
   "key": "iRobot（ルンバ）|F1556",
-  "sat": 58.0,
-  "cheap": 47.8,
-  "cospa": 53.9,
-  "bayes": 4.35,
-  "rank": 62
- },
- {
-  "brand": "Ecovacs（DEEBOT）",
-  "name": "ロボット掃除機 水拭き両用 8,000pa エコバックス DEEBOT mini 高性能 水拭 自動掃除機 メーカー保証",
-  "minPrice": 39800,
-  "review": 4.34,
-  "reviewCount": 101,
-  "affiliate": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/ecovacsjapan_djx11",
-  "url": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 39800,
-    "url": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/unidy-y/7249552.html"
-   }
-  ],
-  "key": "Ecovacs（DEEBOT）|ロボット掃除機水拭き",
-  "sat": 55.9,
-  "cheap": 50.1,
-  "cospa": 53.6,
-  "bayes": 4.33,
+  "sat": 56.7,
+  "cheap": 47.9,
+  "cospa": 53.2,
+  "bayes": 4.32,
   "rank": 63
- },
- {
-  "brand": "Ecovacs（DEEBOT）",
-  "name": "ロボット掃除機 DEEBOT mini エコバックス 公式 ECOVACS お掃除ロボット 掃除機 自動掃除機 掃除ロボ",
-  "minPrice": 69800,
-  "review": 4.36,
-  "reviewCount": 229,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/store-ecovacs-japan/cabinet/campaign/260717/djx11-11ee.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 69800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sun6n.tiw95f1e.g00sun6n.tiw96e37/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fstore-ecovacs-japan%2Fdjx11-11ee%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fstore-ecovacs-japan%2Fi%2F10000480%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "Ecovacs（DEEBOT）|ロボット掃除機DEE",
-  "sat": 58.4,
-  "cheap": 44.2,
-  "cospa": 52.7,
-  "bayes": 4.35,
-  "rank": 64
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1781,11 +1757,11 @@
    }
   ],
   "key": "iRobot（ルンバ）|F1552",
-  "sat": 55.6,
-  "cheap": 47.8,
-  "cospa": 52.5,
-  "bayes": 4.32,
-  "rank": 65
+  "sat": 55.1,
+  "cheap": 47.9,
+  "cospa": 52.2,
+  "bayes": 4.31,
+  "rank": 64
  },
  {
   "brand": "その他・ノーブランド",
@@ -1805,35 +1781,11 @@
    }
   ],
   "key": "その他・ノーブランド|X20+",
-  "sat": 56.7,
-  "cheap": 45.8,
-  "cospa": 52.3,
-  "bayes": 4.33,
-  "rank": 66
- },
- {
-  "brand": "yeedi",
-  "name": "ロボット掃除機 yeedi mop station / yeediモップステーション 吸引掃除もモップがけもこの1台で充",
-  "minPrice": 26000,
-  "review": 4.22,
-  "reviewCount": 18,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/yeedi/cabinet/48/6972790740548_1.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 26000,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "yeedi|K850+",
-  "sat": 50.4,
-  "cheap": 54.6,
-  "cospa": 52.1,
-  "bayes": 4.28,
-  "rank": 67
+  "sat": 55.8,
+  "cheap": 46.0,
+  "cospa": 51.9,
+  "bayes": 4.32,
+  "rank": 65
  },
  {
   "brand": "Dreame",
@@ -1853,11 +1805,35 @@
    }
   ],
   "key": "Dreame|L10S",
-  "sat": 63.0,
-  "cheap": 35.5,
-  "cospa": 52.0,
-  "bayes": 4.39,
-  "rank": 68
+  "sat": 62.6,
+  "cheap": 35.6,
+  "cospa": 51.8,
+  "bayes": 4.38,
+  "rank": 66
+ },
+ {
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "ロボット掃除機 yeedi mop station / yeediモップステーション 吸引掃除もモップがけもこの1台で充",
+  "minPrice": 26000,
+  "review": 4.22,
+  "reviewCount": 18,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/yeedi/cabinet/48/6972790740548_1.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 26000,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00ugubn.tiw95d76.g00ugubn.tiw96258/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyeedi%2Fr6972790740548%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyeedi%2Fi%2F10000001%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "Ecovacs（DEEBOT）|K850+",
+  "sat": 49.7,
+  "cheap": 54.8,
+  "cospa": 51.7,
+  "bayes": 4.26,
+  "rank": 67
  },
  {
   "brand": "AIRROBO",
@@ -1877,11 +1853,11 @@
    }
   ],
   "key": "AIRROBO|E10+",
-  "sat": 51.1,
-  "cheap": 52.1,
+  "sat": 51.0,
+  "cheap": 52.2,
   "cospa": 51.5,
-  "bayes": 4.29,
-  "rank": 69
+  "bayes": 4.27,
+  "rank": 68
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -1907,10 +1883,40 @@
    }
   ],
   "key": "iRobot（ルンバ）|F1554",
-  "sat": 53.6,
-  "cheap": 47.8,
-  "cospa": 51.2,
-  "bayes": 4.31,
+  "sat": 52.9,
+  "cheap": 47.9,
+  "cospa": 50.9,
+  "bayes": 4.29,
+  "rank": 69
+ },
+ {
+  "brand": "iRobot（ルンバ）",
+  "name": "公式 Roomba 205 DustCompactor Combo ルンバ アイロボット ロボット掃除機 2025 お掃",
+  "minPrice": 44200,
+  "review": 4.28,
+  "reviewCount": 835,
+  "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_205c_tm_v2.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 44200,
+    "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html"
+   },
+   {
+    "mall": "rakuten",
+    "price": 59743,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fl12%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000562%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fl12%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000562%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "iRobot（ルンバ）|ROOMBA205",
+  "sat": 51.7,
+  "cheap": 49.2,
+  "cospa": 50.7,
+  "bayes": 4.28,
   "rank": 70
  },
  {
@@ -1937,11 +1943,41 @@
    }
   ],
   "key": "iRobot（ルンバ）|F1550",
-  "sat": 52.9,
-  "cheap": 47.8,
-  "cospa": 50.8,
-  "bayes": 4.3,
+  "sat": 52.1,
+  "cheap": 47.9,
+  "cospa": 50.4,
+  "bayes": 4.28,
   "rank": 71
+ },
+ {
+  "brand": "iRobot（ルンバ）",
+  "name": "公式 Roomba Max 705 Vac + AutoEmpty ルンバ アイロボット ロボット掃除機 2025 お掃",
+  "minPrice": 78800,
+  "review": 4.31,
+  "reviewCount": 392,
+  "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_705v_tm.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 78800,
+    "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html"
+   },
+   {
+    "mall": "rakuten",
+    "price": 99706,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fw155060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000559%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fw155060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000559%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "iRobot（ルンバ）|MAX705",
+  "sat": 54.7,
+  "cheap": 43.1,
+  "cospa": 50.1,
+  "bayes": 4.31,
+  "rank": 72
  },
  {
   "brand": "Dreame",
@@ -1967,40 +2003,10 @@
    }
   ],
   "key": "Dreame|L40",
-  "sat": 57.4,
-  "cheap": 40.4,
-  "cospa": 50.6,
-  "bayes": 4.34,
-  "rank": 72
- },
- {
-  "brand": "iRobot（ルンバ）",
-  "name": "公式 Roomba 205 DustCompactor Combo ルンバ アイロボット ロボット掃除機 2025 お掃",
-  "minPrice": 44200,
-  "review": 4.28,
-  "reviewCount": 835,
-  "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_205c_tm_v2.jpg?_ex=128x128",
-  "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 44200,
-    "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046185.html"
-   },
-   {
-    "mall": "rakuten",
-    "price": 59743,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fl12%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000562%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fl12%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000562%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "iRobot（ルンバ）|ROOMBA205",
-  "sat": 50.6,
-  "cheap": 49.0,
-  "cospa": 50.0,
-  "bayes": 4.28,
+  "sat": 56.1,
+  "cheap": 40.6,
+  "cospa": 49.9,
+  "bayes": 4.32,
   "rank": 73
  },
  {
@@ -2027,10 +2033,10 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|N8+",
-  "sat": 52.9,
-  "cheap": 45.8,
-  "cospa": 50.0,
-  "bayes": 4.3,
+  "sat": 52.2,
+  "cheap": 45.9,
+  "cospa": 49.7,
+  "bayes": 4.28,
   "rank": 74
  },
  {
@@ -2057,41 +2063,11 @@
    }
   ],
   "key": "SwitchBot|S10",
-  "sat": 56.7,
-  "cheap": 38.7,
-  "cospa": 49.5,
-  "bayes": 4.33,
-  "rank": 75
- },
- {
-  "brand": "iRobot（ルンバ）",
-  "name": "公式 Roomba Max 705 Vac + AutoEmpty ルンバ アイロボット ロボット掃除機 2025 お掃",
-  "minPrice": 78800,
-  "review": 4.31,
-  "reviewCount": 392,
-  "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/irobotstore/cabinet/03016688/20260719_marathon/260719_705v_tm.jpg?_ex=128x128",
-  "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 78800,
-    "url": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/ksdenki/0885155046062.html"
-   },
-   {
-    "mall": "rakuten",
-    "price": 99706,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fw155060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000559%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00recun.tiw9534f.g00recun.tiw96659/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Firobotstore%2Fw155060%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Firobotstore%2Fi%2F10000559%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "iRobot（ルンバ）|MAX705",
-  "sat": 53.8,
-  "cheap": 42.9,
-  "cospa": 49.4,
+  "sat": 55.6,
+  "cheap": 38.9,
+  "cospa": 48.9,
   "bayes": 4.31,
-  "rank": 76
+  "rank": 75
  },
  {
   "brand": "iRobot（ルンバ）",
@@ -2111,113 +2087,11 @@
    }
   ],
   "key": "iRobot（ルンバ）|iRobotロボット",
-  "sat": 49.2,
-  "cheap": 47.8,
-  "cospa": 48.6,
-  "bayes": 4.27,
-  "rank": 77
- },
- {
-  "brand": "その他・ノーブランド",
-  "name": "ロボット掃除機 5000Pa 強力吸引 長時間持続 水拭き両用 小型 静音 お掃除ロボット 水拭き 高性能 衝突落下防止",
-  "minPrice": 15260,
-  "review": 3.6,
-  "reviewCount": 10,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/hana-moto6677/cabinet/10356042/10363734/10410078/sdqjr3002.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 15260,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "その他・ノーブランド|ロボット掃除機500",
-  "sat": 39.5,
-  "cheap": 60.3,
-  "cospa": 47.8,
-  "bayes": 4.18,
-  "rank": 78
- },
- {
-  "brand": "その他・ノーブランド",
-  "name": "除菌ロボット ROCKUBOT ロックボット ダニ対策 ウイルス除菌 紫外線除菌 出産祝い 新築祝い 還暦祝い 父の日ギ",
-  "minPrice": 25300,
-  "review": 3.5,
-  "reviewCount": 6,
-  "affiliate": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/egl-okinawa_rockubot0002",
-  "url": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 25300,
-    "url": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html"
-   }
-  ],
-  "key": "その他・ノーブランド|除菌ロボットROCK",
-  "sat": 43.1,
-  "cheap": 54.9,
-  "cospa": 47.8,
-  "bayes": 4.22,
-  "rank": 79
- },
- {
-  "brand": "その他・ノーブランド",
-  "name": "97.6%のダニが死滅! ダニ退治 全自動除菌ロボット ROCKUBOT 自走して除菌とダニ退治! 紫外線 UV-C U",
-  "minPrice": 25300,
-  "review": 3.82,
-  "reviewCount": 11,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/shizen-mori/cabinet/rock/rockubot-500.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 25300,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "その他・ノーブランド|976のダニが死滅ダ",
-  "sat": 42.9,
-  "cheap": 54.9,
-  "cospa": 47.7,
-  "bayes": 4.21,
-  "rank": 80
- },
- {
-  "brand": "SwitchBot",
-  "name": "SwitchBot スイッチボット ロボット掃除機 K10+ 水拭き 拭き掃除 自動ゴミ収集 小型マッピング機能付き パ",
-  "minPrice": 31994,
-  "review": 4.17,
-  "reviewCount": 65,
-  "affiliate": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/newmon/cabinet/07947770/imgrc0107539018.jpg?_ex=128x128",
-  "url": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html",
-  "offers": [
-   {
-    "mall": "yahoo",
-    "price": 31994,
-    "url": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html"
-   },
-   {
-    "mall": "rakuten",
-    "price": 34800,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00s2mbn.tiw95d96.g00s2mbn.tiw96d4a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnewmon%2F15100139%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fnewmon%2Fi%2F10007515%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00s2mbn.tiw95d96.g00s2mbn.tiw96d4a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnewmon%2F15100139%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fnewmon%2Fi%2F10007515%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   }
-  ],
-  "key": "SwitchBot|K10+",
-  "sat": 44.4,
-  "cheap": 52.4,
-  "cospa": 47.6,
-  "bayes": 4.23,
-  "rank": 81
+  "sat": 48.0,
+  "cheap": 47.9,
+  "cospa": 48.0,
+  "bayes": 4.25,
+  "rank": 76
  },
  {
   "brand": "その他・ノーブランド",
@@ -2243,11 +2117,41 @@
    }
   ],
   "key": "その他・ノーブランド|水拭きロボットミズモ",
-  "sat": 40.4,
-  "cheap": 58.0,
-  "cospa": 47.5,
-  "bayes": 4.19,
-  "rank": 82
+  "sat": 41.0,
+  "cheap": 58.1,
+  "cospa": 47.8,
+  "bayes": 4.18,
+  "rank": 77
+ },
+ {
+  "brand": "SwitchBot",
+  "name": "SwitchBot スイッチボット ロボット掃除機 K10+ 水拭き 拭き掃除 自動ゴミ収集 小型マッピング機能付き パ",
+  "minPrice": 31994,
+  "review": 4.17,
+  "reviewCount": 65,
+  "affiliate": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/newmon/cabinet/07947770/imgrc0107539018.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 31994,
+    "url": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/switchbot/w3011021.html"
+   },
+   {
+    "mall": "rakuten",
+    "price": 34800,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00s2mbn.tiw95d96.g00s2mbn.tiw96d4a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnewmon%2F15100139%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fnewmon%2Fi%2F10007515%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00s2mbn.tiw95d96.g00s2mbn.tiw96d4a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnewmon%2F15100139%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fnewmon%2Fi%2F10007515%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "SwitchBot|K10+",
+  "sat": 44.6,
+  "cheap": 52.6,
+  "cospa": 47.8,
+  "bayes": 4.22,
+  "rank": 78
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -2267,11 +2171,35 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|エコバックスショッピ",
-  "sat": 28.4,
-  "cheap": 75.8,
+  "sat": 28.6,
+  "cheap": 75.9,
+  "cospa": 47.6,
+  "bayes": 4.07,
+  "rank": 79
+ },
+ {
+  "brand": "その他・ノーブランド",
+  "name": "ロボット掃除機 5000Pa 強力吸引 長時間持続 水拭き両用 小型 静音 お掃除ロボット 水拭き 高性能 衝突落下防止",
+  "minPrice": 15260,
+  "review": 3.6,
+  "reviewCount": 10,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/hana-moto6677/cabinet/10356042/10363734/10410078/sdqjr3002.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 15260,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00u3pfn.tiw950f2.g00u3pfn.tiw9612e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhana-moto6677%2Fsdjqr001%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fhana-moto6677%2Fi%2F10001238%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "その他・ノーブランド|ロボット掃除機500",
+  "sat": 38.7,
+  "cheap": 60.4,
   "cospa": 47.4,
-  "bayes": 4.09,
-  "rank": 83
+  "bayes": 4.16,
+  "rank": 80
  },
  {
   "brand": "その他・ノーブランド",
@@ -2291,10 +2219,88 @@
    }
   ],
   "key": "その他・ノーブランド|ロボット掃除機自動モ",
-  "sat": 28.3,
-  "cheap": 74.4,
-  "cospa": 46.7,
-  "bayes": 4.09,
+  "sat": 29.1,
+  "cheap": 74.6,
+  "cospa": 47.3,
+  "bayes": 4.08,
+  "rank": 81
+ },
+ {
+  "brand": "その他・ノーブランド",
+  "name": "97.6%のダニが死滅! ダニ退治 全自動除菌ロボット ROCKUBOT 自走して除菌とダニ退治! 紫外線 UV-C U",
+  "minPrice": 25300,
+  "review": 3.82,
+  "reviewCount": 11,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/shizen-mori/cabinet/rock/rockubot-500.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 25300,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00qer0n.tiw952c4.g00qer0n.tiw96318/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshizen-mori%2Frockubot-pro%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fshizen-mori%2Fi%2F10001503%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   }
+  ],
+  "key": "その他・ノーブランド|976のダニが死滅ダ",
+  "sat": 42.1,
+  "cheap": 55.0,
+  "cospa": 47.3,
+  "bayes": 4.19,
+  "rank": 82
+ },
+ {
+  "brand": "その他・ノーブランド",
+  "name": "除菌ロボット ROCKUBOT ロックボット ダニ対策 ウイルス除菌 紫外線除菌 出産祝い 新築祝い 還暦祝い 父の日ギ",
+  "minPrice": 25300,
+  "review": 3.5,
+  "reviewCount": 6,
+  "affiliate": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/egl-okinawa_rockubot0002",
+  "url": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html",
+  "offers": [
+   {
+    "mall": "yahoo",
+    "price": 25300,
+    "url": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/egl-okinawa/rockubot0002.html"
+   }
+  ],
+  "key": "その他・ノーブランド|除菌ロボットROCK",
+  "sat": 42.0,
+  "cheap": 55.0,
+  "cospa": 47.2,
+  "bayes": 4.19,
+  "rank": 83
+ },
+ {
+  "brand": "その他・ノーブランド",
+  "name": "拭き掃除 ロボット掃除機 お掃除ロボット 全自動掃除機 乾拭き 超静音 薄型 ペット＜安心の国内メーカー＞＜DOMO＞＜",
+  "minPrice": 3980,
+  "review": 3.89,
+  "reviewCount": 65,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/success-asia/cabinet/whitelogo/dm0002.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "offers": [
+   {
+    "mall": "rakuten",
+    "price": 3980,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   },
+   {
+    "mall": "yahoo",
+    "price": 3980,
+    "url": "https://store.shopping.yahoo.co.jp/domo-elektro/dm0002.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/domo-elektro/dm0002.html"
+   }
+  ],
+  "key": "その他・ノーブランド|拭き掃除ロボット掃除",
+  "sat": 26.8,
+  "cheap": 74.6,
+  "cospa": 45.9,
+  "bayes": 4.06,
   "rank": 84
  },
  {
@@ -2321,41 +2327,11 @@
    }
   ],
   "key": "その他・ノーブランド|RB05",
-  "sat": 52.3,
-  "cheap": 37.0,
-  "cospa": 46.2,
-  "bayes": 4.3,
+  "sat": 51.2,
+  "cheap": 37.1,
+  "cospa": 45.6,
+  "bayes": 4.28,
   "rank": 85
- },
- {
-  "brand": "その他・ノーブランド",
-  "name": "拭き掃除 ロボット掃除機 お掃除ロボット 全自動掃除機 乾拭き 超静音 薄型 ペット＜安心の国内メーカー＞＜DOMO＞＜",
-  "minPrice": 3980,
-  "review": 3.89,
-  "reviewCount": 65,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/success-asia/cabinet/whitelogo/dm0002.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "offers": [
-   {
-    "mall": "rakuten",
-    "price": 3980,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00sucqn.tiw956d6.g00sucqn.tiw96853/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsuccess-asia%2Fdm0002%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsuccess-asia%2Fi%2F10000003%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   },
-   {
-    "mall": "yahoo",
-    "price": 3980,
-    "url": "https://store.shopping.yahoo.co.jp/domo-elektro/dm0002.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/domo-elektro/dm0002.html"
-   }
-  ],
-  "key": "その他・ノーブランド|拭き掃除ロボット掃除",
-  "sat": 26.2,
-  "cheap": 74.4,
-  "cospa": 45.5,
-  "bayes": 4.07,
-  "rank": 86
  },
  {
   "brand": "SwitchBot",
@@ -2381,11 +2357,11 @@
    }
   ],
   "key": "SwitchBot|S20",
-  "sat": 41.7,
-  "cheap": 46.9,
-  "cospa": 43.8,
-  "bayes": 4.2,
-  "rank": 87
+  "sat": 41.9,
+  "cheap": 47.0,
+  "cospa": 44.0,
+  "bayes": 4.19,
+  "rank": 86
  },
  {
   "brand": "その他・ノーブランド",
@@ -2411,11 +2387,11 @@
    }
   ],
   "key": "その他・ノーブランド|WR010",
-  "sat": 31.1,
-  "cheap": 58.8,
-  "cospa": 42.2,
-  "bayes": 4.11,
-  "rank": 88
+  "sat": 31.8,
+  "cheap": 58.9,
+  "cospa": 42.6,
+  "bayes": 4.1,
+  "rank": 87
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -2441,41 +2417,35 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|T80S",
-  "sat": 42.9,
-  "cheap": 36.9,
-  "cospa": 40.5,
-  "bayes": 4.21,
-  "rank": 89
+  "sat": 42.1,
+  "cheap": 37.0,
+  "cospa": 40.1,
+  "bayes": 4.19,
+  "rank": 88
  },
  {
-  "brand": "その他・ノーブランド",
-  "name": "ロボット掃除機 水拭き 薄型 4in1 両用 噴霧 加湿 除菌 拭き掃除 乾湿 マッピング機能 強力吸引 掃除機 自動ゴ",
-  "minPrice": 7480,
-  "review": 2.0,
-  "reviewCount": 7,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/zohar/cabinet/compass1780393402.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "Ecovacs（DEEBOT）",
+  "name": "ロボット掃除機 お掃除ロボ エコバックス 水拭き カメラ内蔵 見守りカメラ モップ自動洗浄 掃除機 強力吸引 お掃除ロボ",
+  "minPrice": 45800,
+  "review": 4.06,
+  "reviewCount": 139,
+  "affiliate": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html",
+  "image": "https://item-shopping.c.yimg.jp/i/g/insdenki-y_516304",
+  "url": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html",
   "offers": [
    {
-    "mall": "rakuten",
-    "price": 7480,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
-   },
-   {
     "mall": "yahoo",
-    "price": 8980,
-    "url": "https://store.shopping.yahoo.co.jp/hurry-up/hu-01103.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/hurry-up/hu-01103.html"
+    "price": 45800,
+    "url": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html"
    }
   ],
-  "key": "その他・ノーブランド|IN1",
-  "sat": 20.5,
-  "cheap": 67.8,
-  "cospa": 39.4,
-  "bayes": 4.02,
-  "rank": 90
+  "key": "Ecovacs（DEEBOT）|DEX86",
+  "sat": 33.4,
+  "cheap": 48.8,
+  "cospa": 39.6,
+  "bayes": 4.12,
+  "rank": 89
  },
  {
   "brand": "Roborock",
@@ -2501,35 +2471,41 @@
    }
   ],
   "key": "Roborock|QRRC52",
-  "sat": 36.7,
-  "cheap": 43.2,
+  "sat": 36.6,
+  "cheap": 43.3,
   "cospa": 39.3,
-  "bayes": 4.16,
-  "rank": 91
+  "bayes": 4.15,
+  "rank": 90
  },
  {
-  "brand": "Ecovacs（DEEBOT）",
-  "name": "ロボット掃除機 お掃除ロボ エコバックス 水拭き カメラ内蔵 見守りカメラ モップ自動洗浄 掃除機 強力吸引 お掃除ロボ",
-  "minPrice": 45800,
-  "review": 4.06,
-  "reviewCount": 139,
-  "affiliate": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html",
-  "image": "https://item-shopping.c.yimg.jp/i/g/insdenki-y_516304",
-  "url": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html",
+  "brand": "その他・ノーブランド",
+  "name": "ロボット掃除機 水拭き 薄型 4in1 両用 噴霧 加湿 除菌 拭き掃除 乾湿 マッピング機能 強力吸引 掃除機 自動ゴ",
+  "minPrice": 7480,
+  "review": 2.0,
+  "reviewCount": 7,
+  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/zohar/cabinet/compass1780393402.jpg?_ex=128x128",
+  "url": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
   "offers": [
    {
+    "mall": "rakuten",
+    "price": 7480,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00twten.tiw95405.g00twten.tiw96c00/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsouplesse%2Fsouplesse-01056%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fsouplesse%2Fi%2F10001044%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+   },
+   {
     "mall": "yahoo",
-    "price": 45800,
-    "url": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/insdenki-y/516304.html"
+    "price": 8980,
+    "url": "https://store.shopping.yahoo.co.jp/hurry-up/hu-01103.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/hurry-up/hu-01103.html"
    }
   ],
-  "key": "Ecovacs（DEEBOT）|DEX86",
-  "sat": 32.5,
-  "cheap": 48.6,
-  "cospa": 39.0,
-  "bayes": 4.12,
-  "rank": 92
+  "key": "その他・ノーブランド|IN1",
+  "sat": 19.9,
+  "cheap": 67.9,
+  "cospa": 39.1,
+  "bayes": 4.0,
+  "rank": 91
  },
  {
   "brand": "Ecovacs（DEEBOT）",
@@ -2555,41 +2531,41 @@
    }
   ],
   "key": "Ecovacs（DEEBOT）|T20",
-  "sat": 39.0,
-  "cheap": 38.5,
-  "cospa": 38.8,
-  "bayes": 4.18,
-  "rank": 93
+  "sat": 38.0,
+  "cheap": 38.6,
+  "cospa": 38.3,
+  "bayes": 4.16,
+  "rank": 92
  },
  {
-  "brand": "その他・ノーブランド",
-  "name": "SWITCHBOT ロボット掃除機K11+ White W3003101",
-  "minPrice": 54364,
-  "review": 3.0,
-  "reviewCount": 9,
-  "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00t3jpn.tiw95bb7.g00t3jpn.tiw969e2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F1386019013%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyamada-denki%2Fi%2F10661637%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/yamada-denki/cabinet/a07000459/1386019013.jpg?_ex=128x128",
-  "url": "https://hb.afl.rakuten.co.jp/hgc/g00t3jpn.tiw95bb7.g00t3jpn.tiw969e2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F1386019013%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyamada-denki%2Fi%2F10661637%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+  "brand": "Narwal",
+  "name": "(長期無料保証)Narwal（ナーワル） Narwal Freo Pro ロボット掃除機 YJCC023 ホワイト",
+  "minPrice": 69436,
+  "review": 1.2,
+  "reviewCount": 5,
+  "affiliate": "https://store.shopping.yahoo.co.jp/ecj/21564934.html",
+  "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/ksdenki/cabinet/images/24_5/4595555880024_5.jpg?_ex=128x128",
+  "url": "https://store.shopping.yahoo.co.jp/ecj/21564934.html",
   "offers": [
    {
-    "mall": "rakuten",
-    "price": 54364,
-    "url": "https://hb.afl.rakuten.co.jp/hgc/g00t3jpn.tiw95bb7.g00t3jpn.tiw969e2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F1386019013%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyamada-denki%2Fi%2F10661637%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
-    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00t3jpn.tiw95bb7.g00t3jpn.tiw969e2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F1386019013%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fyamada-denki%2Fi%2F10661637%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
+    "mall": "yahoo",
+    "price": 69436,
+    "url": "https://store.shopping.yahoo.co.jp/ecj/21564934.html",
+    "affiliate": "https://store.shopping.yahoo.co.jp/ecj/21564934.html"
    },
    {
-    "mall": "yahoo",
-    "price": 58080,
-    "url": "https://store.shopping.yahoo.co.jp/yamada-denki/1386019013.html",
-    "affiliate": "https://store.shopping.yahoo.co.jp/yamada-denki/1386019013.html"
+    "mall": "rakuten",
+    "price": 98660,
+    "url": "https://hb.afl.rakuten.co.jp/hgc/g00r7ldn.tiw95ff6.g00r7ldn.tiw96022/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbiccamera%2F4595555880024%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fbiccamera%2Fi%2F15090181%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306",
+    "affiliate": "https://hb.afl.rakuten.co.jp/hgc/g00r7ldn.tiw95ff6.g00r7ldn.tiw96022/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbiccamera%2F4595555880024%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fbiccamera%2Fi%2F15090181%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306"
    }
   ],
-  "key": "その他・ノーブランド|K11+",
-  "sat": 30.1,
-  "cheap": 46.8,
-  "cospa": 36.8,
-  "bayes": 4.1,
-  "rank": 94
+  "key": "Narwal|YJCC023",
+  "sat": 19.9,
+  "cheap": 44.4,
+  "cospa": 29.7,
+  "bayes": 4.0,
+  "rank": 93
  },
  {
   "brand": "Roborock",
@@ -2615,11 +2591,11 @@
    }
   ],
   "key": "Roborock|SAROS10",
-  "sat": 16.7,
-  "cheap": 39.9,
-  "cospa": 26.0,
-  "bayes": 3.99,
-  "rank": 95
+  "sat": 16.8,
+  "cheap": 40.0,
+  "cospa": 26.1,
+  "bayes": 3.97,
+  "rank": 94
  },
  {
   "brand": "Narwal",
@@ -2645,11 +2621,11 @@
    }
   ],
   "key": "Narwal|YJCC017",
-  "sat": 8.0,
-  "cheap": 38.0,
-  "cospa": 20.0,
-  "bayes": 3.91,
-  "rank": 96
+  "sat": 7.6,
+  "cheap": 38.1,
+  "cospa": 19.8,
+  "bayes": 3.89,
+  "rank": 95
  },
  {
   "brand": "その他・ノーブランド",
@@ -2676,9 +2652,9 @@
   ],
   "key": "その他・ノーブランド|RC200DZSP",
   "sat": 0.0,
-  "cheap": 42.2,
+  "cheap": 42.3,
   "cospa": 16.9,
-  "bayes": 3.84,
-  "rank": 97
+  "bayes": 3.82,
+  "rank": 96
  }
 ]

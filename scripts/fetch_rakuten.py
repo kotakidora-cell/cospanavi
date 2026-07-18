@@ -48,11 +48,12 @@ def fetch(keyword, pages=15, sort="-reviewCount", genreId=None):
     return items
 
 if __name__ == "__main__":
-    # 使い方: python fetch_rakuten.py <slug> <genreId> [pages]
+    # 使い方: python fetch_rakuten.py <slug> [pages]  （genreIdはcategories.pyから取得）
+    from categories import CATEGORIES
     slug = sys.argv[1] if len(sys.argv) > 1 else "robot-cleaner"
-    genreId = int(sys.argv[2]) if len(sys.argv) > 2 else 562638   # ロボット掃除機
-    pages = int(sys.argv[3]) if len(sys.argv) > 3 else 20
-    print(f"取得: genreId={genreId} pages={pages}")
+    genreId = CATEGORIES[slug]["rakuten_genre"]
+    pages = int(sys.argv[2]) if len(sys.argv) > 2 else 20
+    print(f"取得(楽天): {slug} genreId={genreId} pages={pages}")
     items = fetch(None, pages=pages, genreId=genreId)
     json.dump(items, open(os.path.join(DATA, slug + "_raw.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"保存: {slug}_raw.json  {len(items)}件")
