@@ -37,13 +37,15 @@ def stars(v):
     return "★" * full + ("½" if half else "") + "☆" * (5 - full - half)
 
 def nav(base=""):
-    catlinks = "".join(f'<a href="{base}{c["file"]}">{c["label"]}</a>' for c in CATS)
+    # 上部ナビはシンプルに（カテゴリはハブのカードとフッターから辿れる）
     return (f'<header class="nav"><a class="brand" href="{base}index.html">コスパ<b>ナビ</b></a>'
-            f'<nav><a href="{base}index.html">ホーム</a>{catlinks}'
+            f'<nav><a href="{base}index.html">ホーム</a>'
             f'<a href="{base}about.html">コスパ値とは</a><a href="{base}privacy.html">プライバシー</a></nav></header>')
 
 def foot(base=""):
-    return (f'<footer class="foot"><p>価格・レビューは楽天市場の情報（{UPDATED}時点）。実際の価格は各ショップでご確認ください。</p>'
+    catlinks = "".join(f'<a href="{base}{c["file"]}">{c["label"]}</a>' for c in CATS)
+    return (f'<footer class="foot"><nav class="fcats">{catlinks}</nav>'
+            f'<p>価格・レビューは楽天市場・Yahoo!ショッピングの情報（{UPDATED}時点）。実際の価格は各ショップでご確認ください。</p>'
             f'<p class="muted">当サイトはアフィリエイト広告を利用しています。'
             f'<a href="{base}privacy.html">プライバシーポリシー</a></p></footer>')
 
@@ -369,6 +371,7 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .faq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .faq h3{margin:.1em 0 .3em;font-size:.95rem}.faq p{margin:0;font-size:.9rem;color:var(--sub)}
 .src{margin-top:14px}.foot{max-width:1000px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line)}
+.fcats{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px}.fcats a{color:var(--sub);text-decoration:none;font-size:.85rem}.fcats a:hover{color:var(--accent)}
 @media(max-width:520px){.cards{grid-template-columns:1fr}}
 """
 

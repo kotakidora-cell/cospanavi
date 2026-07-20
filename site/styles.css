@@ -58,4 +58,5 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .faq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .faq h3{margin:.1em 0 .3em;font-size:.95rem}.faq p{margin:0;font-size:.9rem;color:var(--sub)}
 .src{margin-top:14px}.foot{max-width:1000px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line)}
+.fcats{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px}.fcats a{color:var(--sub);text-decoration:none;font-size:.85rem}.fcats a:hover{color:var(--accent)}
 @media(max-width:520px){.cards{grid-template-columns:1fr}}
