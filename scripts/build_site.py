@@ -1,13 +1,13 @@
 # robot-cleaner.json 等から静的サイト生成（ハブ＋カテゴリランキング＋商品ページ）。
 # 目玉: クライアント側で「満足度⇄価格の重み」を動かすとコスパ値が即再計算されるツール。
-import json, os, sys, html as H, hashlib
+import json, os, sys, html as H, hashlib, datetime
 
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 SITE = os.path.join(BASE, "site")
 PDIR = os.path.join(SITE, "product"); os.makedirs(PDIR, exist_ok=True)
-UPDATED = "2026-07-18"
+UPDATED = datetime.date.today().isoformat()  # ビルド日を自動反映（毎日の更新で日付が進む）
 SITE_NAME = "コスパナビ"
 SITE_URL = "https://cospa-navi.com"
 # AdSense（rankingsjpと同一アカウント pub-8706760047070867。審査用に全ページ<head>へ設置）
@@ -20,6 +20,7 @@ SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 
 # --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
 from categories import CATEGORIES
+from guides import GUIDES
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner"]
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
@@ -72,6 +73,21 @@ def load(slug):
         m["id"] = pid(m)
     return d
 
+# 選び方ガイド＋FAQ（ランキング下部の独自コンテンツ）。(HTML, FAQPage構造化データ) を返す
+def render_guide(slug, label):
+    g = GUIDES.get(slug)
+    if not g:
+        return "", None
+    pts = "".join(f'<div class="gpt"><h3>{H.escape(t)}</h3><p>{H.escape(d)}</p></div>' for t, d in g["points"])
+    faqs = "".join(f'<div class="faq"><h3>Q. {H.escape(q)}</h3><p>A. {H.escape(a)}</p></div>' for q, a in g["faq"])
+    html = (f'<section class="guide"><h2>{H.escape(label)}の選び方</h2>'
+            f'<div class="gpts">{pts}</div>'
+            f'<h2>よくある質問</h2><div class="faqs">{faqs}</div></section>')
+    ld = {"@context": "https://schema.org", "@type": "FAQPage",
+          "mainEntity": [{"@type": "Question", "name": q,
+                          "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in g["faq"]]}
+    return html, ld
+
 # ================= カテゴリランキングページ（ツール付き） =================
 def build_category(cfg):
     data = load(cfg["slug"])
@@ -82,6 +98,7 @@ def build_category(cfg):
             for m in data]
     DATA_JSON = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
+    GUIDE_HTML, faq_ld = render_guide(cfg["slug"], cfg["label"])
     body = f"""
 <nav class="crumb"><a href="index.html">コスパナビ</a> › {cfg['label']}</nav>
 <h1>{cfg['label']} コスパランキング<span class="yr">2026</span></h1>
@@ -105,6 +122,8 @@ def build_category(cfg):
 <p class="cnt"><b id="cnt"></b></p>
 <div id="list" class="cards"></div>
 <p class="note">※コスパ値＝満足度（レビュー評価をレビュー数で信頼補正）×安さ の独自指標（0〜100）。<a href="about.html">算出方法</a></p>
+{AD}
+{GUIDE_HTML}
 <script id="data" type="application/json">{DATA_JSON}</script>
 <script>{TOOL_JS}</script>
 """
@@ -113,7 +132,10 @@ def build_category(cfg):
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"],
                                "url": f"{SITE_URL}/product/{m['id']}.html", "name": m["name"]} for m in data[:20]]}
-    head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+    ld_list = [ld]
+    if faq_ld:
+        ld_list.append(faq_ld)
+    head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld_list)
     open(os.path.join(SITE, cfg["file"]), "w", encoding="utf-8").write(shell(title, desc, body, head=head, path=cfg["file"]))
     return data
 
@@ -339,6 +361,13 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .prank{color:var(--accent);font-weight:700}.pstars{color:#f5a623}.pprice{font-size:1.6rem;font-weight:800;margin:.2em 0}.pprice .muted{font-size:.8rem;font-weight:400}
 .kv{width:100%;margin:.4em 0}.kv td{border-bottom:1px solid var(--line);padding:8px}.kv td:first-child{color:var(--sub);width:42%}
 .rel{display:flex;flex-wrap:wrap;gap:8px}.rel a{font-size:.85rem;border:1px solid var(--line);border-radius:8px;padding:5px 10px;text-decoration:none}
+.guide{margin:28px 0 8px}.guide h2{margin-top:1.4em}
+.gpts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:10px 0}
+.gpt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.gpt h3{margin:.1em 0 .3em;font-size:.98rem;color:var(--accent)}.gpt p{margin:0;font-size:.9rem}
+.faqs{display:grid;gap:10px;margin:10px 0}
+.faq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.faq h3{margin:.1em 0 .3em;font-size:.95rem}.faq p{margin:0;font-size:.9rem;color:var(--sub)}
 .src{margin-top:14px}.foot{max-width:1000px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line)}
 @media(max-width:520px){.cards{grid-template-columns:1fr}}
 """
