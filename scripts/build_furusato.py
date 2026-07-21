@@ -40,7 +40,9 @@ def shell(title, desc, body, path, head=""):
             f'<title>{H.escape(title)}</title><meta name="description" content="{H.escape(desc)}">'
             f'{VERIFY}{canon}<link rel="stylesheet" href="styles.css">{ADSENSE}{head}'
             '<style>.fk{font-weight:800;color:var(--accent)}.metar{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem;color:var(--sub);margin:2px 0}'
-            '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}</style>'
+            '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
+            '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
+            '.sguide{margin:20px 0}.sguide h2{margin-top:1.3em}</style>'
             f'</head><body>{nav()}<main>{body}</main>{foot()}</body></html>')
 
 TOOL_JS = r"""
@@ -87,6 +89,7 @@ def build_cat(cfg):
 <nav class="crumb"><a href="index.html">コスパナビ</a> › <a href="furusato.html">ふるさと納税</a> › {cfg['label']}</nav>
 <h1>ふるさと納税 {cfg['label']} コスパランキング<span class="yr">2026</span></h1>
 <p class="lead">楽天ふるさと納税の{cfg['label']}を、<b>寄付額あたりの内容量（{cfg['unit_label']}）</b>とレビュー満足度から独自コスパ値でランキング。<b>{len(data)}件</b>を比較。定期便も総量に換算しています。<b>スライダーで「満足度／お得さ」を調整</b>できます。</p>
+<div class="scallout">💡 掲載は楽天ふるさと納税の寄付額ですが、<b>寄付額は自治体が決めるため他サイトでも同額</b>です。どのサイトで申し込むのが良いかは <a href="furusato-sites.html">ふるさと納税サイトの選び方（2025年ポイント廃止後）→</a></div>
 {AD}
 <div class="tool">
   <div class="ctl"><label>重視ポイント</label>
@@ -115,6 +118,54 @@ def build_cat(cfg):
     open(os.path.join(SITE, cfg["file"]), "w", encoding="utf-8").write(shell(title, desc, body, cfg["file"], head))
     return len(data)
 
+SITES = [
+    ("楽天ふるさと納税", "楽天市場と同じ操作感で使える最大級のサイト。返礼品数が多く、楽天カード・楽天ペイ決済に対応。普段から楽天を使う人はカード決済のポイントを貯めやすい。当サイトのランキングも楽天のデータを利用。"),
+    ("さとふる", "返礼品の掲載数が最大級で、初心者にも分かりやすいUI。発送が早い返礼品が多く、PayPay・クレジットカード決済に対応。「とにかく選択肢を広く見たい」人に。"),
+    ("ふるさとチョイス", "掲載自治体数No.1クラスで、地方の穴場返礼品まで最も網羅的。Amazon Pay・各種決済に対応。「他に無い返礼品を探したい」網羅性重視の人向け。"),
+    ("ふるなび", "家電・電化製品の返礼品に強く、初心者向けの見やすさが特徴。独自の「ふるなびコイン」やキャンペーンあり。家電狙いの人に。"),
+    ("au PAY ふるさと納税", "au・Pontaユーザーと相性が良く、Pontaポイントでの決済も可能。auの経済圏を使っている人向け。"),
+]
+
+def build_guide():
+    site_cards = "".join(f'<div class="gpt"><h3>{H.escape(n)}</h3><p>{H.escape(d)}</p></div>' for n, d in SITES)
+    faqs = [
+        ("結局どのサイトが一番お得ですか？", "2025年10月以降はどのサイトも寄付額・返礼品は同じで、サイト独自のポイント付与も無くなりました。そのため「普段使っているクレジットカード・決済のポイントが貯まるサイト」を選ぶのが実質的に一番お得です。あとは品揃えと使いやすさで選びましょう。"),
+        ("寄付額はサイトによって違いますか？", "違いません。ふるさと納税の寄付額は各自治体が定めているため、同じ返礼品ならどのサイトでも寄付額は同額です。だからサイトごとの「最安値比較」は存在しません。"),
+        ("ポイントはもう一切もらえないのですか？", "ポータルサイトが独自に付与するポイントは2025年10月から廃止されました。ただし、寄付の支払いに使うクレジットカードや各種Pay決済でカード会社・決済事業者が付与するポイントは、これまで通り受け取れます。"),
+        ("控除の上限額はどう決まりますか？", "年収・家族構成・他の控除によって決まります。上限を超えた寄付は自己負担になるため、各サイトの控除額シミュレーターで事前に目安を確認しましょう。"),
+    ]
+    faq_html = "".join(f'<div class="faq"><h3>Q. {H.escape(q)}</h3><p>A. {H.escape(a)}</p></div>' for q, a in faqs)
+    faq_ld = {"@context": "https://schema.org", "@type": "FAQPage",
+              "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
+    body = f"""
+<nav class="crumb"><a href="index.html">コスパナビ</a> › <a href="furusato.html">ふるさと納税</a> › サイトの選び方</nav>
+<h1>ふるさと納税サイトの選び方<span class="yr">2026</span>｜ポイント廃止後の比較</h1>
+<p class="lead">「どのふるさと納税サイトで寄付するのが得？」——2025年10月の制度変更で答えが変わりました。<b>ポイント付与が廃止された今の正しい選び方</b>を、主要サイトの比較とあわせて解説します。</p>
+{AD}
+<div class="sguide">
+<h2>【重要】2025年10月からポイント付与は廃止されました</h2>
+<p>2025年10月1日の総務省ルール改正により、<b>楽天・さとふる・ふるなび・ふるさとチョイス・au PAY など全てのポータルサイトで、サイト独自のポイント付与が禁止</b>されました。つまり「還元率が高いサイトを選ぶ」という選び方は<b>もうできません</b>。同じ返礼品なら寄付額もポイントも各サイト横並びです。</p>
+<h2>では今、どうやってお得にする？</h2>
+<p>ポイント付与の禁止は「ポータルサイトが配るポイント」の話です。<b>寄付の支払いに使うクレジットカードや◯◯Pay決済で、カード会社・決済事業者側が付与するポイントは従来どおり受け取れます</b>。そのため今は「どのサイトか」よりも<b>「どの決済手段（カード）で払うか」</b>のほうが実質的なお得さに直結します。<br>※各社の付与ルールやキャンペーンは変わりやすいので、寄付前に必ず最新の条件をご確認ください。</p>
+<h2>主要ふるさと納税サイト比較</h2>
+<div class="gpts">{site_cards}</div>
+<h2>ポイント廃止後の「サイトの選び方」4つの基準</h2>
+<div class="gpts">
+<div class="gpt"><h3>① 普段使う決済・経済圏</h3><p>楽天カードなら楽天、au/Pontaならau PAY など、自分が普段ポイントを貯めている決済が使えるサイトを選ぶと、カード側ポイントで実質お得になります。</p></div>
+<div class="gpt"><h3>② 返礼品の品揃え</h3><p>欲しい返礼品があるかが最優先。掲載数が多いさとふる、掲載自治体が最も広いふるさとチョイスなどは選択肢が豊富です。</p></div>
+<div class="gpt"><h3>③ 使いやすさ・発送の早さ</h3><p>初めてなら操作の分かりやすいサイトを。年末の駆け込みでは発送が早い返礼品が多いサイトが安心です。</p></div>
+<div class="gpt"><h3>④ 控除シミュレーターの有無</h3><p>上限額を超えると自己負担になります。各サイトのシミュレーターで、年収・家族構成に応じた目安額を先に確認しましょう。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">{faq_html}</div>
+<p class="note">本ページは制度の一般的な解説です。控除・ポイント・キャンペーンの最新条件は各サイト・自治体の公式情報をご確認ください。当サイトのランキングは<a href="furusato.html">ふるさと納税コスパ分析</a>から。</p>
+</div>
+"""
+    title = "ふるさと納税サイトの選び方2026｜ポイント廃止後の比較とお得な方法"
+    desc = "2025年10月のポイント付与廃止後、ふるさと納税サイトはどう選ぶ？楽天・さとふる・ふるさとチョイス・ふるなび等を比較し、今もお得にする方法（決済ポイント）を解説。"
+    head = f'<script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>'
+    open(os.path.join(SITE, "furusato-sites.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato-sites.html", head))
+
 def build_hub(counts):
     cards = ""
     for c in CATS:
@@ -124,6 +175,7 @@ def build_hub(counts):
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
+<div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">牛肉・豚肉</span><span class="soon">海鮮</span><span class="soon">果物</span><span class="soon">ビール</span><span class="soon">トイレットペーパー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
@@ -140,7 +192,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}/{path}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -152,6 +204,7 @@ if __name__ == "__main__":
     counts = {}
     for c in CATS:
         counts[c["slug"]] = build_cat(c)
+    build_guide()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + {len(CATS)}カテゴリ  {counts}")
