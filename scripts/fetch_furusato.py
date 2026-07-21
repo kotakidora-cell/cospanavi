@@ -16,10 +16,8 @@ DATA = os.path.join(BASE, "data")
 URL = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601"
 HDR = {"Referer": REFERER, "Origin": REFERER.rstrip("/")}
 
-# カテゴリ別の検索キーワード（楽天ふるさと納税を絞る）
-FURUSATO = {
-    "rice": {"keyword": "ふるさと納税 米", "label": "米"},
-}
+# カテゴリ設定は furusato_cats.py に集約
+from furusato_cats import FCATS as FURUSATO
 
 def fetch(keyword, pages=30):
     items = []

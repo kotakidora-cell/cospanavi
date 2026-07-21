@@ -1,6 +1,7 @@
 # ふるさと納税コスパ分析ページを生成。ランディング(furusato.html)＋カテゴリ(furusato-<slug>.html)。
 # 通常商品とロジックが違う(寄付額あたりの内容量=お得さ)ため専用ビルダー。styles.cssは共用。
 import json, os, sys, html as H, datetime
+from furusato_cats import FCATS
 
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,11 +13,12 @@ ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/ad
 VERIFY = '<meta name="google-site-verification" content="9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc">'
 AD = '<div class="ad">広告スペース（Google AdSense）</div>'
 
-CATS = [
-    {"slug": "rice", "file": "furusato-rice.html", "label": "米", "unit_label": "円/kg", "amount_label": "総重量",
-     "amount_key": "kg", "amount_suffix": "kg",
-     "desc": "楽天ふるさと納税の米を、寄付額あたりの内容量（円/kg）とレビュー満足度でコスパランキング。定期便もkg換算で比較。"},
-]
+ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "seafood": "🦐", "fruit": "🍇", "beer": "🍺", "toilet-paper": "🧻"}
+CAT_ORDER = ["rice", "beef", "pork", "seafood", "fruit", "beer", "toilet-paper"]
+CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
+         "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
+         "desc": f"楽天ふるさと納税の{FCATS[s]['label']}を、寄付額あたりの内容量（{FCATS[s]['unit_label']}）とレビュー満足度でコスパランキング。"}
+        for s in CAT_ORDER]
 
 def nav():
     return ('<header class="nav"><a class="brand" href="index.html">コスパ<b>ナビ</b></a>'
@@ -65,10 +67,10 @@ function render(){
  list.innerHTML='';
  a.slice(0,60).forEach((x,i)=>{const c=document.createElement('div');c.className='card';
   c.innerHTML='<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>'+
-   '<div class="cbody"><div class="ctop"><span class="crank">#'+(i+1)+'</span><span class="badge">'+x.unit.toLocaleString()+'円/kg</span></div>'+
+   '<div class="cbody"><div class="ctop"><span class="crank">#'+(i+1)+'</span><span class="badge">'+x.unit.toLocaleString()+UL+'</span></div>'+
    '<a class="cname" href="'+x.aff+'" target="_blank" rel="nofollow sponsored noopener">'+x.name+'</a>'+
    '<div class="cstars">'+stars(x.review)+' <span class="muted">'+x.review.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>'+
-   '<div class="metar"><span>寄付 <b>'+yen(x.price)+'</b></span><span>総量 <b>'+x.kg+'kg</b></span><span>単価 <b class="fk">'+x.unit.toLocaleString()+'円/kg</b></span></div>'+
+   '<div class="metar"><span>寄付 <b>'+yen(x.price)+'</b></span><span>総量 <b>'+x.amt+SF+'</b></span><span>単価 <b class="fk">'+x.unit.toLocaleString()+UL+'</b></span></div>'+
    '<div class="ccospa">コスパ <b>'+x.cospa.toFixed(0)+'</b><span class="bar"><i style="width:'+Math.max(3,x.cospa)+'%"></i></span></div>'+
    '<a class="buy" href="'+x.aff+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a></div>';
   list.appendChild(c);});
@@ -81,7 +83,7 @@ render();
 
 def build_cat(cfg):
     data = json.load(open(os.path.join(DATA, f"furusato-{cfg['slug']}.json"), encoding="utf-8"))
-    slim = [{"id": m["id"], "name": m["name"], "price": m["price"], "kg": m["kg"], "unit": m["unit"],
+    slim = [{"id": m["id"], "name": m["name"], "price": m["price"], "amt": m["amt"], "unit": m["unit"],
              "review": m["review"], "rc": m["reviewCount"], "sat": m["sat"], "toku": m["toku"],
              "img": m["image"], "aff": m["affiliate"]} for m in data]
     maxp = ((max(m["price"] for m in data) + 999) // 1000) * 1000
@@ -108,6 +110,7 @@ def build_cat(cfg):
 <div id="list" class="cards"></div>
 <p class="note">※コスパ値＝満足度（レビューをレビュー数で信頼補正）×お得さ（{cfg['unit_label']}が安いほど高い）の独自指標。内容量は商品名から自動抽出のため、複数重量が選べる返礼品は掲載していません。<a href="furusato.html">ふるさと納税コスパとは</a></p>
 <script id="data" type="application/json">{json.dumps(slim, ensure_ascii=False, separators=(",", ":"))}</script>
+<script>const UL={json.dumps(cfg['unit_label'], ensure_ascii=False)},SF={json.dumps(cfg['suffix'], ensure_ascii=False)};</script>
 <script>{TOOL_JS}</script>
 """
     title = f"ふるさと納税 {cfg['label']}のコスパ最強ランキング2026｜{cfg['unit_label']}で比較"
@@ -169,7 +172,7 @@ def build_guide():
 def build_hub(counts):
     cards = ""
     for c in CATS:
-        cards += (f'<a class="hcard" href="{c["file"]}"><div class="hico">🍚</div>'
+        cards += (f'<a class="hcard" href="{c["file"]}"><div class="hico">{c["icon"]}</div>'
                   f'<div><h3>{c["label"]}<span class="n">{counts[c["slug"]]}件</span></h3><p>{c["desc"]}</p></div></a>')
     body = f"""
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
@@ -177,7 +180,7 @@ def build_hub(counts):
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
-<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">牛肉・豚肉</span><span class="soon">海鮮</span><span class="soon">果物</span><span class="soon">ビール</span><span class="soon">トイレットペーパー</span></div>
+<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">鶏肉</span><span class="soon">ハンバーグ</span><span class="soon">日用品（洗剤）</span><span class="soon">ティッシュ</span><span class="soon">飲料・水</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="about.html">コスパ値とは</a>。</p>
 """
