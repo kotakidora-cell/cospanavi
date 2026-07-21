@@ -22,11 +22,12 @@ SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 from categories import CATEGORIES
 from guides import GUIDES
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
-             "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle"]
+             "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
+             "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet"]
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
          "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
-COMING = ["冷蔵庫", "洗濯機", "炊飯器", "掃除機（紙パック）", "テレビ", "タブレット"]
+COMING = ["スマートウォッチ", "ゲーミングチェア", "コーヒーメーカー", "扇風機", "こたつ", "プリンター"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。

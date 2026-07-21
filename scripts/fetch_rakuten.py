@@ -51,9 +51,11 @@ if __name__ == "__main__":
     # 使い方: python fetch_rakuten.py <slug> [pages]  （genreIdはcategories.pyから取得）
     from categories import CATEGORIES
     slug = sys.argv[1] if len(sys.argv) > 1 else "robot-cleaner"
-    genreId = CATEGORIES[slug]["rakuten_genre"]
+    cfg = CATEGORIES[slug]
+    genreId = cfg["rakuten_genre"]
+    q = cfg.get("rakuten_query")  # ジャンルが他カテゴリと共通の時にキーワード併用で絞る(例:紙パック掃除機)
     pages = int(sys.argv[2]) if len(sys.argv) > 2 else 20
-    print(f"取得(楽天): {slug} genreId={genreId} pages={pages}")
-    items = fetch(None, pages=pages, genreId=genreId)
+    print(f"取得(楽天): {slug} genreId={genreId} query={q} pages={pages}")
+    items = fetch(q, pages=pages, genreId=genreId)
     json.dump(items, open(os.path.join(DATA, slug + "_raw.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"保存: {slug}_raw.json  {len(items)}件")
