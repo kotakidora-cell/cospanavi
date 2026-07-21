@@ -21,11 +21,12 @@ SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 # --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
 from categories import CATEGORIES
 from guides import GUIDES
-CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner"]
+CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
+             "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle"]
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
          "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
-COMING = ["電子レンジ", "ドライヤー", "モニター", "ワイヤレスイヤホン", "加湿器", "電気ケトル"]
+COMING = ["冷蔵庫", "洗濯機", "炊飯器", "掃除機（紙パック）", "テレビ", "タブレット"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
@@ -256,7 +257,7 @@ def build_hub(built):
     coming = "".join(f'<span class="soon">{c}</span>' for c in COMING)
     body = f"""
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
-<p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。</p></div>
+<p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
 {AD}
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
