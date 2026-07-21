@@ -11,4 +11,12 @@ for slug in CATEGORIES:
     subprocess.run([PY, "fetch_yahoo.py", slug], check=False)   # Yahoo失敗(APIキー未設定等)は楽天のみで継続
     subprocess.run([PY, "normalize_score.py", slug], check=True)
 subprocess.run([PY, "build_site.py"], check=True)
+
+# ふるさと納税(楽天のみ・別ロジック)
+from fetch_furusato import FURUSATO
+for slug in FURUSATO:
+    print(f"\n==== furusato-{slug} ====")
+    subprocess.run([PY, "fetch_furusato.py", slug], check=False)
+    subprocess.run([PY, "normalize_furusato.py", slug], check=False)
+subprocess.run([PY, "build_furusato.py"], check=False)   # build_site後に実行(sitemap追記のため)
 print("\n全カテゴリ更新完了")

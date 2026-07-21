@@ -41,7 +41,7 @@ def stars(v):
 def nav(base=""):
     # 上部ナビはシンプルに（カテゴリはハブのカードとフッターから辿れる）
     return (f'<header class="nav"><a class="brand" href="{base}index.html">コスパ<b>ナビ</b></a>'
-            f'<nav><a href="{base}index.html">ホーム</a>'
+            f'<nav><a href="{base}index.html">ホーム</a><a href="{base}furusato.html">ふるさと納税</a>'
             f'<a href="{base}about.html">コスパ値とは</a><a href="{base}privacy.html">プライバシー</a></nav></header>')
 
 def foot(base=""):
@@ -260,6 +260,7 @@ def build_hub(built):
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
 {AD}
+<a class="fbanner" href="furusato.html"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
 <h2>コスパナビとは</h2>
@@ -356,6 +357,10 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .buy{display:inline-block;margin-top:6px;background:var(--accent);color:#fff;text-decoration:none;padding:7px 14px;border-radius:8px;font-weight:700;font-size:.88rem;position:relative}
 .buy .pr{font-size:.6rem;opacity:.8;margin-left:6px;vertical-align:middle}
 .buy.big{display:block;text-align:center;padding:12px;font-size:1rem;margin-top:10px}
+.fbanner{display:flex;align-items:center;gap:14px;background:var(--chip);border:1px solid var(--accent);border-radius:14px;padding:14px 18px;margin:14px 0;text-decoration:none;color:var(--ink)}
+.fbanner:hover{box-shadow:0 2px 10px rgba(255,90,31,.15)}.fbanner .hico{font-size:2rem}.fbanner h3{margin:.1em 0;font-size:1.1rem}.fbanner .n{background:var(--accent);color:#fff;border-radius:6px;padding:1px 7px;font-size:.68rem;margin-left:8px;vertical-align:middle}
+.fbanner p{margin:.2em 0 0;color:var(--sub);font-size:.85rem}.fbanner .fgo{margin-left:auto;color:var(--accent);font-weight:700;white-space:nowrap}
+@media(max-width:520px){.fbanner .fgo{display:none}}
 .hero{margin:.4em 0 1em}.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:14px 0}
 .hcard{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-decoration:none;color:var(--ink)}
 .hcard:hover{border-color:var(--accent)}.hico{font-size:1.8rem}.hcard h3{margin:.1em 0;font-size:1.05rem}.hcard .n{color:var(--accent);font-size:.8rem;margin-left:8px}.hcard p{margin:.2em 0 0;color:var(--sub);font-size:.85rem}
