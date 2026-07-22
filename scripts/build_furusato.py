@@ -19,11 +19,10 @@ def _vc(pid, cls="adcard"):
             f'<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid={pid}" rel="nofollow">'
             f'<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid={pid}" border="0"></a></noscript></div>')
 
-# グリッド内(偶数行の中央)に差し込む小型バナー。カード枠にきれいに収まるサイズ(〜150px四方)のみ。
-# 小型バナーが増えたら足すと、2行目→4行目→6行目…の中央へ自動で入る。
+# グリッド内(偶数行の中央)を埋める小型バナー(〜150px四方)。今は食べログ120×120のみ→各偶数行中央に繰り返し配置。
+# 種類が増えたらリストに足すと順番に使われる(1種なら同じものを繰り返す)。
 IN_GRID_ADS = [_vc("892664019")]   # 食べログ 120×120 (承認済)
-# 300×250等の大型バナーはカード枠に収まらず余白が出るため、グリッド下に中央スタンドアロン配置。
-STANDALONE_AD = _vc("892664027", "adbanner")   # 300×250 (未承認。承認後に表示)
+# 大型300×250(pid892664027)はカード枠だと高さ不揃いで見た目が悪いため今は不使用。承認＆別レイアウトが決まったら再検討。
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "fruit": "🍇", "beer": "🍺", "drink": "🥤", "toilet-paper": "🧻", "tissue": "🤧", "detergent": "🧴"}
@@ -194,8 +193,8 @@ def build_hub(counts):
     parts = []
     ci = pos = adn = 0
     while ci < len(CATS):
-        if pos % 6 == 4 and adn < len(IN_GRID_ADS):   # 偶数行の中央に1枠ずつ(banner数まで)
-            parts.append(IN_GRID_ADS[adn]); adn += 1; pos += 1
+        if pos % 6 == 4 and IN_GRID_ADS:   # 偶数行(2,4,6…)の中央を広告で埋める(banner循環)
+            parts.append(IN_GRID_ADS[adn % len(IN_GRID_ADS)]); adn += 1; pos += 1
             continue
         c = CATS[ci]
         parts.append(f'<a class="hcard" href="{c["file"]}"><div class="hico">{c["icon"]}</div>'
@@ -208,7 +207,6 @@ def build_hub(counts):
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
-{STANDALONE_AD}
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">日用品（洗剤）</span><span class="soon">お菓子・スイーツ</span><span class="soon">卵</span><span class="soon">冷凍食品</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="about.html">コスパ値とは</a>。</p>
