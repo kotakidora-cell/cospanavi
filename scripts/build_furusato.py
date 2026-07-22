@@ -19,10 +19,12 @@ def _vc(pid, cls="adcard"):
             f'<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid={pid}" rel="nofollow">'
             f'<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid={pid}" border="0"></a></noscript></div>')
 
-# グリッド内(偶数行の中央)を埋める小型バナー(〜150px四方)。今は食べログ120×120のみ→各偶数行中央に繰り返し配置。
-# 種類が増えたらリストに足すと順番に使われる(1種なら同じものを繰り返す)。
-IN_GRID_ADS = []   # グリッド内広告は見た目が悪いため一旦なし(カテゴリカードのみのクリーンなグリッド)
-# 大型300×250(pid892664027)はカード枠だと高さ不揃いで見た目が悪いため今は不使用。承認＆別レイアウトが決まったら再検討。
+IN_GRID_ADS = []   # グリッド内広告は余白が出て見た目が悪いため無し(横長バナーはグリッド下の帯＋スマホはオーバーレイ)
+# PC用: 食べログ 468×60 横長バナー(グリッド下に中央の帯。スマホでは非表示=CSSで制御)
+VC_468_PC = _vc("892664051", "adbanner-pc")
+# スマホ用: 食べログ 320×50 オーバーレイ(VCがスマホ時のみ画面下部に固定表示。スクリプトを置くだけ)
+VC_320_OVERLAY = ('<script language="javascript" '
+                  'src="//ad.jp.ap.valuecommerce.com/servlet/smartphonebanner?sid=3775700&pid=892664050&position=overlay"></script>')
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "fruit": "🍇", "beer": "🍺", "drink": "🥤", "toilet-paper": "🧻", "tissue": "🤧", "detergent": "🧴"}
@@ -59,12 +61,12 @@ def shell(title, desc, body, path, head=""):
             '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
             '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
             '.sguide{margin:20px 0}.sguide h2{margin-top:1.3em}'
-            '.hgrid{align-items:start}'  # 背の高い広告(300×250)が隣のカードを引き伸ばさないよう上揃え
             '.adcard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-height:150px}'
             '.adcard img{max-width:100%;height:auto}'
-            '.adbanner{display:flex;flex-direction:column;align-items:center;gap:4px;margin:18px 0}.adbanner img{max-width:100%;height:auto}'
+            '.adbanner-pc{display:flex;flex-direction:column;align-items:center;gap:4px;margin:18px 0}.adbanner-pc img{max-width:100%;height:auto}'
+            '@media(max-width:640px){.adbanner-pc{display:none}}'  # 横長帯はPCのみ(スマホはオーバーレイ320×50が出る)
             '.adlabel{align-self:flex-start;color:var(--sub);font-size:.68rem;border:1px solid var(--line);border-radius:4px;padding:0 5px}</style>'
-            f'</head><body>{nav()}<main>{body}</main>{foot()}</body></html>')
+            f'</head><body>{nav()}<main>{body}</main>{foot()}{VC_320_OVERLAY}</body></html>')
 
 TOOL_JS = r"""
 const D=JSON.parse(document.getElementById('data').textContent);
@@ -207,6 +209,7 @@ def build_hub(counts):
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
+{VC_468_PC}
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">日用品（洗剤）</span><span class="soon">お菓子・スイーツ</span><span class="soon">卵</span><span class="soon">冷凍食品</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="about.html">コスパ値とは</a>。</p>
