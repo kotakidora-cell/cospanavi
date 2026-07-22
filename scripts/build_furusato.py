@@ -12,11 +12,12 @@ UPDATED = datetime.date.today().isoformat()
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
 VERIFY = '<meta name="google-site-verification" content="9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc">'
 AD = '<div class="ad">広告スペース（Google AdSense）</div>'
-# バリューコマース 食べログ バナー（ステマ規制対応で「広告」表記付き。document.writeのためインライン配置）
-VC_TABELOG = ('<div class="adfull"><span class="adlabel">広告</span>'
-              '<script language="javascript" src="//ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=3775700&pid=892664010"></script>'
-              '<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid=892664010" rel="nofollow">'
-              '<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid=892664010" border="0"></a></noscript></div>')
+# バリューコマース 食べログ バナー(120×120)。カテゴリカードの1枠のようにグリッド内へ配置。
+# ステマ規制対応で「広告」表記付き。document.writeのためインライン配置。
+VC_TABELOG = ('<div class="adcard"><span class="adlabel">広告</span>'
+              '<script language="javascript" src="//ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=3775700&pid=892664019"></script>'
+              '<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid=892664019" rel="nofollow">'
+              '<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid=892664019" border="0"></a></noscript></div>')
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "seafood": "🦐", "fruit": "🍇", "beer": "🍺", "toilet-paper": "🧻"}
 CAT_ORDER = ["rice", "beef", "pork", "seafood", "fruit", "beer", "toilet-paper"]
@@ -50,7 +51,8 @@ def shell(title, desc, body, path, head=""):
             '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
             '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
             '.sguide{margin:20px 0}.sguide h2{margin-top:1.3em}'
-            '.adfull{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:4px;margin:6px 0;min-height:60px}'
+            '.adcard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-height:150px}'
+            '.adcard img{max-width:100%}'
             '.adlabel{align-self:flex-start;color:var(--sub);font-size:.68rem;border:1px solid var(--line);border-radius:4px;padding:0 5px}</style>'
             f'</head><body>{nav()}<main>{body}</main>{foot()}</body></html>')
 
@@ -181,7 +183,7 @@ def build_hub(counts):
     for i, c in enumerate(CATS):
         cards += (f'<a class="hcard" href="{c["file"]}"><div class="hico">{c["icon"]}</div>'
                   f'<div><h3>{c["label"]}<span class="n">{counts[c["slug"]]}件</span></h3><p>{c["desc"]}</p></div></a>')
-        if i == 2:   # 米・牛肉・豚肉(1行目)の直後に広告バナー
+        if i == 3:   # 米・牛肉・豚肉・海鮮 の次(5番目のマス)に広告カードを1枠差し込む
             cards += VC_TABELOG
     body = f"""
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
