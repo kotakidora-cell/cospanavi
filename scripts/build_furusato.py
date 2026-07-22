@@ -12,15 +12,24 @@ UPDATED = datetime.date.today().isoformat()
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
 VERIFY = '<meta name="google-site-verification" content="9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc">'
 AD = '<div class="ad">広告スペース（Google AdSense）</div>'
-# バリューコマース 食べログ バナー(120×120)。カテゴリカードの1枠のようにグリッド内へ配置。
-# ステマ規制対応で「広告」表記付き。document.writeのためインライン配置。
-VC_TABELOG = ('<div class="adcard"><span class="adlabel">広告</span>'
-              '<script language="javascript" src="//ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=3775700&pid=892664019"></script>'
-              '<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid=892664019" rel="nofollow">'
-              '<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid=892664019" border="0"></a></noscript></div>')
+# バリューコマース広告バナー(カテゴリカード風に1枠としてグリッド内へ)。ステマ規制対応で「広告」表記付き。
+def _vc(pid, cls="adcard"):
+    return (f'<div class="{cls}"><span class="adlabel">広告</span>'
+            f'<script language="javascript" src="//ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=3775700&pid={pid}"></script>'
+            f'<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid={pid}" rel="nofollow">'
+            f'<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid={pid}" border="0"></a></noscript></div>')
 
-ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "seafood": "🦐", "fruit": "🍇", "beer": "🍺", "toilet-paper": "🧻"}
-CAT_ORDER = ["rice", "beef", "pork", "seafood", "fruit", "beer", "toilet-paper"]
+# グリッド内(偶数行の中央)に差し込む小型バナー。カード枠にきれいに収まるサイズ(〜150px四方)のみ。
+# 小型バナーが増えたら足すと、2行目→4行目→6行目…の中央へ自動で入る。
+IN_GRID_ADS = [_vc("892664019")]   # 食べログ 120×120 (承認済)
+# 300×250等の大型バナーはカード枠に収まらず余白が出るため、グリッド下に中央スタンドアロン配置。
+STANDALONE_AD = _vc("892664027", "adbanner")   # 300×250 (未承認。承認後に表示)
+
+ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
+        "fruit": "🍇", "beer": "🍺", "drink": "🥤", "toilet-paper": "🧻", "tissue": "🤧", "detergent": "🧴"}
+# ジャンル順(米→肉→魚介→果物→飲料→日用品)でユーザーが探しやすく
+CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "fruit", "beer", "drink",
+             "toilet-paper", "tissue"]
 CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
          "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
          "desc": f"楽天ふるさと納税の{FCATS[s]['label']}を、寄付額あたりの内容量（{FCATS[s]['unit_label']}）とレビュー満足度でコスパランキング。"}
@@ -51,8 +60,10 @@ def shell(title, desc, body, path, head=""):
             '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
             '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
             '.sguide{margin:20px 0}.sguide h2{margin-top:1.3em}'
+            '.hgrid{align-items:start}'  # 背の高い広告(300×250)が隣のカードを引き伸ばさないよう上揃え
             '.adcard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-height:150px}'
-            '.adcard img{max-width:100%}'
+            '.adcard img{max-width:100%;height:auto}'
+            '.adbanner{display:flex;flex-direction:column;align-items:center;gap:4px;margin:18px 0}.adbanner img{max-width:100%;height:auto}'
             '.adlabel{align-self:flex-start;color:var(--sub);font-size:.68rem;border:1px solid var(--line);border-radius:4px;padding:0 5px}</style>'
             f'</head><body>{nav()}<main>{body}</main>{foot()}</body></html>')
 
@@ -179,19 +190,26 @@ def build_guide():
     open(os.path.join(SITE, "furusato-sites.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato-sites.html", head))
 
 def build_hub(counts):
-    cards = ""
-    for i, c in enumerate(CATS):
-        cards += (f'<a class="hcard" href="{c["file"]}"><div class="hico">{c["icon"]}</div>'
-                  f'<div><h3>{c["label"]}<span class="n">{counts[c["slug"]]}件</span></h3><p>{c["desc"]}</p></div></a>')
-        if i == 3:   # 米・牛肉・豚肉・海鮮 の次(5番目のマス)に広告カードを1枠差し込む
-            cards += VC_TABELOG
+    # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
+    parts = []
+    ci = pos = adn = 0
+    while ci < len(CATS):
+        if pos % 6 == 4 and adn < len(IN_GRID_ADS):   # 偶数行の中央に1枠ずつ(banner数まで)
+            parts.append(IN_GRID_ADS[adn]); adn += 1; pos += 1
+            continue
+        c = CATS[ci]
+        parts.append(f'<a class="hcard" href="{c["file"]}"><div class="hico">{c["icon"]}</div>'
+                     f'<div><h3>{c["label"]}<span class="n">{counts[c["slug"]]}件</span></h3><p>{c["desc"]}</p></div></a>')
+        ci += 1; pos += 1
+    cards = "".join(parts)
     body = f"""
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
-<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">鶏肉</span><span class="soon">ハンバーグ</span><span class="soon">日用品（洗剤）</span><span class="soon">ティッシュ</span><span class="soon">飲料・水</span></div>
+{STANDALONE_AD}
+<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">日用品（洗剤）</span><span class="soon">お菓子・スイーツ</span><span class="soon">卵</span><span class="soon">冷凍食品</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="about.html">コスパ値とは</a>。</p>
 """
