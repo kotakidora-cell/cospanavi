@@ -16,7 +16,7 @@ AD = '<div class="ad">広告スペース（Google AdSense）</div>'
 def _vc(pid, cls="adcard"):
     return (f'<div class="{cls}"><span class="adlabel">広告</span>'
             f'<script language="javascript" src="//ad.jp.ap.valuecommerce.com/servlet/jsbanner?sid=3775700&pid={pid}"></script>'
-            f'<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid={pid}" rel="nofollow">'
+            f'<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid={pid}" target="_blank" rel="nofollow sponsored noopener">'
             f'<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid={pid}" border="0"></a></noscript></div>')
 
 IN_GRID_ADS = [_vc("892664055")]   # 食べログ 120×60。偶数行(2,4,6…)の中央に配置(PCのみ表示、スマホは非表示)
@@ -66,7 +66,10 @@ def shell(title, desc, body, path, head=""):
             '.adbanner-pc{display:flex;flex-direction:column;align-items:center;gap:4px;margin:18px 0}.adbanner-pc img{max-width:100%;height:auto}'
             '@media(max-width:640px){.adbanner-pc{display:none}}'  # 横長帯はPCのみ(スマホはオーバーレイ320×50が出る)
             '.adlabel{align-self:flex-start;color:var(--sub);font-size:.68rem;border:1px solid var(--line);border-radius:4px;padding:0 5px}</style>'
-            f'</head><body>{nav()}<main>{body}</main>{foot()}{VC_320_OVERLAY}</body></html>')
+            f'</head><body>{nav()}<main>{body}</main>{foot()}{VC_320_OVERLAY}'
+            # VC広告バナー(document.writeでtarget=_topで生成される)を別タブで開くよう書き換え
+            '<script>window.addEventListener("load",function(){document.querySelectorAll(".adcard a,.adbanner-pc a").forEach(function(a){a.target="_blank";a.rel="nofollow sponsored noopener";});});</script>'
+            '</body></html>')
 
 TOOL_JS = r"""
 const D=JSON.parse(document.getElementById('data').textContent);
