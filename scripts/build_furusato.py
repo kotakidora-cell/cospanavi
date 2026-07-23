@@ -27,10 +27,11 @@ VC_320_OVERLAY = ('<script language="javascript" '
                   'src="//ad.jp.ap.valuecommerce.com/servlet/smartphonebanner?sid=3775700&pid=892664050&position=overlay"></script>')
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
-        "fruit": "🍇", "beer": "🍺", "drink": "🥤", "toilet-paper": "🧻", "tissue": "🤧", "detergent": "🧴"}
-# ジャンル順(米→肉→魚介→果物→飲料→日用品)でユーザーが探しやすく
-CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "fruit", "beer", "drink",
-             "toilet-paper", "tissue"]
+        "egg": "🥚", "fruit": "🍇", "sweets": "🍰", "frozen": "🥟", "beer": "🍺", "drink": "🥤",
+        "toilet-paper": "🧻", "tissue": "🤧", "detergent": "🧴"}
+# ジャンル順(主食・肉→魚介・卵→果物・菓子→冷凍→飲料→日用品)でユーザーが探しやすく
+CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "egg", "fruit", "sweets",
+             "frozen", "beer", "drink", "toilet-paper", "tissue", "detergent"]
 CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
          "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
          "desc": f"楽天ふるさと納税の{FCATS[s]['label']}を、寄付額あたりの内容量（{FCATS[s]['unit_label']}）とレビュー満足度でコスパランキング。"}
@@ -212,7 +213,7 @@ def build_hub(counts):
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
-<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">日用品（洗剤）</span><span class="soon">お菓子・スイーツ</span><span class="soon">卵</span><span class="soon">冷凍食品</span></div>
+<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="about.html">コスパ値とは</a>。</p>
 """
