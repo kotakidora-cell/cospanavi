@@ -1,7 +1,12 @@
 # ふるさと納税コスパ分析ページを生成。ランディング(furusato.html)＋カテゴリ(furusato-<slug>.html)。
 # 通常商品とロジックが違う(寄付額あたりの内容量=お得さ)ため専用ビルダー。styles.cssは共用。
-import json, os, sys, html as H, datetime
+import json, os, sys, html as H, datetime, urllib.parse
 from furusato_cats import FCATS
+
+# バリューコマース MyLink(ふるさと納税サイトのアフィリ化)。sid共通、pidは広告主ごと。
+def vc_mylink(pid, url):
+    return ("//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3776612&pid=" + pid +
+            "&vc_url=" + urllib.parse.quote(url, safe=""))
 
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -148,16 +153,21 @@ def build_cat(cfg):
     open(os.path.join(SITE, cfg["file"]), "w", encoding="utf-8").write(shell(title, desc, body, cfg["file"], head))
     return len(data)
 
+# (サイト名, 説明, MyLink pid or None, 公式URL or None)。pidがある広告主(提携済)は公式サイトへのアフィリリンクを付与。
 SITES = [
-    ("楽天ふるさと納税", "楽天市場と同じ操作感で使える最大級のサイト。返礼品数が多く、楽天カード・楽天ペイ決済に対応。普段から楽天を使う人はカード決済のポイントを貯めやすい。当サイトのランキングも楽天のデータを利用。"),
-    ("さとふる", "返礼品の掲載数が最大級で、初心者にも分かりやすいUI。発送が早い返礼品が多く、PayPay・クレジットカード決済に対応。「とにかく選択肢を広く見たい」人に。"),
-    ("ふるさとチョイス", "掲載自治体数No.1クラスで、地方の穴場返礼品まで最も網羅的。Amazon Pay・各種決済に対応。「他に無い返礼品を探したい」網羅性重視の人向け。"),
-    ("ふるなび", "家電・電化製品の返礼品に強く、初心者向けの見やすさが特徴。独自の「ふるなびコイン」やキャンペーンあり。家電狙いの人に。"),
-    ("au PAY ふるさと納税", "au・Pontaユーザーと相性が良く、Pontaポイントでの決済も可能。auの経済圏を使っている人向け。"),
+    ("楽天ふるさと納税", "楽天市場と同じ操作感で使える最大級のサイト。返礼品数が多く、楽天カード・楽天ペイ決済に対応。普段から楽天を使う人はカード決済のポイントを貯めやすい。当サイトのランキングも楽天のデータを利用。", None, None),
+    ("さとふる", "返礼品の掲載数が最大級で、初心者にも分かりやすいUI。発送が早い返礼品が多く、PayPay・クレジットカード決済に対応。「とにかく選択肢を広く見たい」人に。", "892664781", "https://www.satofull.jp/"),
+    ("ふるさとチョイス", "掲載自治体数No.1クラスで、地方の穴場返礼品まで最も網羅的。Amazon Pay・各種決済に対応。「他に無い返礼品を探したい」網羅性重視の人向け。", None, None),
+    ("ふるなび", "家電・電化製品の返礼品に強く、初心者向けの見やすさが特徴。独自の「ふるなびコイン」やキャンペーンあり。家電狙いの人に。", "892664782", "https://furunavi.jp/"),
+    ("au PAY ふるさと納税", "au・Pontaユーザーと相性が良く、Pontaポイントでの決済も可能。auの経済圏を使っている人向け。", None, None),
 ]
 
 def build_guide():
-    site_cards = "".join(f'<div class="gpt"><h3>{H.escape(n)}</h3><p>{H.escape(d)}</p></div>' for n, d in SITES)
+    def card(n, d, pid, url):
+        link = (f'<p><a class="buy sm" href="{vc_mylink(pid, url)}" target="_blank" rel="nofollow sponsored noopener">'
+                f'{H.escape(n)}を見る<span class="pr">PR</span></a></p>') if pid else ""
+        return f'<div class="gpt"><h3>{H.escape(n)}</h3><p>{H.escape(d)}</p>{link}</div>'
+    site_cards = "".join(card(*s) for s in SITES)
     faqs = [
         ("結局どのサイトが一番お得ですか？", "2025年10月以降はどのサイトも寄付額・返礼品は同じで、サイト独自のポイント付与も無くなりました。そのため「普段使っているクレジットカード・決済のポイントが貯まるサイト」を選ぶのが実質的に一番お得です。あとは品揃えと使いやすさで選びましょう。"),
         ("寄付額はサイトによって違いますか？", "違いません。ふるさと納税の寄付額は各自治体が定めているため、同じ返礼品ならどのサイトでも寄付額は同額です。だからサイトごとの「最安値比較」は存在しません。"),
