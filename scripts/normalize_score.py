@@ -1,5 +1,13 @@
 # raw listing → 機種正規化(ブランド+型番) → 満足度コスパ値算出 → data/<slug>.json
-import json, os, sys, re, math, statistics as st
+import json, os, sys, re, math, statistics as st, urllib.parse
+
+# Yahoo!ショッピングのアフィリ化(バリューコマース MyLink)。生Yahoo URLをVC計測URLに変換して成果を発生させる。
+VC_YAHOO_SID, VC_YAHOO_PID = "3776612", "892664780"
+def vc_yahoo(url):
+    if not url:
+        return url
+    return ("https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=" + VC_YAHOO_SID +
+            "&pid=" + VC_YAHOO_PID + "&vc_url=" + urllib.parse.quote(url, safe=""))
 
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,7 +76,8 @@ for k, g in groups.items():
     for l in ls:
         mall = l.get("mall", "rakuten")
         if mall not in offers or l["price"] < offers[mall]["price"]:
-            offers[mall] = {"mall": mall, "price": l["price"], "url": l["url"], "affiliate": l["affiliate"]}
+            aff = vc_yahoo(l["url"]) if mall == "yahoo" else l["affiliate"]   # Yahooはバリューコマースでアフィリ化
+            offers[mall] = {"mall": mall, "price": l["price"], "url": l["url"], "affiliate": aff}
     offer_list = sorted(offers.values(), key=lambda o: o["price"])
     best = offer_list[0]   # 全モール横断の最安（アフィリ主導線）
     # 代表画像は楽天優先（画像URLが安定）→無ければ最初
