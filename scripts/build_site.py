@@ -12,6 +12,8 @@ SITE_NAME = "コスパナビ"
 SITE_URL = "https://cospa-navi.com"
 # AdSense（rankingsjpと同一アカウント pub-8706760047070867。審査用に全ページ<head>へ設置）
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
+# バリューコマース LinkSwitch: 提携済みモール(Yahoo!ショッピング等)へのリンクを自動でアフィリ化
+LINKSWITCH = '<script type="text/javascript">var vc_pid="892664777";</script><script type="text/javascript" src="//aml.valuecommerce.com/vcdal.js" async></script>'
 ADSENSE_PUB = "pub-8706760047070867"
 SITE_VERIFY = "9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc"  # Search Console HTMLメタタグ認証
 # Search ConsoleはメタタグSITE_VERIFYで認証済のためHTMLファイル方式は不要（空でOK）
@@ -67,7 +69,7 @@ def shell(title, desc, body, base="", head="", path=None, image=None):
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
             f"{verify}{canon}<link rel=\"stylesheet\" href=\"{base}styles.css\">{ADSENSE}{head}</head><body>"
-            + nav(base) + "<main>" + body + "</main>" + foot(base) + "</body></html>")
+            + nav(base) + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
 
 AD = '<div class="ad">広告スペース（Google AdSense）</div>'
 

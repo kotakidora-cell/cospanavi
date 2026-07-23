@@ -10,6 +10,8 @@ SITE = os.path.join(BASE, "site")
 SITE_URL = "https://cospa-navi.com"
 UPDATED = datetime.date.today().isoformat()
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
+# バリューコマース LinkSwitch: 提携済みモール(さとふる等)へのリンクを自動でアフィリ化(全ふるさとページ)
+LINKSWITCH = '<script type="text/javascript">var vc_pid="892664777";</script><script type="text/javascript" src="//aml.valuecommerce.com/vcdal.js" async></script>'
 VERIFY = '<meta name="google-site-verification" content="9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc">'
 AD = '<div class="ad">広告スペース（Google AdSense）</div>'
 # バリューコマース広告バナー(カテゴリカード風に1枠としてグリッド内へ)。ステマ規制対応で「広告」表記付き。
@@ -70,7 +72,7 @@ def shell(title, desc, body, path, head=""):
             f'</head><body>{nav()}<main>{body}</main>{foot()}{VC_320_OVERLAY}'
             # VC広告バナー(document.writeでtarget=_topで生成される)を別タブで開くよう書き換え
             '<script>window.addEventListener("load",function(){document.querySelectorAll(".adcard a,.adbanner-pc a").forEach(function(a){a.target="_blank";a.rel="nofollow sponsored noopener";});});</script>'
-            '</body></html>')
+            f'{LINKSWITCH}</body></html>')
 
 TOOL_JS = r"""
 const D=JSON.parse(document.getElementById('data').textContent);
