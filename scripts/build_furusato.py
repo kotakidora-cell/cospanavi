@@ -2,6 +2,22 @@
 # 通常商品とロジックが違う(寄付額あたりの内容量=お得さ)ため専用ビルダー。styles.cssは共用。
 import json, os, sys, html as H, datetime, urllib.parse
 from furusato_cats import FCATS
+from furusato_guides import FGUIDES
+
+# カテゴリ別 選び方ガイド＋FAQ (HTML, FAQPage構造化データ) を返す
+def render_fguide(slug, label):
+    g = FGUIDES.get(slug)
+    if not g:
+        return "", None
+    pts = "".join(f'<div class="gpt"><h3>{H.escape(t)}</h3><p>{H.escape(d)}</p></div>' for t, d in g["points"])
+    faqs = "".join(f'<div class="faq"><h3>Q. {H.escape(q)}</h3><p>A. {H.escape(a)}</p></div>' for q, a in g["faq"])
+    html = (f'<section class="guide"><h2>{H.escape(label)}のふるさと納税・選び方</h2>'
+            f'<div class="gpts">{pts}</div>'
+            f'<h2>よくある質問</h2><div class="faqs">{faqs}</div></section>')
+    ld = {"@context": "https://schema.org", "@type": "FAQPage",
+          "mainEntity": [{"@type": "Question", "name": q,
+                          "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in g["faq"]]}
+    return html, ld
 
 # バリューコマース MyLink(ふるさと納税サイトのアフィリ化)。sid共通、pidは広告主ごと。
 def vc_mylink(pid, url):
@@ -119,6 +135,7 @@ def build_cat(cfg):
              "review": m["review"], "rc": m["reviewCount"], "sat": m["sat"], "toku": m["toku"],
              "img": m["image"], "aff": m["affiliate"]} for m in data]
     maxp = ((max(m["price"] for m in data) + 999) // 1000) * 1000
+    GUIDE_HTML, faq_ld = render_fguide(cfg["slug"], cfg["label"])
     body = f"""
 <nav class="crumb"><a href="index.html">コスパナビ</a> › <a href="furusato.html">ふるさと納税</a> › {cfg['label']}</nav>
 <h1>ふるさと納税 {cfg['label']} コスパランキング<span class="yr">2026</span></h1>
@@ -144,12 +161,15 @@ def build_cat(cfg):
 <script id="data" type="application/json">{json.dumps(slim, ensure_ascii=False, separators=(",", ":"))}</script>
 <script>const UL={json.dumps(cfg['unit_label'], ensure_ascii=False)},SF={json.dumps(cfg['suffix'], ensure_ascii=False)};</script>
 <script>{TOOL_JS}</script>
+{AD}
+{GUIDE_HTML}
 """
     title = f"ふるさと納税 {cfg['label']}のコスパ最強ランキング2026｜{cfg['unit_label']}で比較"
     desc = cfg["desc"]
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"], "name": m["name"]} for m in data[:20]]}
-    head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+    ld_list = [ld] + ([faq_ld] if faq_ld else [])
+    head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld_list)
     open(os.path.join(SITE, cfg["file"]), "w", encoding="utf-8").write(shell(title, desc, body, cfg["file"], head))
     return len(data)
 
