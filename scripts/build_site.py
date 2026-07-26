@@ -242,10 +242,14 @@ def build_products(cfg, data):
 """
         title = f"{m['name'][:30]}のコスパ・価格・レビュー【{cfg['label']}{r}位】"
         desc = f"{m['brand']} {m['name'][:24]}のコスパ値{m['cospa']:.0f}、最安¥{m['minPrice']:,}、レビュー★{m['review']:.2f}（{m['reviewCount']:,}件）。{cfg['label']}コスパ{r}位。"
+        _prices = [o["price"] for o in m.get("offers", [])] or [m["minPrice"]]
         ld = {"@context": "https://schema.org", "@type": "Product", "name": m["name"], "brand": m["brand"],
-              "image": m["image"], "aggregateRating": {"@type": "AggregateRating", "ratingValue": m["review"],
-              "reviewCount": m["reviewCount"], "bestRating": 5}, "offers": {"@type": "Offer",
-              "price": m["minPrice"], "priceCurrency": "JPY", "availability": "https://schema.org/InStock"}}
+              "description": desc, "image": m["image"],
+              "aggregateRating": {"@type": "AggregateRating", "ratingValue": m["review"],
+              "reviewCount": m["reviewCount"], "bestRating": 5},
+              "offers": {"@type": "AggregateOffer", "priceCurrency": "JPY",
+                         "lowPrice": min(_prices), "highPrice": max(_prices), "offerCount": len(_prices),
+                         "availability": "https://schema.org/InStock"}}
         head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
         open(os.path.join(PDIR, rid + ".html"), "w", encoding="utf-8").write(
             shell(title, desc, body, base="../", head=head, path="product/" + rid + ".html", image=m["image"]))
