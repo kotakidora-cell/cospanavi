@@ -34,7 +34,7 @@ ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/ad
 # バリューコマース LinkSwitch: 提携済みモール(さとふる等)へのリンクを自動でアフィリ化(全ふるさとページ)
 LINKSWITCH = '<script type="text/javascript">var vc_pid="892664777";</script><script type="text/javascript" src="//aml.valuecommerce.com/vcdal.js" async></script>'
 VERIFY = '<meta name="google-site-verification" content="9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc">'
-AD = '<div class="ad">広告スペース（Google AdSense）</div>'
+AD = ''
 # バリューコマース広告バナー(カテゴリカード風に1枠としてグリッド内へ)。ステマ規制対応で「広告」表記付き。
 def _vc(pid, cls="adcard"):
     return (f'<div class="{cls}"><span class="adlabel">広告</span>'
@@ -60,19 +60,26 @@ CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "i
          "desc": f"楽天ふるさと納税の{FCATS[s]['label']}を、寄付額あたりの内容量（{FCATS[s]['unit_label']}）とレビュー満足度でコスパランキング。"}
         for s in CAT_ORDER]
 
+def U(file):
+    # 内部リンクを絶対パス・拡張子なしに（Cloudflareのクリーンurlと一致させリダイレクト回避）
+    if file in ("index.html", "index", "", "/"):
+        return "/"
+    f = file[:-5] if file.endswith(".html") else file
+    return "/" + f.lstrip("/")
+
 def nav():
-    return ('<header class="nav"><a class="brand" href="index.html">コスパ<b>ナビ</b></a>'
-            '<nav><a href="index.html">ホーム</a><a href="furusato.html">ふるさと納税</a>'
-            '<a href="about.html">コスパ値とは</a><a href="privacy.html">プライバシー</a></nav></header>')
+    return ('<header class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
+            '<nav><a href="/">ホーム</a><a href="/furusato">ふるさと納税</a>'
+            '<a href="/about">コスパ値とは</a><a href="/privacy">プライバシー</a></nav></header>')
 
 def foot():
-    cl = "".join(f'<a href="{c["file"]}">{c["label"]}</a>' for c in CATS)
-    return (f'<footer class="foot"><nav class="fcats"><a href="furusato.html">ふるさと納税トップ</a>{cl}</nav>'
+    cl = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)
+    return (f'<footer class="foot"><nav class="fcats"><a href="/furusato">ふるさと納税トップ</a>{cl}</nav>'
             f'<p>寄付額・レビューは楽天ふるさと納税の情報（{UPDATED}時点）。内容量は商品名から自動抽出のため、必ず各返礼品ページで最新情報をご確認ください。</p>'
-            f'<p class="muted">当サイトはアフィリエイト広告を利用しています。<a href="privacy.html">プライバシーポリシー</a></p></footer>')
+            f'<p class="muted">当サイトはアフィリエイト広告を利用しています。<a href="/privacy">プライバシーポリシー</a></p></footer>')
 
 def shell(title, desc, body, path, head=""):
-    url = SITE_URL + "/" + path
+    url = SITE_URL + U(path)
     canon = (f'<link rel="canonical" href="{url}">'
              f'<meta property="og:type" content="website"><meta property="og:title" content="{H.escape(title)}">'
              f'<meta property="og:description" content="{H.escape(desc)}"><meta property="og:url" content="{url}">'
@@ -80,7 +87,7 @@ def shell(title, desc, body, path, head=""):
     return ('<!doctype html><html lang="ja"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>{H.escape(title)}</title><meta name="description" content="{H.escape(desc)}">'
-            f'{VERIFY}{canon}<link rel="stylesheet" href="styles.css">{ADSENSE}{head}'
+            f'{VERIFY}{canon}<link rel="stylesheet" href="/styles.css">{ADSENSE}{head}'
             '<style>.fk{font-weight:800;color:var(--accent)}.metar{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem;color:var(--sub);margin:2px 0}'
             '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
             '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
@@ -137,10 +144,10 @@ def build_cat(cfg):
     maxp = ((max(m["price"] for m in data) + 999) // 1000) * 1000
     GUIDE_HTML, faq_ld = render_fguide(cfg["slug"], cfg["label"])
     body = f"""
-<nav class="crumb"><a href="index.html">コスパナビ</a> › <a href="furusato.html">ふるさと納税</a> › {cfg['label']}</nav>
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › {cfg['label']}</nav>
 <h1>ふるさと納税 {cfg['label']} コスパランキング<span class="yr">2026</span></h1>
 <p class="lead">楽天ふるさと納税の{cfg['label']}を、<b>寄付額あたりの内容量（{cfg['unit_label']}）</b>とレビュー満足度から独自コスパ値でランキング。<b>{len(data)}件</b>を比較。定期便も総量に換算しています。<b>スライダーで「満足度／お得さ」を調整</b>できます。</p>
-<div class="scallout">💡 掲載は楽天ふるさと納税の寄付額ですが、<b>寄付額は自治体が決めるため他サイトでも同額</b>です。どのサイトで申し込むのが良いかは <a href="furusato-sites.html">ふるさと納税サイトの選び方（2025年ポイント廃止後）→</a></div>
+<div class="scallout">💡 掲載は楽天ふるさと納税の寄付額ですが、<b>寄付額は自治体が決めるため他サイトでも同額</b>です。どのサイトで申し込むのが良いかは <a href="/furusato-sites">ふるさと納税サイトの選び方（2025年ポイント廃止後）→</a></div>
 {AD}
 <div class="tool">
   <div class="ctl"><label>重視ポイント</label>
@@ -157,7 +164,7 @@ def build_cat(cfg):
 </div>
 <p class="cnt"><b id="cnt"></b></p>
 <div id="list" class="cards"></div>
-<p class="note">※コスパ値＝満足度（レビューをレビュー数で信頼補正）×お得さ（{cfg['unit_label']}が安いほど高い）の独自指標。内容量は商品名から自動抽出のため、複数重量が選べる返礼品は掲載していません。<a href="furusato.html">ふるさと納税コスパとは</a></p>
+<p class="note">※コスパ値＝満足度（レビューをレビュー数で信頼補正）×お得さ（{cfg['unit_label']}が安いほど高い）の独自指標。内容量は商品名から自動抽出のため、複数重量が選べる返礼品は掲載していません。<a href="/furusato">ふるさと納税コスパとは</a></p>
 <script id="data" type="application/json">{json.dumps(slim, ensure_ascii=False, separators=(",", ":"))}</script>
 <script>const UL={json.dumps(cfg['unit_label'], ensure_ascii=False)},SF={json.dumps(cfg['suffix'], ensure_ascii=False)};</script>
 <script>{TOOL_JS}</script>
@@ -198,7 +205,7 @@ def build_guide():
     faq_ld = {"@context": "https://schema.org", "@type": "FAQPage",
               "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
     body = f"""
-<nav class="crumb"><a href="index.html">コスパナビ</a> › <a href="furusato.html">ふるさと納税</a> › サイトの選び方</nav>
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › サイトの選び方</nav>
 <h1>ふるさと納税サイトの選び方<span class="yr">2026</span>｜ポイント廃止後の比較</h1>
 <p class="lead">「どのふるさと納税サイトで寄付するのが得？」——2025年10月の制度変更で答えが変わりました。<b>ポイント付与が廃止された今の正しい選び方</b>を、主要サイトの比較とあわせて解説します。</p>
 {AD}
@@ -218,7 +225,7 @@ def build_guide():
 </div>
 <h2>よくある質問</h2>
 <div class="faqs">{faq_html}</div>
-<p class="note">本ページは制度の一般的な解説です。控除・ポイント・キャンペーンの最新条件は各サイト・自治体の公式情報をご確認ください。当サイトのランキングは<a href="furusato.html">ふるさと納税コスパ分析</a>から。</p>
+<p class="note">本ページは制度の一般的な解説です。控除・ポイント・キャンペーンの最新条件は各サイト・自治体の公式情報をご確認ください。当サイトのランキングは<a href="/furusato">ふるさと納税コスパ分析</a>から。</p>
 </div>
 """
     title = "ふるさと納税サイトの選び方2026｜ポイント廃止後の比較とお得な方法"
@@ -235,7 +242,7 @@ def build_hub(counts):
             parts.append(IN_GRID_ADS[adn % len(IN_GRID_ADS)]); adn += 1; pos += 1
             continue
         c = CATS[ci]
-        parts.append(f'<a class="hcard" href="{c["file"]}"><div class="hico">{c["icon"]}</div>'
+        parts.append(f'<a class="hcard" href="{U(c["file"])}"><div class="hico">{c["icon"]}</div>'
                      f'<div><h3>{c["label"]}<span class="n">{counts[c["slug"]]}件</span></h3><p>{c["desc"]}</p></div></a>')
         ci += 1; pos += 1
     cards = "".join(parts)
@@ -243,11 +250,11 @@ def build_hub(counts):
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
-<div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="furusato-sites.html">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
+<div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
-<p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="about.html">コスパ値とは</a>。</p>
+<p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="/about">コスパ値とは</a>。</p>
 """
     title = "ふるさと納税コスパ分析2026｜円/kgで選ぶお得な返礼品ランキング"
     desc = "楽天ふるさと納税の返礼品を寄付額あたりの内容量（円/kg等）とレビュー満足度で独自コスパランキング。定期便も総量換算で比較。米など。"
@@ -261,7 +268,7 @@ def add_to_sitemap():
     xml = open(sp, encoding="utf-8").read()
     add = ""
     for path in ["furusato.html", "furusato-sites.html"] + [c["file"] for c in CATS]:
-        loc = f"{SITE_URL}/{path}"
+        loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
     if add:

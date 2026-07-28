@@ -40,24 +40,32 @@ def stars(v):
     full = int(v); half = 1 if v - full >= 0.5 else 0
     return "★" * full + ("½" if half else "") + "☆" * (5 - full - half)
 
+def U(file):
+    # 内部リンクを絶対パス・拡張子なしに統一（Cloudflareのクリーンurlと一致させリダイレクトを避ける）
+    if file in ("index.html", "index", "", "/"):
+        return "/"
+    f = file[:-5] if file.endswith(".html") else file
+    return "/" + f.lstrip("/")
+
 def nav(base=""):
     # 上部ナビはシンプルに（カテゴリはハブのカードとフッターから辿れる）
-    return (f'<header class="nav"><a class="brand" href="{base}index.html">コスパ<b>ナビ</b></a>'
-            f'<nav><a href="{base}index.html">ホーム</a><a href="{base}furusato.html">ふるさと納税</a>'
-            f'<a href="{base}about.html">コスパ値とは</a><a href="{base}privacy.html">プライバシー</a></nav></header>')
+    return ('<header class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
+            '<nav><a href="/">ホーム</a><a href="/furusato">ふるさと納税</a>'
+            '<a href="/about">コスパ値とは</a><a href="/privacy">プライバシー</a></nav></header>')
 
 def foot(base=""):
-    catlinks = "".join(f'<a href="{base}{c["file"]}">{c["label"]}</a>' for c in CATS)
+    catlinks = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)
     return (f'<footer class="foot"><nav class="fcats">{catlinks}</nav>'
             f'<p>価格・レビューは楽天市場・Yahoo!ショッピングの情報（{UPDATED}時点）。実際の価格は各ショップでご確認ください。</p>'
             f'<p class="muted">当サイトはアフィリエイト広告を利用しています。'
-            f'<a href="{base}privacy.html">プライバシーポリシー</a></p></footer>')
+            f'<a href="/privacy">プライバシーポリシー</a></p></footer>')
 
 def shell(title, desc, body, base="", head="", path=None, image=None):
     canon = ""
     if path is not None:
-        SITEMAP.append(path)
-        url = SITE_URL + "/" + path
+        cpath = U(path)   # 拡張子なしの絶対パス（"/"や"/robot-cleaner"）
+        SITEMAP.append(cpath)
+        url = SITE_URL + cpath
         img = image or (SITE_URL + "/ogp.png")
         canon = (f'<link rel="canonical" href="{url}">'
                  f'<meta property="og:type" content="website"><meta property="og:site_name" content="{SITE_NAME}">'
@@ -68,10 +76,10 @@ def shell(title, desc, body, base="", head="", path=None, image=None):
     return ("<!doctype html><html lang=\"ja\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
-            f"{verify}{canon}<link rel=\"stylesheet\" href=\"{base}styles.css\">{ADSENSE}{head}</head><body>"
+            f"{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css\">{ADSENSE}{head}</head><body>"
             + nav(base) + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
 
-AD = '<div class="ad">広告スペース（Google AdSense）</div>'
+AD = ''
 
 def load(slug):
     d = json.load(open(os.path.join(DATA, slug + ".json"), encoding="utf-8"))
@@ -106,7 +114,7 @@ def build_category(cfg):
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
     GUIDE_HTML, faq_ld = render_guide(cfg["slug"], cfg["label"])
     body = f"""
-<nav class="crumb"><a href="index.html">コスパナビ</a> › {cfg['label']}</nav>
+<nav class="crumb"><a href="/">コスパナビ</a> › {cfg['label']}</nav>
 <h1>{cfg['label']} コスパランキング<span class="yr">2026</span></h1>
 <p class="lead">{cfg['desc']} <b>{len(data)}機種</b>を比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
 {AD}
@@ -127,7 +135,7 @@ def build_category(cfg):
 </div>
 <p class="cnt"><b id="cnt"></b></p>
 <div id="list" class="cards"></div>
-<p class="note">※コスパ値＝満足度（レビュー評価をレビュー数で信頼補正）×安さ の独自指標（0〜100）。<a href="about.html">算出方法</a></p>
+<p class="note">※コスパ値＝満足度（レビュー評価をレビュー数で信頼補正）×安さ の独自指標（0〜100）。<a href="/about">算出方法</a></p>
 {AD}
 {GUIDE_HTML}
 <script id="data" type="application/json">{DATA_JSON}</script>
@@ -137,7 +145,7 @@ def build_category(cfg):
     desc = f"{cfg['desc']} 楽天・Yahoo!の最安値も比較。{len(data)}機種を掲載。"
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"],
-                               "url": f"{SITE_URL}/product/{m['id']}.html", "name": m["name"]} for m in data[:20]]}
+                               "url": f"{SITE_URL}/product/{m['id']}", "name": m["name"]} for m in data[:20]]}
     ld_list = [ld]
     if faq_ld:
         ld_list.append(faq_ld)
@@ -176,7 +184,7 @@ function render(){
  a.slice(0,60).forEach((x,i)=>{const c=document.createElement('div');c.className='card';
   c.innerHTML='<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>'+
    '<div class="cbody"><div class="ctop"><span class="crank">#'+(i+1)+'</span><span class="cbrand">'+x.brand+'</span></div>'+
-   '<a class="cname" href="product/'+x.id+'.html">'+x.name+'</a>'+
+   '<a class="cname" href="/product/'+x.id+'">'+x.name+'</a>'+
    '<div class="cstars">'+starHtml(x.review)+' <span class="muted">'+x.review.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>'+
    '<div class="cprice">'+yen(x.price)+'<span class="muted">〜（最安）</span></div>'+
    mallsHtml(x.offers)+
@@ -199,7 +207,7 @@ def build_products(cfg, data):
     for m in data:
         rid = m["id"]; r = rank_of[rid]
         rel = [o for o in data_sorted if o["id"] != rid][:6]
-        rel_html = "".join(f'<a href="{o["id"]}.html">{H.escape(o["name"][:24])}</a>' for o in rel)
+        rel_html = "".join(f'<a href="/product/{o["id"]}">{H.escape(o["name"][:24])}</a>' for o in rel)
         offers = m.get("offers", [])
         if len(offers) >= 2:
             lowest = min(o["price"] for o in offers)
@@ -213,7 +221,7 @@ def build_products(cfg, data):
             price_cmp = ""
         low_mall = MALL.get(offers[0]["mall"], "楽天市場") if offers else "楽天市場"
         body = f"""
-<nav class="crumb"><a href="../index.html">コスパナビ</a> › <a href="../{cfg['file']}">{cfg['label']}</a> › {H.escape(m['name'][:20])}</nav>
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="{U(cfg['file'])}">{cfg['label']}</a> › {H.escape(m['name'][:20])}</nav>
 <div class="pdetail">
   <div class="pimg"><img src="{m['image']}" alt="{H.escape(m['name'])}"></div>
   <div class="pinfo">
@@ -235,10 +243,10 @@ def build_products(cfg, data):
 <tr><td>最安値</td><td>¥{m['minPrice']:,}</td></tr>
 <tr><td>レビュー</td><td>★{m['review']:.2f}（{m['reviewCount']:,}件）</td></tr>
 </table>
-<p class="note">コスパ値は「満足度（レビュー評価をレビュー数で信頼補正）×安さ」の独自指標です。詳しくは<a href="../about.html">コスパ値とは</a>。</p>
+<p class="note">コスパ値は「満足度（レビュー評価をレビュー数で信頼補正）×安さ」の独自指標です。詳しくは<a href="/about">コスパ値とは</a>。</p>
 <h2>他の機種と比べる</h2>
 <p class="rel">{rel_html}</p>
-<p class="src"><a href="../{cfg['file']}">{cfg['label']}ランキングへ戻る</a></p>
+<p class="src"><a href="{U(cfg['file'])}">{cfg['label']}ランキングへ戻る</a></p>
 """
         title = f"{m['name'][:30]}のコスパ・価格・レビュー【{cfg['label']}{r}位】"
         desc = f"{m['brand']} {m['name'][:24]}のコスパ値{m['cospa']:.0f}、最安¥{m['minPrice']:,}、レビュー★{m['review']:.2f}（{m['reviewCount']:,}件）。{cfg['label']}コスパ{r}位。"
@@ -259,18 +267,18 @@ def build_hub(built):
     cards = ""
     for cfg in CATS:
         n = built.get(cfg["slug"], 0)
-        cards += (f'<a class="hcard" href="{cfg["file"]}"><div class="hico">{cfg["icon"]}</div>'
+        cards += (f'<a class="hcard" href="{U(cfg["file"])}"><div class="hico">{cfg["icon"]}</div>'
                   f'<div><h3>{cfg["label"]}<span class="n">{n}機種</span></h3><p>{cfg["desc"]}</p></div></a>')
     coming = "".join(f'<span class="soon">{c}</span>' for c in COMING)
     body = f"""
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
 {AD}
-<a class="fbanner" href="furusato.html"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
+<a class="fbanner" href="/furusato"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
 <h2>コスパナビとは</h2>
-<p>価格.comのように"全部載せ"で迷わせるのではなく、<b>「満足度×価格」の独自コスパ値</b>と<b>調整できるツール</b>で、あなたの条件に合う最適解を提示します。データは楽天市場のレビュー・価格に基づき毎日更新。詳しくは<a href="about.html">コスパ値とは</a>。</p>
+<p>価格.comのように"全部載せ"で迷わせるのではなく、<b>「満足度×価格」の独自コスパ値</b>と<b>調整できるツール</b>で、あなたの条件に合う最適解を提示します。データは楽天市場のレビュー・価格に基づき毎日更新。詳しくは<a href="/about">コスパ値とは</a>。</p>
 """
     open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(
         shell("コスパナビ2026｜満足度×価格で選ぶ商品コスパ比較", "レビュー満足度と価格から独自コスパ値で製品をランキング。ロボット掃除機など。重視ポイント・予算で最適な1台が選べる。", body, path="index.html"))
@@ -308,7 +316,7 @@ def build_static():
         shell("プライバシーポリシー｜コスパナビ", "コスパナビのプライバシーポリシー。広告・アフィリエイト・Cookieの取り扱いについて。", privacy, path="privacy.html"))
 
 def build_seo():
-    urls = "".join(f"<url><loc>{SITE_URL}/{p}</loc><lastmod>{UPDATED}</lastmod></url>" for p in SITEMAP)
+    urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{UPDATED}</lastmod></url>" for p in SITEMAP)
     xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
     open(os.path.join(SITE, "sitemap.xml"), "w", encoding="utf-8").write(xml)
     robots = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
