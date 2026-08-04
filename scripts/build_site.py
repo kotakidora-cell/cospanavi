@@ -60,11 +60,12 @@ def foot(base=""):
             f'<p class="muted">当サイトはアフィリエイト広告を利用しています。'
             f'<a href="/privacy">プライバシーポリシー</a></p></footer>')
 
-def shell(title, desc, body, base="", head="", path=None, image=None):
+def shell(title, desc, body, base="", head="", path=None, image=None, noindex=False):
     canon = ""
     if path is not None:
         cpath = U(path)   # 拡張子なしの絶対パス（"/"や"/robot-cleaner"）
-        SITEMAP.append(cpath)
+        if not noindex:   # noindexページ(薄い商品詳細)はsitemapに載せない
+            SITEMAP.append(cpath)
         url = SITE_URL + cpath
         img = image or (SITE_URL + "/ogp.png")
         canon = (f'<link rel="canonical" href="{url}">'
@@ -72,11 +73,13 @@ def shell(title, desc, body, base="", head="", path=None, image=None):
                  f'<meta property="og:title" content="{H.escape(title)}"><meta property="og:description" content="{H.escape(desc)}">'
                  f'<meta property="og:url" content="{url}"><meta property="og:image" content="{H.escape(img)}">'
                  f'<meta name="twitter:card" content="summary_large_image">')
+    # 薄い量産ページ(商品詳細4199枚)はnoindex,follow=検索非掲載・リンクは辿らせる。AdSense「有用性の低いコンテンツ」対策
+    robots = '<meta name="robots" content="noindex,follow">' if noindex else ""
     verify = f'<meta name="google-site-verification" content="{SITE_VERIFY}">' if SITE_VERIFY else ""
     return ("<!doctype html><html lang=\"ja\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
-            f"{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css\">{ADSENSE}{head}</head><body>"
+            f"{robots}{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css\">{ADSENSE}{head}</head><body>"
             + nav(base) + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
 
 AD = ''
@@ -260,7 +263,7 @@ def build_products(cfg, data):
                          "availability": "https://schema.org/InStock"}}
         head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
         open(os.path.join(PDIR, rid + ".html"), "w", encoding="utf-8").write(
-            shell(title, desc, body, base="../", head=head, path="product/" + rid + ".html", image=m["image"]))
+            shell(title, desc, body, base="../", head=head, path="product/" + rid + ".html", image=m["image"], noindex=True))
 
 # ================= ハブ =================
 def build_hub(built):
