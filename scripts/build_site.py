@@ -7,6 +7,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 SITE = os.path.join(BASE, "site")
 PDIR = os.path.join(SITE, "product"); os.makedirs(PDIR, exist_ok=True)
+CDIR = os.path.join(SITE, "compare"); os.makedirs(CDIR, exist_ok=True)
 UPDATED = datetime.date.today().isoformat()  # ビルド日を自動反映（毎日の更新で日付が進む）
 SITE_NAME = "コスパナビ"
 SITE_URL = "https://cospa-navi.com"
@@ -23,6 +24,7 @@ SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 # --- カテゴリ定義（categories.pyから生成。掲載順もここで制御） ---
 from categories import CATEGORIES
 from guides import GUIDES
+from compares import COMPARES
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet"]
@@ -120,6 +122,7 @@ def build_category(cfg):
 <nav class="crumb"><a href="/">コスパナビ</a> › {cfg['label']}</nav>
 <h1>{cfg['label']} コスパランキング<span class="yr">2026</span></h1>
 <p class="lead">{cfg['desc']} <b>{len(data)}機種</b>を比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
+{render_compare_box(cfg['slug'])}
 {AD}
 <div class="tool">
   <div class="ctl"><label>重視ポイント</label>
@@ -265,6 +268,102 @@ def build_products(cfg, data):
         open(os.path.join(PDIR, rid + ".html"), "w", encoding="utf-8").write(
             shell(title, desc, body, base="../", head=head, path="product/" + rid + ".html", image=m["image"], noindex=True))
 
+# ================= 徹底比較記事 =================
+CAT_BY_SLUG = {c["slug"]: c for c in CATS}
+
+def compares_for(slug):
+    return [c for c in COMPARES if c["category"] == slug]
+
+def render_compare_box(slug):
+    # カテゴリページ上部に、そのカテゴリの比較記事へのリンクを出す（内部リンク＆回遊）
+    cs = compares_for(slug)
+    if not cs:
+        return ""
+    links = "".join(f'<a class="cmpbox-a" href="/compare/{c["slug"]}">{H.escape(c["title"].split("｜")[0])} →</a>' for c in cs)
+    return f'<div class="cmpbox"><span class="cmpbox-t">🔍 徹底比較</span>{links}</div>'
+
+def _top_model(data, match):
+    # ブランド部分一致で、現在の最コスパ機種を1台返す（無ければNone）
+    cand = [m for m in data if match in m["brand"]]
+    return max(cand, key=lambda m: m["cospa"]) if cand else None
+
+def build_compares():
+    for c in COMPARES:
+        cfg = CAT_BY_SLUG.get(c["category"])
+        if not cfg:
+            continue
+        data = load(c["category"])
+        ranked = sorted(data, key=lambda m: m["cospa"], reverse=True)
+        rank_of = {m["id"]: i + 1 for i, m in enumerate(ranked)}
+        picks = []
+        for b in c["brands"]:
+            m = _top_model(data, b["match"])
+            if m:
+                picks.append((b, m))
+        if len(picks) < 2:
+            continue  # データ不足の対決はスキップ（記事を破綻させない）
+        # 上部の対決カード（現在の最コスパ機種を自動注入＝常に最新・リンク切れなし）
+        vcards = []
+        for i, (b, m) in enumerate(picks):
+            buy = (f'<a class="buy sm" href="{m["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">'
+                   f'最安値を見る<span class="pr">PR</span></a>')
+            vcards.append(
+                f'<div class="vcard"><div class="vb">{H.escape(b["name"])}</div>'
+                f'<img src="{m["image"]}" alt="{H.escape(m["name"])}">'
+                f'<div class="vn">{H.escape(m["name"][:34])}</div>'
+                f'<div class="vp">¥{m["minPrice"]:,}〜</div>'
+                f'<div class="ccospa">コスパ値 <b>{m["cospa"]:.0f}</b> ／ {cfg["label"]}{rank_of[m["id"]]}位</div>'
+                f'<div class="cstars">{stars(m["review"])} {m["review"]:.2f}（{m["reviewCount"]:,}件）</div>'
+                f'{buy}</div>')
+        vs_html = f'<div class="vs">{vcards[0]}<div class="vsbadge">VS</div>{vcards[1]}</div>'
+        # 比較表（ライブ数値 ＋ 編集の定性項目）
+        b0, m0 = picks[0]; b1, m1 = picks[1]
+        def row(label, v0, v1):
+            return f'<tr><td>{label}</td><td>{v0}</td><td>{v1}</td></tr>'
+        rows = [
+            row("現在の最コスパ機種", H.escape(m0["name"][:26]), H.escape(m1["name"][:26])),
+            row("最安値", f'¥{m0["minPrice"]:,}〜', f'¥{m1["minPrice"]:,}〜'),
+            row("コスパ値", f'<b>{m0["cospa"]:.0f}</b>/100', f'<b>{m1["cospa"]:.0f}</b>/100'),
+            row(f'{cfg["label"]}内順位', f'{rank_of[m0["id"]]}位', f'{rank_of[m1["id"]]}位'),
+            row("レビュー", f'★{m0["review"]:.2f}（{m0["reviewCount"]:,}）', f'★{m1["review"]:.2f}（{m1["reviewCount"]:,}）'),
+        ]
+        for k in ("タイプ", "強み", "注意点", "向いている人"):
+            rows.append(row(k, H.escape(b0["traits"].get(k, "—")), H.escape(b1["traits"].get(k, "—"))))
+        cmp_table = (f'<table class="kv cmp3"><tr><th>項目</th><th>{H.escape(b0["name"])}</th>'
+                     f'<th>{H.escape(b1["name"])}</th></tr>{"".join(rows)}</table>')
+        # 各ブランドの解説（独自文）
+        brand_sections = "".join(
+            f'<h2>{H.escape(b["name"])}の特徴</h2><p>{b["body"]}</p>' for b in c["brands"])
+        # FAQ（FAQPage構造化データも）
+        faq_html = "".join(
+            f'<div class="faq"><h3>{H.escape(q)}</h3><p>{H.escape(a)}</p></div>' for q, a in c["faq"])
+        faq_ld = {"@context": "https://schema.org", "@type": "FAQPage",
+                  "mainEntity": [{"@type": "Question", "name": q,
+                                  "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in c["faq"]]}
+        body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="{U(cfg['file'])}">{cfg['label']}</a> › 徹底比較</nav>
+<h1>{H.escape(c['title'].split('｜')[0])}</h1>
+<p class="lead">{c['lead']}</p>
+{AD}
+{vs_html}
+<p class="note">※価格・レビュー・コスパ値・順位は毎日更新される最新データ（{UPDATED}時点）。各ブランドで現在最もコスパの良い機種を自動表示しています。</p>
+<h2>比較表</h2>
+{cmp_table}
+{brand_sections}
+<h2>結局どっちがおすすめ？</h2>
+<p>{c['verdict']}</p>
+{AD}
+<h2>よくある質問</h2>
+<div class="faqs">{faq_html}</div>
+<p class="src"><a href="{U(cfg['file'])}">{cfg['label']}コスパランキングをすべて見る →</a></p>
+<script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
+"""
+        head = ""
+        open(os.path.join(CDIR, c["slug"] + ".html"), "w", encoding="utf-8").write(
+            shell(c["title"], c["desc"], body, base="../", head=head,
+                  path="compare/" + c["slug"] + ".html", image=picks[0][1]["image"]))
+    return len(COMPARES)
+
 # ================= ハブ =================
 def build_hub(built):
     cards = ""
@@ -273,6 +372,13 @@ def build_hub(built):
         cards += (f'<a class="hcard" href="{U(cfg["file"])}"><div class="hico">{cfg["icon"]}</div>'
                   f'<div><h3>{cfg["label"]}<span class="n">{n}機種</span></h3><p>{cfg["desc"]}</p></div></a>')
     coming = "".join(f'<span class="soon">{c}</span>' for c in COMING)
+    cmp_cards = "".join(
+        f'<a class="hcard" href="/compare/{c["slug"]}"><div class="hico">🔍</div>'
+        f'<div><h3>{H.escape(c["title"].split("｜")[0])}</h3>'
+        f'<p>{H.escape(CAT_BY_SLUG[c["category"]]["label"])}の人気ブランドを徹底比較</p></div></a>'
+        for c in COMPARES)
+    cmp_section = (f'<h2>徹底比較</h2><p class="lead">人気ブランドを1対1で比較。価格・満足度・機能・向いている人がひと目で分かります。</p>'
+                   f'<div class="hgrid">{cmp_cards}</div>') if COMPARES else ""
     body = f"""
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
@@ -280,6 +386,7 @@ def build_hub(built):
 <a class="fbanner" href="/furusato"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
+{cmp_section}
 <h2>コスパナビとは</h2>
 <p>価格.comのように"全部載せ"で迷わせるのではなく、<b>「満足度×価格」の独自コスパ値</b>と<b>調整できるツール</b>で、あなたの条件に合う最適解を提示します。データは楽天市場のレビュー・価格に基づき毎日更新。詳しくは<a href="/about">コスパ値とは</a>。</p>
 """
@@ -397,6 +504,19 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .src{margin-top:14px}.foot{max-width:1000px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line)}
 .fcats{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px}.fcats a{color:var(--sub);text-decoration:none;font-size:.85rem}.fcats a:hover{color:var(--accent)}
 @media(max-width:520px){.cards{grid-template-columns:1fr}}
+.cmpbox{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0}
+.cmpbox-t{font-weight:800;color:var(--accent);font-size:.9rem}.cmpbox-a{font-weight:700;font-size:.88rem;text-decoration:none}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:16px 0}
+.vcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.vcard img{height:120px;object-fit:contain;max-width:100%;margin:4px 0}
+.vcard .vb{font-size:.78rem;color:var(--accent);font-weight:700}
+.vcard .vn{font-weight:700;font-size:.88rem;min-height:2.6em;line-height:1.3}
+.vcard .vp{font-weight:800;font-size:1.25rem;color:var(--accent)}
+.vcard .ccospa{justify-content:center}.vcard .cstars{font-size:.8rem}.vcard .buy{margin-top:8px}
+.vsbadge{align-self:center;font-weight:800;color:var(--sub);font-size:1.1rem}
+.cmp3 th{text-align:left;color:var(--sub);font-size:.82rem;padding:6px 8px;border-bottom:1px solid var(--line)}
+.cmp3 td{vertical-align:top;font-size:.9rem}.cmp3 td:first-child{color:var(--sub);width:26%}
+@media(max-width:560px){.vs{grid-template-columns:1fr 1fr;gap:8px}.vsbadge{grid-column:1/3;order:-1;padding:2px}.cmp3 td:first-child{width:34%}}
 """
 
 if __name__ == "__main__":
@@ -405,10 +525,11 @@ if __name__ == "__main__":
         data = build_category(cfg)
         build_products(cfg, data)
         built[cfg["slug"]] = len(data)
+    ncmp = build_compares()
     build_hub(built)
     build_static()
     build_seo()
     # styles.css
     open(os.path.join(SITE, "styles.css"), "w", encoding="utf-8").write(CSS)
     total = sum(built.values())
-    print(f"生成: index / {len(CATS)}カテゴリ / product×{total} / about / privacy / sitemap({len(SITEMAP)}URL) / robots / styles.css")
+    print(f"生成: index / {len(CATS)}カテゴリ / product×{total} / 比較×{ncmp} / about / privacy / sitemap({len(SITEMAP)}URL) / robots / styles.css")
