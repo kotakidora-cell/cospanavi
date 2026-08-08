@@ -282,9 +282,13 @@ def render_compare_box(slug):
     links = "".join(f'<a class="cmpbox-a" href="/compare/{c["slug"]}">{H.escape(c["title"].split("｜")[0])} →</a>' for c in cs)
     return f'<div class="cmpbox"><span class="cmpbox-t">🔍 徹底比較</span>{links}</div>'
 
-def _top_model(data, match):
+def _top_model(data, match, name_incl=None):
     # ブランド部分一致で、現在の最コスパ機種を1台返す（無ければNone）
+    # name_incl指定時は機種名にもいずれかのトークンを含む機種に限定（例: パナソニックの"ナノケア"）。該当0ならブランド全体にフォールバック
     cand = [m for m in data if match in m["brand"]]
+    if name_incl:
+        f = [m for m in cand if any(t.lower() in m["name"].lower() for t in name_incl)]
+        cand = f or cand
     return max(cand, key=lambda m: m["cospa"]) if cand else None
 
 def build_compares():
@@ -297,7 +301,7 @@ def build_compares():
         rank_of = {m["id"]: i + 1 for i, m in enumerate(ranked)}
         picks = []
         for b in c["brands"]:
-            m = _top_model(data, b["match"])
+            m = _top_model(data, b["match"], b.get("name_incl"))
             if m:
                 picks.append((b, m))
         if len(picks) < 2:
