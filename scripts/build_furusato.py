@@ -233,6 +233,167 @@ def build_guide():
     head = f'<script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>'
     open(os.path.join(SITE, "furusato-sites.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato-sites.html", head))
 
+# ================= 現地で使える体験（全国から県で探す） =================
+PREFS = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県",
+         "埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県",
+         "岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県",
+         "鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県",
+         "佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+# 地方別の並び（北→南、地図的に上から）。ページ上で「全国から選ぶ」レイアウトに
+REGIONS = [
+    ("北海道", ["北海道"]),
+    ("東北", ["青森県","岩手県","宮城県","秋田県","山形県","福島県"]),
+    ("関東", ["茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県"]),
+    ("中部", ["新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県"]),
+    ("近畿", ["三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県"]),
+    ("中国", ["鳥取県","島根県","岡山県","広島県","山口県"]),
+    ("四国", ["徳島県","香川県","愛媛県","高知県"]),
+    ("九州・沖縄", ["福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]),
+]
+LTYPES = ["宿泊", "食事", "温泉", "レジャー・体験", "ゴルフ", "利用券"]
+
+def _ltype(n):
+    if any(k in n for k in ("宿泊", "旅館", "ホテル", "1泊", "１泊", "泊2食", "コテージ")): return "宿泊"
+    if any(k in n for k in ("温泉", "入浴", "サウナ", "スパ")): return "温泉"
+    if any(k in n for k in ("食事券", "お食事券", "ランチ", "ディナー", "レストラン", "飲食", "グルメ券", "食券")): return "食事"
+    if "ゴルフ" in n: return "ゴルフ"
+    if any(k in n for k in ("入場券", "入園券", "チケット", "レジャー", "水族館", "動物園", "遊園", "スキー", "体験", "招待券", "サファリ", "パーク", "乗車", "クルーズ", "遊覧")): return "レジャー・体験"
+    return "利用券"
+
+def _short_pref(p):
+    return p[:-1] if p.endswith(("県", "府")) else p  # 東京都/北海道はそのまま、〇〇県/府は末尾を落とす
+
+def _muni(shop, pref):
+    return shop[len(pref):] if shop.startswith(pref) else shop
+
+def build_local():
+    path = os.path.join(DATA, "furusato-local_raw.json")
+    if not os.path.exists(path):
+        print("  (furusato-local_raw.json 無し→現地体験ページはスキップ)")
+        return 0
+    raw = json.load(open(path, encoding="utf-8"))
+    items = []
+    for x in raw:
+        pref = x.get("pref")
+        if pref not in PREFS:
+            continue
+        items.append({
+            "p": pref, "t": _ltype(x["name"]),
+            "n": x["name"].replace("【ふるさと納税】", "").strip()[:60],
+            "m": _muni(x["shop"], pref), "y": x["price"],
+            "r": round(float(x.get("review") or 0), 2), "c": x.get("reviewCount") or 0,
+            "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url"),
+        })
+    # レビュー数→寄付額の順で並べておく（JS側は表示順を尊重）
+    items.sort(key=lambda z: (-z["c"], z["y"]))
+    per_pref = {}
+    for it in items:
+        per_pref[it["p"]] = per_pref.get(it["p"], 0) + 1
+    # 地図（地方→県タイル）
+    region_html = ""
+    for rname, prefs in REGIONS:
+        tiles = ""
+        for p in prefs:
+            n = per_pref.get(p, 0)
+            cls = "ptile" + ("" if n else " off")
+            dis = "" if n else " aria-disabled=\"true\""
+            tiles += (f'<button class="{cls}" data-pref="{p}"{dis}>'
+                      f'<span class="pn">{_short_pref(p)}</span><span class="pc">{n}</span></button>')
+        region_html += f'<div class="region"><span class="rname">{rname}</span><div class="ptiles">{tiles}</div></div>'
+    type_chips = '<button class="lchip on" data-t="">すべて</button>' + "".join(
+        f'<button class="lchip" data-t="{t}">{t}</button>' for t in LTYPES)
+    DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
+    total = len(items)
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 現地で使える体験</nav>
+<h1>ふるさと納税で「現地で使える」体験を全国から探す<span class="yr">2026</span></h1>
+<p class="lead">寄付先の<b>現地で使える</b>食事券・宿泊券・温泉・レジャー施設・ゴルフ・利用券などの返礼品を、<b>全国{total:,}件</b>から都道府県別に探せます。旅行や帰省の予定に合わせて、行き先の自治体に寄付すれば“現地で楽しめる”のが魅力です。<b>地図から県を選ぶ</b>と、その県で使える返礼品が一覧表示されます。</p>
+{AD}
+<div class="jpmap">{region_html}</div>
+<div id="localres">
+  <div class="lbar"><h2 id="lhead">県を選んでください</h2><div class="lchips">{type_chips}</div></div>
+  <p class="cnt"><b id="lcnt"></b></p>
+  <div id="llist" class="cards"></div>
+</div>
+<section class="guide">
+<h2>ふるさと納税の「現地利用型」返礼品とは</h2>
+<p>返礼品というと肉や米などの“送られてくる特産品”を思い浮かべがちですが、寄付先の<b>現地に行って使うタイプ</b>の返礼品も数多くあります。旅館・ホテルの宿泊券、レストランの食事券、温泉施設や動物園・水族館などのレジャー施設の入場券、ゴルフ場の利用券、対象施設で使えるクーポンなどです。旅行や帰省、レジャーの予定がある人にとっては、<b>実質2,000円の自己負担で現地での体験費用を大きく賄える</b>ため非常にお得です。</p>
+<div class="gpts">
+<div class="gpt"><h3>使い方は？</h3><p>行きたいエリアの都道府県を地図から選び、宿泊・食事・レジャーなど目的のタイプで絞り込みます。気になる返礼品は「楽天ふるさと納税で見る」から寄付できます。</p></div>
+<div class="gpt"><h3>寄付額はサイトで違う？</h3><p>寄付額は自治体が決めるため、どのふるさと納税サイトでも同額です。掲載は楽天ふるさと納税のデータですが、金額の比較で損得は生じません。</p></div>
+<div class="gpt"><h3>注意点は？</h3><p>有効期限・予約要否・対象施設・利用条件は返礼品ごとに異なります。申込前に必ず各返礼品ページの記載をご確認ください。控除上限額は年収・家族構成で変わります。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">
+<div class="faq"><h3>Q. 現地で使える返礼品はどんな種類がありますか？</h3><p>A. 宿泊券、食事券、温泉・入浴、動物園や水族館などのレジャー施設の入場券、ゴルフ利用券、対象施設で使えるクーポンなどがあります。本ページでは都道府県×タイプで探せます。</p></div>
+<div class="faq"><h3>Q. 旅行先の自治体に寄付すれば現地で使えますか？</h3><p>A. はい。行き先の都道府県・自治体の返礼品を選べば、その土地で使える体験・チケットとして活用できます。旅行や帰省の予定に合わせて選ぶのがおすすめです。</p></div>
+<div class="faq"><h3>Q. 予約は必要ですか？有効期限は？</h3><p>A. 返礼品によって異なります。事前予約が必要なものや、発行から半年〜1年程度の有効期限があるものが多いので、必ず各返礼品の記載を確認してください。</p></div>
+</div>
+</section>
+<script id="ldata" type="application/json">{DATA_JSON}</script>
+<script>{LOCAL_JS}</script>
+"""
+    title = "ふるさと納税で現地で使える体験を全国から探す｜食事券・宿泊・レジャー"
+    desc = f"寄付先の現地で使える食事券・宿泊券・温泉・レジャー施設・ゴルフ・利用券のふるさと納税返礼品を、全国{total:,}件から都道府県別に探せます。旅行・帰省先で使えてお得。"
+    open(os.path.join(SITE, "furusato-local.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-local.html", head=LOCAL_CSS))
+    print(f"  現地体験ページ: {total}件 / {len(per_pref)}県")
+    return total
+
+LOCAL_CSS = ("<style>"
+    ".jpmap{display:flex;flex-direction:column;gap:8px;margin:14px 0}"
+    ".region{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}"
+    ".rname{flex:0 0 68px;font-weight:800;color:var(--accent);font-size:.82rem;padding-top:8px}"
+    ".ptiles{display:flex;flex-wrap:wrap;gap:6px;flex:1}"
+    ".ptile{position:relative;min-width:58px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:7px 6px 6px;cursor:pointer;text-align:center;color:var(--ink)}"
+    ".ptile:hover{border-color:var(--accent)}.ptile.on{background:var(--accent);color:#fff;border-color:var(--accent)}"
+    ".ptile .pn{display:block;font-size:.82rem;font-weight:700;line-height:1.2}"
+    ".ptile .pc{display:block;font-size:.68rem;color:var(--sub);margin-top:1px}.ptile.on .pc{color:#ffe}"
+    ".ptile.off{opacity:.4;cursor:default;pointer-events:none}"
+    ".lbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:8px}"
+    ".lchips{display:flex;flex-wrap:wrap;gap:6px}"
+    ".lchip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:5px 12px;font-size:.84rem;cursor:pointer}"
+    ".lchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}"
+    ".ltag{display:inline-block;background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin-bottom:3px}"
+    ".lmuni{font-size:.75rem;color:var(--sub)}"
+    "@media(max-width:520px){.rname{flex-basis:100%;padding-top:0}}"
+    "</style>")
+
+LOCAL_JS = r"""
+const LD=JSON.parse(document.getElementById('ldata').textContent);
+const list=document.getElementById('llist'),head=document.getElementById('lhead'),cnt=document.getElementById('lcnt');
+let selP='',selT='';
+const yen=v=>'¥'+v.toLocaleString();
+const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
+function render(){
+  if(!selP){list.innerHTML='';cnt.textContent='';return;}
+  let a=LD.filter(x=>x.p===selP&&(!selT||x.t===selT));
+  head.textContent=selP+'で現地で使える返礼品';
+  cnt.innerHTML='<b>'+a.length+'件</b>'+(selT?'（'+selT+'）':'');
+  list.innerHTML=a.slice(0,120).map(x=>{
+    const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
+    const rev=x.c>0?'<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.c+'）</span></div>':'';
+    return '<div class="card">'+img+'<div class="cbody">'
+      +'<span class="ltag">'+x.t+'</span>'
+      +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+x.n.replace(/"/g,'')+'">'+x.n+'</a>'
+      +'<div class="lmuni">'+x.m+'</div>'
+      +'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rev
+      +'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+      +'</div></div>';
+  }).join('');
+  if(a.length>120){list.innerHTML+='<p class="note">上位120件を表示中（レビュー数順）。</p>';}
+}
+document.querySelectorAll('.ptile').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.ptile').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');selP=b.dataset.pref;render();
+  document.getElementById('localres').scrollIntoView({behavior:'smooth',block:'start'});
+}));
+document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.lchip').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');selT=b.dataset.t;render();
+}));
+"""
+
 def build_hub(counts):
     # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
     parts = []
@@ -251,6 +412,7 @@ def build_hub(counts):
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
+<a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
@@ -267,7 +429,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -280,6 +442,7 @@ if __name__ == "__main__":
     for c in CATS:
         counts[c["slug"]] = build_cat(c)
     build_guide()
+    nloc = build_local()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + サイト選び方 + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + {len(CATS)}カテゴリ  {counts}")
