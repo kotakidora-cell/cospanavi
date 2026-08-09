@@ -394,6 +394,128 @@ document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
 }));
 """
 
+# ================= 高評価殿堂（失敗しない返礼品・全カテゴリ横断） =================
+def pref_of(shop):
+    for p in PREFS:
+        if shop.startswith(p):
+            return p
+    return ""
+
+# カテゴリ(slug)→グループ（チップ絞り込み用）
+HGROUPS = [("all","すべて"),("meat","肉"),("seafood","魚介"),("rice-egg","米・卵"),
+           ("fruit-sweets","果物・スイーツ"),("drink","飲料・お酒"),("daily","日用品"),("local","現地体験")]
+SLUG2GROUP = {"beef":"meat","pork":"meat","chicken":"meat","hamburg":"meat","seafood":"seafood",
+              "rice":"rice-egg","egg":"rice-egg","fruit":"fruit-sweets","sweets":"fruit-sweets",
+              "frozen":"fruit-sweets","beer":"drink","drink":"drink","toilet-paper":"daily",
+              "tissue":"daily","detergent":"daily","local":"local"}
+
+def build_hall():
+    MIN_R, MIN_RC, TOPN = 4.7, 50, 400
+    sources = [(s, FCATS[s]["label"], os.path.join(DATA, f"furusato-{s}_raw.json")) for s in FCATS]
+    sources.append(("local", "現地体験", os.path.join(DATA, "furusato-local_raw.json")))
+    seen = {}
+    revs = []
+    for slug, label, f in sources:
+        if not os.path.exists(f):
+            continue
+        for x in json.load(open(f, encoding="utf-8")):
+            key = x.get("affiliate") or x.get("url")
+            if not key or key in seen:
+                continue
+            rc = x.get("reviewCount") or 0
+            r = round(float(x.get("review") or 0), 2)
+            pref = x.get("pref") or pref_of(x.get("shop", ""))
+            seen[key] = {"slug": slug, "cat": label, "r": r, "rc": rc, "pref": pref,
+                         "name": x["name"].replace("【ふるさと納税】", "").strip()[:56],
+                         "muni": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
+                         "price": x["price"], "img": x.get("image", ""),
+                         "aff": x.get("affiliate") or x.get("url")}
+            if rc > 0:
+                revs.append(r)
+    C = (sum(revs) / len(revs)) if revs else 4.5
+    m = 100
+    pool = [x for x in seen.values() if x["r"] >= MIN_R and x["rc"] >= MIN_RC]
+    for x in pool:
+        x["bayes"] = (x["rc"] / (x["rc"] + m)) * x["r"] + (m / (x["rc"] + m)) * C
+    pool.sort(key=lambda z: -z["bayes"])
+    pool = pool[:TOPN]
+    items = [{"k": i + 1, "g": SLUG2GROUP.get(x["slug"], "other"), "c": x["cat"],
+              "n": x["name"], "p": x["pref"], "m": x["muni"], "y": x["price"],
+              "r": x["r"], "rc": x["rc"], "img": x["img"], "a": x["aff"]}
+             for i, x in enumerate(pool)]
+    total = len(items)
+    chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>' for g, lab in HGROUPS)
+    DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 高評価殿堂</nav>
+<h1>ふるさと納税 高評価殿堂<span class="yr">2026</span></h1>
+<p class="lead">楽天ふるさと納税の全カテゴリ約23,000件の返礼品から、<b>★4.7以上・レビュー多数</b>の「まず失敗しない」返礼品だけを厳選し、レビュー数で信頼補正した独自スコアで横断ランキング。<b>迷ったらここから選べば外さない</b>、殿堂入りの{total}品です。</p>
+{AD}
+<div class="lbar"><h2>殿堂ランキング</h2><div class="lchips">{chips}</div></div>
+<p class="cnt"><b id="hcnt"></b></p>
+<div id="hlist" class="cards"></div>
+<section class="guide">
+<h2>「高評価殿堂」の選び方</h2>
+<p>ふるさと納税は種類が多すぎて「どれを選べば失敗しないか」が分かりにくいもの。このページは<b>レビュー★4.7以上かつレビュー件数の多い返礼品</b>だけを全カテゴリから集め、<b>「高評価×たくさんの人が満足」</b>を数値化（ベイズ補正）して並べています。★5.0でもレビュー2件のような“怪しい高評価”は上位に来ないよう補正しているため、<b>本当に多くの人が満足した鉄板返礼品</b>が上位に並びます。</p>
+<div class="gpts">
+<div class="gpt"><h3>なぜレビュー数も見るの？</h3><p>★の高さだけだと、数件のレビューでたまたま高評価になった商品が紛れ込みます。レビュー件数が多いほど評価は信頼でき、当ランキングは件数で重みづけしています。</p></div>
+<div class="gpt"><h3>寄付額はサイトで違う？</h3><p>寄付額は自治体が決めるため、どのふるさと納税サイトでも同額です。掲載は楽天ふるさと納税のデータです。</p></div>
+<div class="gpt"><h3>カテゴリで絞れる？</h3><p>上のチップで肉・魚介・米卵・果物スイーツ・飲料お酒・日用品・現地体験に絞り込めます。目的が決まっている人はチップで絞ると探しやすくなります。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">
+<div class="faq"><h3>Q. 迷ったら何を選べばいい？</h3><p>A. まずこの殿堂ランキングの上位から、欲しいジャンル（肉・魚介・果物など）で絞って選べば大きく外しません。いずれも多くの人が高評価をつけた実績のある返礼品です。</p></div>
+<div class="faq"><h3>Q. ランキングの基準は？</h3><p>A. レビュー★4.7以上・レビュー50件以上を対象に、レビュー件数で信頼補正した独自スコア順です。件数が多く評価も高い返礼品ほど上位になります。</p></div>
+<div class="faq"><h3>Q. コスパ（量あたりの安さ）でも選びたい</h3><p>A. 各カテゴリの<a href="/furusato">コスパランキング</a>では、寄付額あたりの内容量（円/kg等）で選べます。殿堂は“満足度”、コスパランキングは“量あたりのお得さ”で見る使い分けがおすすめです。</p></div>
+</div>
+</section>
+<script id="hdata" type="application/json">{DATA_JSON}</script>
+<script>{HALL_JS}</script>
+"""
+    title = "ふるさと納税 高評価殿堂2026｜★4.7以上の失敗しない返礼品ランキング"
+    desc = f"楽天ふるさと納税の全カテゴリから★4.7以上・レビュー多数の返礼品だけを厳選、信頼補正した独自スコアで横断ランキング。迷ったら選べば外さない殿堂入り{total}品。"
+    open(os.path.join(SITE, "furusato-hall.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-hall.html", head=HALL_CSS))
+    print(f"  高評価殿堂ページ: {total}品 (★{MIN_R}+ & レビュー{MIN_RC}+)")
+    return total
+
+HALL_CSS = ("<style>"
+    ".hrank{position:absolute;top:-6px;left:-6px;background:var(--accent);color:#fff;font-weight:800;"
+    "font-size:.8rem;min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.2)}"
+    ".hrank.top{background:#e8a800}"
+    ".card{position:relative}"
+    "</style>")
+
+HALL_JS = r"""
+const HD=JSON.parse(document.getElementById('hdata').textContent);
+const list=document.getElementById('hlist'),cnt=document.getElementById('hcnt');
+let selG='all';
+const yen=v=>'¥'+v.toLocaleString();
+const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
+function render(){
+  let a=(selG==='all')?HD:HD.filter(x=>x.g===selG);
+  cnt.innerHTML='<b>'+a.length+'品</b>'+(selG==='all'?'（全カテゴリ殿堂）':'');
+  list.innerHTML=a.slice(0,150).map(x=>{
+    const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
+    const rc='<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>';
+    const loc=x.p?('<div class="lmuni">'+x.p+(x.m&&x.m!==x.p?' '+x.m:'')+'</div>'):'';
+    const rk='<span class="hrank'+(x.k<=3?' top':'')+'">'+x.k+'</span>';
+    return '<div class="card">'+rk+img+'<div class="cbody">'
+      +'<span class="ltag">'+x.c+'</span>'
+      +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+x.n.replace(/"/g,'')+'">'+x.n+'</a>'
+      +loc+'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rc
+      +'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+      +'</div></div>';
+  }).join('');
+  if(a.length>150){list.innerHTML+='<p class="note">上位150品を表示中（殿堂スコア順）。</p>';}
+}
+document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.lchip').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');selG=b.dataset.g;render();
+}));
+render();
+"""
+
 def build_hub(counts):
     # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
     parts = []
@@ -412,6 +534,7 @@ def build_hub(counts):
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
+<a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
@@ -429,7 +552,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -443,6 +566,7 @@ if __name__ == "__main__":
         counts[c["slug"]] = build_cat(c)
     build_guide()
     nloc = build_local()
+    nhall = build_hall()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + {len(CATS)}カテゴリ  {counts}")
