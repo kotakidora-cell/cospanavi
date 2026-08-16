@@ -73,6 +73,51 @@ def foot(base=""):
             f'<p class="muted">当サイトはアフィリエイト広告を利用しています。'
             f'<a href="/privacy">プライバシーポリシー</a></p></footer>')
 
+CAT_MAP = {c["slug"]: c for c in CATS}
+# 関連カテゴリ（トピッククラスター）＝内部リンクで関連ページ群の評価を底上げ（SEO）
+CLUSTERS = [
+    ["robot-cleaner", "stick-cleaner", "canister-cleaner"],  # 掃除機
+    ["microwave", "rice-cooker", "kettle"],                  # キッチン家電
+    ["air-purifier", "humidifier"],                          # 空気・季節
+    ["refrigerator", "washer"],                              # 大型家電
+    ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
+    ["hair-dryer", "portable-power"],                        # 生活・その他
+]
+SLUG2CLUSTER = {s: i for i, cl in enumerate(CLUSTERS) for s in cl}
+POPULAR = ["robot-cleaner", "air-purifier", "tablet", "hair-dryer", "microwave"]
+
+def related_cats(slug, k=4):
+    out = []
+    ci = SLUG2CLUSTER.get(slug)
+    if ci is not None:
+        out += [s for s in CLUSTERS[ci] if s != slug]
+    for s in POPULAR:  # クラスターが小さい場合は人気カテゴリで補完（内部リンクの辺を増やす）
+        if len(out) >= k:
+            break
+        if s != slug and s not in out:
+            out.append(s)
+    return out[:k]
+
+def render_related(slug):
+    rs = [s for s in related_cats(slug) if s in CAT_MAP]
+    if not rs:
+        return ""
+    cards = "".join(
+        f'<a class="hcard" href="{U(CAT_MAP[s]["file"])}"><div class="hico">{CAT_MAP[s]["icon"]}</div>'
+        f'<div><h3>{CAT_MAP[s]["label"]}</h3><p>{H.escape(CAT_MAP[s]["desc"][:44])}</p></div></a>'
+        for s in rs)
+    return f'<h2>関連カテゴリのランキング</h2><div class="hgrid">{cards}</div>'
+
+def breadcrumb_ld(pairs):
+    # pairs=[(name, url or None)] 末尾=現在ページ。SERPのパンくず表示＆サイト構造の伝達に効く
+    items = []
+    for i, (name, url) in enumerate(pairs, 1):
+        it = {"@type": "ListItem", "position": i, "name": name}
+        if url:
+            it["item"] = url
+        items.append(it)
+    return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+
 def shell(title, desc, body, base="", head="", path=None, image=None, noindex=False):
     canon = ""
     if path is not None:
@@ -160,6 +205,7 @@ def build_category(cfg):
 <p class="note">※コスパ値＝満足度（レビュー評価をレビュー数で信頼補正）×安さ の独自指標（0〜100）。<a href="/about">算出方法</a></p>
 {AD}
 {GUIDE_HTML}
+{render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
 <script>{TOOL_JS}</script>
 """
@@ -169,7 +215,7 @@ def build_category(cfg):
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"],
                                "url": f"{SITE_URL}/product/{m['id']}", "name": m["name"]} for m in data[:20]]}
-    ld_list = [ld]
+    ld_list = [ld, breadcrumb_ld([("コスパナビ", SITE_URL + "/"), (cfg["label"], None)])]
     if faq_ld:
         ld_list.append(faq_ld)
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld_list)
@@ -281,7 +327,9 @@ def build_products(cfg, data):
               "offers": {"@type": "AggregateOffer", "priceCurrency": "JPY",
                          "lowPrice": min(_prices), "highPrice": max(_prices), "offerCount": len(_prices),
                          "availability": "https://schema.org/InStock"}}
-        head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+        bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), (cfg["label"], SITE_URL + U(cfg["file"])),
+                            (m["name"][:40], None)])
+        head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in (ld, bc))
         open(os.path.join(PDIR, rid + ".html"), "w", encoding="utf-8").write(
             shell(title, desc, body, base="../", head=head, path="product/" + rid + ".html", image=m["image"], noindex=True))
 
@@ -379,7 +427,9 @@ def build_compares():
 <p class="src"><a href="{U(cfg['file'])}">{cfg['label']}コスパランキングをすべて見る →</a></p>
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
 """
-        head = ""
+        bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), (cfg["label"], SITE_URL + U(cfg["file"])),
+                            (c["title"].split("｜")[0], None)])
+        head = f'<script type="application/ld+json">{json.dumps(bc, ensure_ascii=False)}</script>'
         open(os.path.join(CDIR, c["slug"] + ".html"), "w", encoding="utf-8").write(
             shell(c["title"], c["desc"], body, base="../", head=head,
                   path="compare/" + c["slug"] + ".html", image=picks[0][1]["image"]))

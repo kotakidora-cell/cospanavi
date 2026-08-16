@@ -29,6 +29,21 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 SITE = os.path.join(BASE, "site")
 SITE_URL = "https://cospa-navi.com"
+
+def breadcrumb_ld(pairs):
+    # pairs=[(name, url or None)] 末尾=現在ページ。パンくず構造化データ（SERP表示＆サイト構造の伝達）
+    items = []
+    for i, (name, url) in enumerate(pairs, 1):
+        it = {"@type": "ListItem", "position": i, "name": name}
+        if url:
+            it["item"] = url
+        items.append(it)
+    d = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+    return '<script type="application/ld+json">' + json.dumps(d, ensure_ascii=False) + '</script>'
+
+def bc_furusato(leaf):
+    # コスパナビ > ふるさと納税 > leaf
+    return breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("ふるさと納税", SITE_URL + "/furusato"), (leaf, None)])
 UPDATED = datetime.date.today().isoformat()
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
 # バリューコマース LinkSwitch: 提携済みモール(さとふる等)へのリンクを自動でアフィリ化(全ふるさとページ)
@@ -177,6 +192,7 @@ def build_cat(cfg):
           "itemListElement": [{"@type": "ListItem", "position": m["rank"], "name": m["name"]} for m in data[:20]]}
     ld_list = [ld] + ([faq_ld] if faq_ld else [])
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld_list)
+    head += bc_furusato(cfg["label"])
     open(os.path.join(SITE, cfg["file"]), "w", encoding="utf-8").write(shell(title, desc, body, cfg["file"], head))
     return len(data)
 
@@ -231,6 +247,7 @@ def build_guide():
     title = "ふるさと納税サイトの選び方2026｜ポイント廃止後の比較とお得な方法"
     desc = "2025年10月のポイント付与廃止後、ふるさと納税サイトはどう選ぶ？楽天・さとふる・ふるさとチョイス・ふるなび等を比較し、今もお得にする方法（決済ポイント）を解説。"
     head = f'<script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>'
+    head += bc_furusato("ふるさと納税サイトの選び方")
     open(os.path.join(SITE, "furusato-sites.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato-sites.html", head))
 
 # ================= 現地で使える体験（全国から県で探す） =================
@@ -336,7 +353,7 @@ def build_local():
     title = "ふるさと納税で現地で使える体験を全国から探す｜食事券・宿泊・レジャー"
     desc = f"寄付先の現地で使える食事券・宿泊券・温泉・レジャー施設・ゴルフ・利用券のふるさと納税返礼品を、全国{total:,}件から都道府県別に探せます。旅行・帰省先で使えてお得。"
     open(os.path.join(SITE, "furusato-local.html"), "w", encoding="utf-8").write(
-        shell(title, desc, body, "furusato-local.html", head=LOCAL_CSS))
+        shell(title, desc, body, "furusato-local.html", head=LOCAL_CSS + bc_furusato("現地で使える体験")))
     print(f"  現地体験ページ: {total}件 / {len(per_pref)}県")
     return total
 
@@ -475,7 +492,7 @@ def build_hall():
     title = "ふるさと納税 高評価殿堂2026｜★4.7以上の失敗しない返礼品ランキング"
     desc = f"楽天ふるさと納税の全カテゴリから★4.7以上・レビュー多数の返礼品だけを厳選、信頼補正した独自スコアで横断ランキング。迷ったら選べば外さない殿堂入り{total}品。"
     open(os.path.join(SITE, "furusato-hall.html"), "w", encoding="utf-8").write(
-        shell(title, desc, body, "furusato-hall.html", head=HALL_CSS))
+        shell(title, desc, body, "furusato-hall.html", head=HALL_CSS + bc_furusato("高評価殿堂")))
     print(f"  高評価殿堂ページ: {total}品 (★{MIN_R}+ & レビュー{MIN_RC}+)")
     return total
 
@@ -543,7 +560,8 @@ def build_hub(counts):
 """
     title = "ふるさと納税コスパ分析2026｜円/kgで選ぶお得な返礼品ランキング"
     desc = "楽天ふるさと納税の返礼品を寄付額あたりの内容量（円/kg等）とレビュー満足度で独自コスパランキング。定期便も総量換算で比較。米など。"
-    open(os.path.join(SITE, "furusato.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato.html"))
+    hub_bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("ふるさと納税", None)])
+    open(os.path.join(SITE, "furusato.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato.html", hub_bc))
 
 def add_to_sitemap():
     # build_site生成のsitemap.xmlにふるさと納税ページを追記(未登録なら)
