@@ -42,6 +42,17 @@ def stars(v):
     full = int(v); half = 1 if v - full >= 0.5 else 0
     return "★" * full + ("½" if half else "") + "☆" * (5 - full - half)
 
+def price_stats(data):
+    # 「〇〇 相場/値段」検索の意図に答えるため、実売最安値の分布を算出（最安/中央値/ボリュームゾーン25-75%）
+    ps = sorted(m["minPrice"] for m in data)
+    n = len(ps)
+    def pct(q):
+        if n == 1:
+            return ps[0]
+        i = q * (n - 1); lo = int(i); frac = i - lo
+        return ps[lo] if lo + 1 >= n else round(ps[lo] + (ps[lo + 1] - ps[lo]) * frac)
+    return ps[0], pct(0.5), pct(0.25), pct(0.75)
+
 def U(file):
     # 内部リンクを絶対パス・拡張子なしに統一（Cloudflareのクリーンurlと一致させリダイレクトを避ける）
     if file in ("index.html", "index", "", "/"):
@@ -118,10 +129,15 @@ def build_category(cfg):
     DATA_JSON = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
     GUIDE_HTML, faq_ld = render_guide(cfg["slug"], cfg["label"])
+    lo, med, q1, q3 = price_stats(data)
+    soba = (f'<div class="soba"><span class="sicon">💰</span><div><b>{cfg["label"]}の価格相場</b>'
+            f'<span class="smt">（{UPDATED}時点・{len(data)}機種の実売最安値より）</span><br>'
+            f'最安 <b>¥{lo:,}</b> ／ 相場（中央値） <b>¥{med:,}</b> ／ ボリュームゾーン <b>¥{q1:,}〜¥{q3:,}</b></div></div>')
     body = f"""
 <nav class="crumb"><a href="/">コスパナビ</a> › {cfg['label']}</nav>
-<h1>{cfg['label']} コスパランキング<span class="yr">2026</span></h1>
-<p class="lead">{cfg['desc']} <b>{len(data)}機種</b>を比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
+<h1>{cfg['label']} コスパ最強ランキング＆価格相場<span class="yr">2026</span></h1>
+<p class="lead">{cfg['desc']} <b>{len(data)}機種</b>を、価格相場と満足度から比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
+{soba}
 {render_compare_box(cfg['slug'])}
 {AD}
 <div class="tool">
@@ -147,8 +163,9 @@ def build_category(cfg):
 <script id="data" type="application/json">{DATA_JSON}</script>
 <script>{TOOL_JS}</script>
 """
-    title = f"{cfg['label']}のコスパ最強ランキング2026｜満足度×価格で比較"
-    desc = f"{cfg['desc']} 楽天・Yahoo!の最安値も比較。{len(data)}機種を掲載。"
+    title = f"{cfg['label']}のコスパ最強ランキング2026｜価格相場・安い順に比較"
+    desc = (f"{cfg['label']}の価格相場は最安¥{lo:,}〜中央値¥{med:,}。満足度×価格の独自コスパ値で"
+            f"{len(data)}機種を安い順・コスパ順に比較し、値段とおすすめが一目で分かります。楽天・Yahoo!の最安値も掲載。")
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"],
                                "url": f"{SITE_URL}/product/{m['id']}", "name": m["name"]} for m in data[:20]]}
@@ -508,6 +525,8 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .src{margin-top:14px}.foot{max-width:1000px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line)}
 .fcats{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px}.fcats a{color:var(--sub);text-decoration:none;font-size:.85rem}.fcats a:hover{color:var(--accent)}
 @media(max-width:520px){.cards{grid-template-columns:1fr}}
+.soba{display:flex;gap:10px;align-items:flex-start;background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:11px 14px;margin:12px 0;font-size:.92rem}
+.soba .sicon{font-size:1.2rem;line-height:1.3}.soba b{color:var(--accent)}.soba .smt{color:var(--sub);font-size:.78rem;font-weight:400}
 .cmpbox{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0}
 .cmpbox-t{font-weight:800;color:var(--accent);font-size:.9rem}.cmpbox-a{font-weight:700;font-size:.88rem;text-decoration:none}
 .vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:16px 0}
