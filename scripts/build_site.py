@@ -184,6 +184,7 @@ def build_category(cfg):
 <p class="lead">{cfg['desc']} <b>{len(data)}機種</b>を、価格相場と満足度から比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
 {soba}
 {render_compare_box(cfg['slug'])}
+{render_brand_links(cfg['slug'])}
 {AD}
 <div class="tool">
   <div class="ctl"><label>重視ポイント</label>
@@ -435,6 +436,97 @@ def build_compares():
                   path="compare/" + c["slug"] + ".html", image=picks[0][1]["image"]))
     return len(COMPARES)
 
+# ================= ブランド別ページ（「〇〇 レビュー/コスパ」検索の受け皿） =================
+BDIR = os.path.join(SITE, "brand"); os.makedirs(BDIR, exist_ok=True)
+BRAND_SLUGS = {"iRobot": "roomba", "Anker": "eufy", "Roborock": "roborock", "Ecovacs": "deebot",
+               "EcoFlow": "ecoflow", "Jackery": "jackery", "Dyson": "dyson", "パナソニック": "panasonic"}
+
+def _brands_from_compares():
+    # COMPARESのbrand定義(独自解説を執筆済)を(カテゴリ,match)単位で集約→ブランドページの素に
+    seen = {}
+    for c in COMPARES:
+        for b in c["brands"]:
+            key = (c["category"], b["match"])
+            if key not in seen and b["match"] in BRAND_SLUGS:
+                seen[key] = {"cat": c["category"], "match": b["match"], "name": b["name"],
+                             "body": b.get("body", ""), "traits": b.get("traits", {}),
+                             "name_incl": b.get("name_incl"), "slug": BRAND_SLUGS[b["match"]]}
+    return list(seen.values())
+
+def brands_for(cat_slug):
+    return [b for b in _brands_from_compares() if b["cat"] == cat_slug]
+
+def render_brand_links(cat_slug):
+    bs = brands_for(cat_slug)
+    if not bs:
+        return ""
+    links = "".join(f'<a class="cmpbox-a" href="/brand/{b["slug"]}">{H.escape(b["name"].split("（")[0])}のコスパ・レビュー →</a>' for b in bs)
+    return f'<div class="cmpbox"><span class="cmpbox-t">🔖 ブランドで選ぶ</span>{links}</div>'
+
+def _mcard(m, rank):
+    return (f'<div class="card"><div class="cimg"><img loading="lazy" src="{m["image"]}" alt="{H.escape(m["name"][:30])}"></div>'
+            f'<div class="cbody"><div class="ctop"><span class="crank">#{rank}</span>'
+            f'<span class="ccospa">コスパ <b>{m["cospa"]:.0f}</b></span></div>'
+            f'<a class="cname" href="/product/{m["id"]}" title="{H.escape(m["name"])}">{H.escape(m["name"][:40])}</a>'
+            f'<div class="cstars">{stars(m["review"])} <span class="muted">{m["review"]:.2f}（{m["reviewCount"]:,}件）</span></div>'
+            f'<div class="cprice">¥{m["minPrice"]:,}<span class="muted">〜</span></div>'
+            f'<a class="buy sm" href="{m["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">最安値を見る<span class="pr">PR</span></a>'
+            f'</div></div>')
+
+def build_brands():
+    n = 0
+    for b in _brands_from_compares():
+        cfg = CAT_MAP.get(b["cat"])
+        if not cfg:
+            continue
+        data = load(b["cat"])
+        def ok(m):
+            if b["match"] not in m["brand"]:
+                return False
+            if b["name_incl"] and not any(t.lower() in m["name"].lower() for t in b["name_incl"]):
+                return False
+            return True
+        models = sorted([m for m in data if ok(m)], key=lambda m: -m["cospa"])
+        if len(models) < 2:
+            continue
+        short = b["name"].split("（")[0]  # 「ルンバ」など検索語に近い短名
+        lo, med, q1, q3 = price_stats(models)
+        soba = (f'<div class="soba"><span class="sicon">💰</span><div><b>{short}（{cfg["label"]}）の価格相場</b>'
+                f'<span class="smt">（{UPDATED}時点・{len(models)}機種の実売最安値より）</span><br>'
+                f'最安 <b>¥{lo:,}</b> ／ 中央値 <b>¥{med:,}</b> ／ ボリュームゾーン <b>¥{q1:,}〜¥{q3:,}</b></div></div>')
+        traits = "".join(f'<tr><td>{H.escape(k)}</td><td>{H.escape(v)}</td></tr>' for k, v in b["traits"].items())
+        cards = "".join(_mcard(m, i + 1) for i, m in enumerate(models[:24]))
+        more = f'<p class="note">上位24機種を表示中（全{len(models)}機種）。すべては<a href="{U(cfg["file"])}">{cfg["label"]}コスパランキング</a>で確認できます。</p>' if len(models) > 24 else ""
+        cmps = [c for c in COMPARES if c["category"] == b["cat"] and any(b["match"] == x["match"] for x in c["brands"])]
+        cmp_links = "".join(f'<li><a href="/compare/{c["slug"]}">{H.escape(c["title"].split("｜")[0])}</a></li>' for c in cmps)
+        cmp_sec = f'<h2>{short}を他ブランドと比較</h2><ul class="rel-list">{cmp_links}</ul>' if cmp_links else ""
+        body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="{U(cfg['file'])}">{cfg['label']}</a> › {H.escape(short)}</nav>
+<h1>{H.escape(b["name"])}の{cfg['label']} コスパ・レビュー比較<span class="yr">2026</span></h1>
+<p class="lead">{H.escape(b["name"])}の{cfg['label']}を全<b>{len(models)}機種</b>、レビュー満足度と価格の独自コスパ値で比較。{short}のどの機種がコスパが良いか、価格相場と口コミ評価から分かります。</p>
+{soba}
+<h2>{H.escape(short)}ってどう？特徴と評判</h2>
+<p>{b["body"]}</p>
+<table class="kv">{traits}</table>
+{render_compare_box(b['cat'])}
+{AD}
+<h2>{H.escape(short)}の{cfg['label']} コスパランキング</h2>
+<div class="cards">{cards}</div>
+{more}
+{cmp_sec}
+<p class="src"><a href="{U(cfg['file'])}">{cfg['label']}の全機種ランキングへ →</a></p>
+"""
+        title = f"{b['name']}の{cfg['label']}｜全{len(models)}機種のコスパ・価格・レビュー比較【2026】"
+        desc = (f"{b['name']}の{cfg['label']}の価格相場は最安¥{lo:,}〜中央値¥{med:,}。全{len(models)}機種を"
+                f"コスパ値・レビュー・価格で比較。{short}のおすすめ機種とコスパが分かります。")
+        bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), (cfg["label"], SITE_URL + U(cfg["file"])),
+                            (short, None)])
+        head = f'<script type="application/ld+json">{json.dumps(bc, ensure_ascii=False)}</script>'
+        open(os.path.join(BDIR, b["slug"] + ".html"), "w", encoding="utf-8").write(
+            shell(title, desc, body, base="../", head=head, path="brand/" + b["slug"] + ".html", image=models[0]["image"]))
+        n += 1
+    return n
+
 # ================= ハブ =================
 def build_hub(built):
     cards = ""
@@ -565,6 +657,7 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .prank{color:var(--accent);font-weight:700}.pstars{color:#f5a623}.pprice{font-size:1.6rem;font-weight:800;margin:.2em 0}.pprice .muted{font-size:.8rem;font-weight:400}
 .kv{width:100%;margin:.4em 0}.kv td{border-bottom:1px solid var(--line);padding:8px}.kv td:first-child{color:var(--sub);width:42%}
 .rel{display:flex;flex-wrap:wrap;gap:8px}.rel a{font-size:.85rem;border:1px solid var(--line);border-radius:8px;padding:5px 10px;text-decoration:none}
+.rel-list{margin:.4em 0;padding-left:1.2em}.rel-list li{margin:.2em 0}
 .guide{margin:28px 0 8px}.guide h2{margin-top:1.4em}
 .gpts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:10px 0}
 .gpt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -599,10 +692,11 @@ if __name__ == "__main__":
         build_products(cfg, data)
         built[cfg["slug"]] = len(data)
     ncmp = build_compares()
+    nbrand = build_brands()
     build_hub(built)
     build_static()
     build_seo()
     # styles.css
     open(os.path.join(SITE, "styles.css"), "w", encoding="utf-8").write(CSS)
     total = sum(built.values())
-    print(f"生成: index / {len(CATS)}カテゴリ / product×{total} / 比較×{ncmp} / about / privacy / sitemap({len(SITEMAP)}URL) / robots / styles.css")
+    print(f"生成: index / {len(CATS)}カテゴリ / product×{total} / 比較×{ncmp} / ブランド×{nbrand} / about / privacy / sitemap({len(SITEMAP)}URL) / robots / styles.css")
