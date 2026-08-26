@@ -50,6 +50,9 @@ if __name__ == "__main__":
     kw = FURUSATO[slug]["keyword"]
     print(f"取得(楽天ふるさと納税): {slug} kw={kw} pages={pages}")
     items = fetch(kw, pages=pages)
-    json.dump(items, open(os.path.join(DATA, f"furusato-{slug}_raw.json"), "w", encoding="utf-8"),
-              ensure_ascii=False, indent=1)
-    print(f"保存: furusato-{slug}_raw.json  {len(items)}件")
+    if items:
+        json.dump(items, open(os.path.join(DATA, f"furusato-{slug}_raw.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        print(f"保存: furusato-{slug}_raw.json  {len(items)}件")
+    else:  # 取得0件(レート制限/APIエラー等)は既存の良いデータを空で上書きしない
+        print(f"[SKIP] furusato-{slug}: 取得0件のため保存せず既存データを保持")

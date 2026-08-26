@@ -95,6 +95,9 @@ if __name__ == "__main__":
             kept += 1
         print(f"{kw}: 取得{len(got)} 採用{kept} 累計{len(seen)}")
     items = list(seen.values())
-    json.dump(items, open(os.path.join(DATA, "furusato-local_raw.json"), "w", encoding="utf-8"),
-              ensure_ascii=False, indent=1)
-    print(f"保存: furusato-local_raw.json  {len(items)}件")
+    if items:
+        json.dump(items, open(os.path.join(DATA, "furusato-local_raw.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        print(f"保存: furusato-local_raw.json  {len(items)}件")
+    else:  # 取得0件は既存データを空で上書きしない
+        print("[SKIP] furusato-local: 取得0件のため保存せず既存データを保持")
