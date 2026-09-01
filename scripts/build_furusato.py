@@ -551,56 +551,47 @@ def teiki_freq(n):
     return None
 
 def build_teiki():
-    MIN_RC, TOPN = 3, 400
-    seen = {}
-    revs = []
+    # 正規化データ(furusato-<slug>.json)を使う=定期便を総量換算した円/unit・コスパ値が算出済み。
+    # コスパナビの核=「1回の寄付で総量いくら届く=円/kg」を定期便でも見せる。
+    TOPN = 400
+    pool = []
     for slug in FCATS:
-        f = os.path.join(DATA, f"furusato-{slug}_raw.json")
+        f = os.path.join(DATA, f"furusato-{slug}.json")
         if not os.path.exists(f):
             continue
+        ul = FCATS[slug]["suffix"]  # バラの単位(kg/個/本/ロール)。unit_labelは"円/kg"なので不可
         for x in json.load(open(f, encoding="utf-8")):
-            key = x.get("affiliate") or x.get("url")
-            if not key or key in seen:
-                continue
             fr = teiki_freq(x["name"])
             if not fr:
                 continue
-            rc = x.get("reviewCount") or 0
-            r = round(float(x.get("review") or 0), 2)
-            pref = x.get("pref") or pref_of(x.get("shop", ""))
-            seen[key] = {"slug": slug, "cat": FCATS[slug]["label"], "fr": fr, "r": r, "rc": rc, "pref": pref,
-                         "name": x["name"].replace("【ふるさと納税】", "").strip()[:56],
-                         "muni": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
-                         "price": x["price"], "img": x.get("image", ""),
-                         "aff": x.get("affiliate") or x.get("url")}
-            if rc > 0:
-                revs.append(r)
-    C = (sum(revs) / len(revs)) if revs else 4.5
-    m = 100
-    pool = [x for x in seen.values() if x["rc"] >= MIN_RC]
-    for x in pool:
-        x["bayes"] = (x["rc"] / (x["rc"] + m)) * x["r"] + (m / (x["rc"] + m)) * C
-    pool.sort(key=lambda z: -z["bayes"])
+            pref = pref_of(x.get("shop", ""))
+            amt = x.get("amt", 0)
+            pool.append({"g": SLUG2GROUP.get(slug, "other"), "c": FCATS[slug]["label"], "fr": fr,
+                         "cospa": round(x["cospa"]), "unit": round(x["unit"]), "ul": ul,
+                         "amt": (round(amt, 1) if amt < 10 else round(amt)),
+                         "n": x["name"].replace("【ふるさと納税】", "").strip()[:56],
+                         "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
+                         "y": x["price"], "r": round(x["review"], 2), "rc": x["reviewCount"],
+                         "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
+    pool.sort(key=lambda z: -z["cospa"])  # コスパ順（円/unitの正規化スコア）
     pool = pool[:TOPN]
-    present = {SLUG2GROUP.get(x["slug"], "other") for x in pool}
-    items = [{"g": SLUG2GROUP.get(x["slug"], "other"), "c": x["cat"], "fr": x["fr"], "n": x["name"],
-              "p": x["pref"], "m": x["muni"], "y": x["price"], "r": x["r"], "rc": x["rc"],
-              "img": x["img"], "a": x["aff"]} for x in pool]
+    present = {x["g"] for x in pool}
+    items = pool
     total = len(items)
     chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>'
                     for g, lab in HGROUPS if g == "all" or g in present)
     DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
     body = f"""
 <nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 定期便特集</nav>
-<h1>ふるさと納税 定期便特集<span class="yr">2026</span></h1>
-<p class="lead">1回の寄付で<b>毎月・隔月・全〇回に分けて届く「定期便」</b>の返礼品を、レビュー評価で信頼補正した独自スコアでジャンル別にランキング。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>定期便を{total}品から探せます。</p>
+<h1>ふるさと納税 定期便コスパランキング<span class="yr">2026</span></h1>
+<p class="lead">1回の寄付で<b>毎月・全〇回に分けて届く定期便</b>を、<b>寄付額あたりの総量（円/kg など）</b>でランキング。全回分を<b>総量に換算</b>して「量あたり本当にお得な定期便」が分かります。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>コスパ定期便を{total}品から。</p>
 {AD}
-<div class="lbar"><h2>定期便ランキング</h2><div class="lchips">{chips}</div></div>
+<div class="lbar"><h2>定期便コスパランキング</h2><div class="lchips">{chips}</div></div>
 <p class="cnt"><b id="tcnt"></b></p>
 <div id="tlist" class="cards"></div>
 <section class="guide">
-<h2>ふるさと納税「定期便」のメリットと選び方</h2>
-<p>定期便は、1回の寄付で返礼品が<b>複数回に分けて届く</b>タイプ。お米やお水、トイレットペーパーのような<b>使い続ける消耗品</b>や、旬のフルーツ・お肉を毎月楽しみたい人に人気です。一度の手続きで一年分をまかなえて、保管場所にも困りにくいのが魅力。当ページはレビュー件数で信頼補正した独自スコア順に並べているので、<b>多くの人が満足した定期便</b>が上位に来ます。</p>
+<h2>ふるさと納税「定期便」のコスパの見方</h2>
+<p>定期便は、1回の寄付で返礼品が<b>複数回に分けて届く</b>タイプ。お米やお水、トイレットペーパーのような<b>使い続ける消耗品</b>や、旬のフルーツ・お肉を毎月楽しみたい人に人気です。定期便のコスパは<b>「全回分の総量 ÷ 寄付額」＝円/kg（円/本など）</b>で決まります。当ページは全回分を総量に換算し、<b>量あたりが本当にお得な定期便</b>をコスパ順に並べています（例：寄付8,000円で全6回・総量12kg＝667円/kg）。一度の手続きで一年分をまかなえて、保管場所にも困りにくいのが魅力です。</p>
 <div class="gpts">
 <div class="gpt"><h3>どんな人に向く？</h3><p>お米・お水・日用品を切らしたくない人、旬の食材を毎月楽しみたい人、まとめて大量に届くと保管に困る人に向いています。</p></div>
 <div class="gpt"><h3>注意点は？</h3><p>初回発送月や配送間隔、総回数は返礼品ごとに異なります。冷蔵・冷凍品は受け取りタイミングにご注意を。申込前に各返礼品の配送スケジュールを必ずご確認ください。</p></div>
@@ -616,15 +607,16 @@ def build_teiki():
 <script id="tdata" type="application/json">{DATA_JSON}</script>
 <script>{TEIKI_JS}</script>
 """
-    title = "ふるさと納税 定期便特集2026｜毎月・全〇回で届く返礼品ランキング"
-    desc = f"1回の寄付で毎月・隔月・全〇回に分けて届く定期便の返礼品を、米・肉・ビール・日用品などジャンル別にランキング。レビュー信頼補正で厳選した定期便{total}品。"
+    title = "ふるさと納税 定期便コスパランキング2026｜円/kgで選ぶお得な定期便"
+    desc = f"毎月・全〇回に分けて届く定期便を、寄付額あたりの総量（円/kg等）でコスパランキング。全回分を総量換算して量あたりお得な定期便を米・肉・ビール・日用品などジャンル別に{total}品。"
     open(os.path.join(SITE, "furusato-teiki.html"), "w", encoding="utf-8").write(
         shell(title, desc, body, "furusato-teiki.html", head=HALL_CSS + TEIKI_CSS + bc_furusato("定期便特集")))
     print(f"  定期便特集ページ: {total}品")
     return total
 
 TEIKI_CSS = ("<style>.ftag{display:inline-block;background:var(--accent2,#2563eb);color:#fff;border-radius:6px;"
-             "padding:1px 7px;font-size:.7rem;font-weight:700;margin:0 0 3px 5px}</style>")
+             "padding:1px 7px;font-size:.7rem;font-weight:700;margin:0 0 3px 5px}"
+             ".tunit{font-size:.9rem;margin:2px 0}.tunit b{color:var(--accent);font-size:1.05rem}</style>")
 
 TEIKI_JS = r"""
 const TD=JSON.parse(document.getElementById('tdata').textContent);
@@ -634,19 +626,25 @@ const yen=v=>'¥'+v.toLocaleString();
 const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
 function render(){
   let a=(selG==='all')?TD:TD.filter(x=>x.g===selG);
-  cnt.innerHTML='<b>'+a.length+'品</b>'+(selG==='all'?'（全ジャンル）':'');
-  list.innerHTML=a.slice(0,150).map(x=>{
+  cnt.innerHTML='<b>'+a.length+'品</b>'+(selG==='all'?'（全ジャンル・コスパ順）':'（コスパ順）');
+  list.innerHTML=a.slice(0,150).map((x,i)=>{
     const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
     const rc=x.rc>0?'<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>':'';
     const loc=x.p?('<div class="lmuni">'+x.p+(x.m&&x.m!==x.p?' '+x.m:'')+'</div>'):'';
+    const bar='<span class="bar"><i style="width:'+Math.max(4,x.cospa)+'%"></i></span>';
+    const cos='<div class="ccospa">コスパ <b>'+x.cospa+'</b>'+bar+'</div>';
+    // 定期便の核: 総量に換算した 円/kg と 総量
+    const unitline='<div class="tunit"><b>¥'+x.unit.toLocaleString()+'</b>/'+x.ul
+      +' <span class="muted">・総量'+x.amt+x.ul+'（'+x.fr+'）</span></div>';
     return '<div class="card">'+img+'<div class="cbody">'
       +'<span class="ltag">'+x.c+'</span><span class="ftag">🔁 '+x.fr+'</span>'
       +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+x.n.replace(/"/g,'')+'">'+x.n+'</a>'
-      +loc+'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rc
+      +loc+cos+unitline
+      +'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rc
       +'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
       +'</div></div>';
   }).join('');
-  if(a.length>150){list.innerHTML+='<p class="note">上位150品を表示中（スコア順）。</p>';}
+  if(a.length>150){list.innerHTML+='<p class="note">上位150品を表示中（コスパ順）。</p>';}
 }
 document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.lchip').forEach(x=>x.classList.remove('on'));
