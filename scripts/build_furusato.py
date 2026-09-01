@@ -1,6 +1,6 @@
 # ふるさと納税コスパ分析ページを生成。ランディング(furusato.html)＋カテゴリ(furusato-<slug>.html)。
 # 通常商品とロジックが違う(寄付額あたりの内容量=お得さ)ため専用ビルダー。styles.cssは共用。
-import json, os, sys, html as H, datetime, urllib.parse
+import json, os, sys, html as H, datetime, urllib.parse, re
 from furusato_cats import FCATS
 from furusato_guides import FGUIDES
 
@@ -533,6 +533,128 @@ document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
 render();
 """
 
+# ================= 定期便特集（毎月・全〇回で届く返礼品をジャンル別に） =================
+def teiki_freq(n):
+    # 回数・頻度を伴う=本当の定期便のみ検出（「定期便も選べる」等の単発1回は除外）。表示用の頻度ラベルを返す
+    has_ctx = ("定期" in n or "頒布" in n or "毎月" in n or "隔月" in n
+               or bool(re.search(r'\d+\s*回\s*(?:コース|お届け|に分)|全\s*\d+\s*回', n)))
+    if has_ctx:
+        nums = [int(x) for x in re.findall(r'(\d+)\s*回', n) if 2 <= int(x) <= 52]  # 範囲(1〜6回)は最大回数、1回(単発)や桁違いは除外
+        if nums:
+            return f"全{max(nums)}回"
+        if "頒布会" in n:
+            return "頒布会"
+        if "定期" in n and "毎月" in n:
+            return "毎月"
+        if "定期" in n and "隔月" in n:
+            return "隔月"
+    return None
+
+def build_teiki():
+    MIN_RC, TOPN = 3, 400
+    seen = {}
+    revs = []
+    for slug in FCATS:
+        f = os.path.join(DATA, f"furusato-{slug}_raw.json")
+        if not os.path.exists(f):
+            continue
+        for x in json.load(open(f, encoding="utf-8")):
+            key = x.get("affiliate") or x.get("url")
+            if not key or key in seen:
+                continue
+            fr = teiki_freq(x["name"])
+            if not fr:
+                continue
+            rc = x.get("reviewCount") or 0
+            r = round(float(x.get("review") or 0), 2)
+            pref = x.get("pref") or pref_of(x.get("shop", ""))
+            seen[key] = {"slug": slug, "cat": FCATS[slug]["label"], "fr": fr, "r": r, "rc": rc, "pref": pref,
+                         "name": x["name"].replace("【ふるさと納税】", "").strip()[:56],
+                         "muni": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
+                         "price": x["price"], "img": x.get("image", ""),
+                         "aff": x.get("affiliate") or x.get("url")}
+            if rc > 0:
+                revs.append(r)
+    C = (sum(revs) / len(revs)) if revs else 4.5
+    m = 100
+    pool = [x for x in seen.values() if x["rc"] >= MIN_RC]
+    for x in pool:
+        x["bayes"] = (x["rc"] / (x["rc"] + m)) * x["r"] + (m / (x["rc"] + m)) * C
+    pool.sort(key=lambda z: -z["bayes"])
+    pool = pool[:TOPN]
+    present = {SLUG2GROUP.get(x["slug"], "other") for x in pool}
+    items = [{"g": SLUG2GROUP.get(x["slug"], "other"), "c": x["cat"], "fr": x["fr"], "n": x["name"],
+              "p": x["pref"], "m": x["muni"], "y": x["price"], "r": x["r"], "rc": x["rc"],
+              "img": x["img"], "a": x["aff"]} for x in pool]
+    total = len(items)
+    chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>'
+                    for g, lab in HGROUPS if g == "all" or g in present)
+    DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 定期便特集</nav>
+<h1>ふるさと納税 定期便特集<span class="yr">2026</span></h1>
+<p class="lead">1回の寄付で<b>毎月・隔月・全〇回に分けて届く「定期便」</b>の返礼品を、レビュー評価で信頼補正した独自スコアでジャンル別にランキング。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>定期便を{total}品から探せます。</p>
+{AD}
+<div class="lbar"><h2>定期便ランキング</h2><div class="lchips">{chips}</div></div>
+<p class="cnt"><b id="tcnt"></b></p>
+<div id="tlist" class="cards"></div>
+<section class="guide">
+<h2>ふるさと納税「定期便」のメリットと選び方</h2>
+<p>定期便は、1回の寄付で返礼品が<b>複数回に分けて届く</b>タイプ。お米やお水、トイレットペーパーのような<b>使い続ける消耗品</b>や、旬のフルーツ・お肉を毎月楽しみたい人に人気です。一度の手続きで一年分をまかなえて、保管場所にも困りにくいのが魅力。当ページはレビュー件数で信頼補正した独自スコア順に並べているので、<b>多くの人が満足した定期便</b>が上位に来ます。</p>
+<div class="gpts">
+<div class="gpt"><h3>どんな人に向く？</h3><p>お米・お水・日用品を切らしたくない人、旬の食材を毎月楽しみたい人、まとめて大量に届くと保管に困る人に向いています。</p></div>
+<div class="gpt"><h3>注意点は？</h3><p>初回発送月や配送間隔、総回数は返礼品ごとに異なります。冷蔵・冷凍品は受け取りタイミングにご注意を。申込前に各返礼品の配送スケジュールを必ずご確認ください。</p></div>
+<div class="gpt"><h3>寄付額はサイトで違う？</h3><p>寄付額は自治体が決めるため、どのふるさと納税サイトでも同額です。掲載は楽天ふるさと納税のデータです。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">
+<div class="faq"><h3>Q. 定期便は何回に分けて届きますか？</h3><p>A. 全3回・全6回・全12回（毎月）など返礼品によって様々です。各カードに配送頻度の目安を表示しています。詳細は返礼品ページでご確認ください。</p></div>
+<div class="faq"><h3>Q. 一度の寄付で申し込めますか？</h3><p>A. はい。定期便は1回の寄付（申込）で、指定回数に分けて届きます。毎回申し込む必要はありません。</p></div>
+<div class="faq"><h3>Q. コスパで選びたい場合は？</h3><p>A. 各カテゴリの<a href="/furusato">コスパランキング</a>では寄付額あたりの内容量（円/kg等）で選べます。定期便特集と合わせてご活用ください。</p></div>
+</div>
+</section>
+<script id="tdata" type="application/json">{DATA_JSON}</script>
+<script>{TEIKI_JS}</script>
+"""
+    title = "ふるさと納税 定期便特集2026｜毎月・全〇回で届く返礼品ランキング"
+    desc = f"1回の寄付で毎月・隔月・全〇回に分けて届く定期便の返礼品を、米・肉・ビール・日用品などジャンル別にランキング。レビュー信頼補正で厳選した定期便{total}品。"
+    open(os.path.join(SITE, "furusato-teiki.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-teiki.html", head=HALL_CSS + TEIKI_CSS + bc_furusato("定期便特集")))
+    print(f"  定期便特集ページ: {total}品")
+    return total
+
+TEIKI_CSS = ("<style>.ftag{display:inline-block;background:var(--accent2,#2563eb);color:#fff;border-radius:6px;"
+             "padding:1px 7px;font-size:.7rem;font-weight:700;margin:0 0 3px 5px}</style>")
+
+TEIKI_JS = r"""
+const TD=JSON.parse(document.getElementById('tdata').textContent);
+const list=document.getElementById('tlist'),cnt=document.getElementById('tcnt');
+let selG='all';
+const yen=v=>'¥'+v.toLocaleString();
+const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
+function render(){
+  let a=(selG==='all')?TD:TD.filter(x=>x.g===selG);
+  cnt.innerHTML='<b>'+a.length+'品</b>'+(selG==='all'?'（全ジャンル）':'');
+  list.innerHTML=a.slice(0,150).map(x=>{
+    const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
+    const rc=x.rc>0?'<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>':'';
+    const loc=x.p?('<div class="lmuni">'+x.p+(x.m&&x.m!==x.p?' '+x.m:'')+'</div>'):'';
+    return '<div class="card">'+img+'<div class="cbody">'
+      +'<span class="ltag">'+x.c+'</span><span class="ftag">🔁 '+x.fr+'</span>'
+      +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+x.n.replace(/"/g,'')+'">'+x.n+'</a>'
+      +loc+'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rc
+      +'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+      +'</div></div>';
+  }).join('');
+  if(a.length>150){list.innerHTML+='<p class="note">上位150品を表示中（スコア順）。</p>';}
+}
+document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.lchip').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');selG=b.dataset.g;render();
+}));
+render();
+"""
+
 def build_hub(counts):
     # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
     parts = []
@@ -552,6 +674,7 @@ def build_hub(counts):
 {AD}
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
+<a class="fbanner" href="/furusato-teiki"><div class="hico">🔁</div><div><h3>定期便特集 — 毎月・全〇回で届く<span class="n">NEW</span></h3><p>1回の寄付で<b>毎月・隔月・全〇回</b>に分けて届く定期便を厳選。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>返礼品をジャンル別に。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
@@ -570,7 +693,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -585,6 +708,7 @@ if __name__ == "__main__":
     build_guide()
     nloc = build_local()
     nhall = build_hall()
+    nteiki = build_teiki()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + {len(CATS)}カテゴリ  {counts}")
