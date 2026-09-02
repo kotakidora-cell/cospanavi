@@ -59,6 +59,12 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .gpts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:10px 0}
 .gpt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .gpt h3{margin:.1em 0 .3em;font-size:.98rem;color:var(--accent)}.gpt p{margin:0;font-size:.9rem}
+.picks{margin:8px 0}.pk-rng{font-size:.78rem;color:var(--sub);font-weight:400;margin-left:8px}
+.pk-nm{display:block;font-weight:700;text-decoration:none;color:var(--ink);font-size:.92rem;margin:2px 0}.pk-nm:hover{color:var(--accent2)}
+.pk-meta{font-size:.82rem;color:var(--sub);margin-bottom:6px}
+table.pk{border-collapse:collapse}table.pk th{text-align:left;color:var(--sub);font-size:.78rem;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.pk td{border-bottom:1px solid var(--line);padding:8px;font-size:.88rem;vertical-align:middle}
+.pk-r{font-weight:800;color:var(--accent);width:1.6em}.pk-br{font-size:.72rem;color:var(--sub)}.pk-p{font-weight:800;white-space:nowrap}.pk-cc{color:var(--sub);font-size:.8rem;white-space:nowrap}
 .faqs{display:grid;gap:10px;margin:10px 0}
 .faq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .faq h3{margin:.1em 0 .3em;font-size:.95rem}.faq p{margin:0;font-size:.9rem;color:var(--sub)}

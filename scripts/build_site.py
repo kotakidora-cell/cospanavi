@@ -163,6 +163,42 @@ def render_guide(slug, label):
                           "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in g["faq"]]}
     return html, ld
 
+# 「価格帯別おすすめ」＋「安い順TOP5」の静的ブロック。「〇〇 安い/値段/おすすめ/相場」検索に直答する実コンテンツ（SEO）。
+def render_picks(cfg, data):
+    label = cfg["label"]
+    lo, med, q1, q3 = price_stats(data)
+    # 価格帯別おすすめ（各予算帯の最コスパ機種）
+    bands = [("安く抑えたい", f"〜¥{q1:,}", lambda p: p <= q1),
+             ("価格と満足のバランス", f"¥{q1:,}〜¥{q3:,}", lambda p: q1 < p <= q3),
+             ("高性能・上位モデル", f"¥{q3:,}〜", lambda p: p > q3)]
+    cards = ""
+    for name, rng, cond in bands:
+        cand = [m for m in data if cond(m["minPrice"])]
+        if not cand:
+            continue
+        m = max(cand, key=lambda x: x["cospa"])
+        cards += (f'<div class="gpt"><h3>{name}<span class="pk-rng">{rng}</span></h3>'
+                  f'<a class="pk-nm" href="/product/{m["id"]}">{H.escape(m["name"][:34])}</a>'
+                  f'<div class="pk-meta">¥{m["minPrice"]:,}／コスパ{m["cospa"]:.0f}／★{m["review"]:.2f}（{m["reviewCount"]:,}）</div>'
+                  f'<a class="buy sm" href="{m["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">最安値を見る<span class="pr">PR</span></a></div>')
+    band_sec = (f'<h2>{label}の価格帯別おすすめ（予算別ベストコスパ）</h2>'
+                f'<p class="note">価格相場をもとに予算帯を3段階に分け、各帯で最もコスパの良い機種を選びました。</p>'
+                f'<div class="gpts">{cards}</div>') if cards else ""
+    # 安い順TOP5（安いだけの地雷を除き、レビュー多数＆コスパ60以上の「安くてコスパ良い」機種に限定）
+    rel = [m for m in data if m["reviewCount"] >= 10 and m["cospa"] >= 60]
+    if len(rel) < 5:
+        rel = [m for m in data if m["reviewCount"] >= 10] or data
+    cheap = sorted(rel, key=lambda m: m["minPrice"])[:5]
+    rows = "".join(
+        f'<tr><td class="pk-r">{i+1}</td>'
+        f'<td><a href="/product/{m["id"]}">{H.escape(m["name"][:28])}</a> <span class="pk-br">{H.escape(m["brand"])}</span></td>'
+        f'<td class="pk-p">¥{m["minPrice"]:,}</td><td class="pk-cc">コスパ{m["cospa"]:.0f}</td>'
+        f'<td><a class="buy sm" href="{m["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">見る<span class="pr">PR</span></a></td></tr>'
+        for i, m in enumerate(cheap))
+    cheap_sec = (f'<h2>{label}の安い順TOP5（最安値でコスパの良い格安モデル）</h2>'
+                 f'<table class="kv pk"><tr><th></th><th>機種</th><th>最安値</th><th></th><th></th></tr>{rows}</table>')
+    return f'<section class="picks">{band_sec}{cheap_sec}</section>'
+
 # ================= カテゴリランキングページ（ツール付き） =================
 def build_category(cfg):
     data = load(cfg["slug"])
@@ -205,6 +241,7 @@ def build_category(cfg):
 <div id="list" class="cards"></div>
 <p class="note">※コスパ値＝満足度（レビュー評価をレビュー数で信頼補正）×安さ の独自指標（0〜100）。<a href="/about">算出方法</a></p>
 {AD}
+{render_picks(cfg, data)}
 {GUIDE_HTML}
 {render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
@@ -662,6 +699,12 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .gpts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:10px 0}
 .gpt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .gpt h3{margin:.1em 0 .3em;font-size:.98rem;color:var(--accent)}.gpt p{margin:0;font-size:.9rem}
+.picks{margin:8px 0}.pk-rng{font-size:.78rem;color:var(--sub);font-weight:400;margin-left:8px}
+.pk-nm{display:block;font-weight:700;text-decoration:none;color:var(--ink);font-size:.92rem;margin:2px 0}.pk-nm:hover{color:var(--accent2)}
+.pk-meta{font-size:.82rem;color:var(--sub);margin-bottom:6px}
+table.pk{border-collapse:collapse}table.pk th{text-align:left;color:var(--sub);font-size:.78rem;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.pk td{border-bottom:1px solid var(--line);padding:8px;font-size:.88rem;vertical-align:middle}
+.pk-r{font-weight:800;color:var(--accent);width:1.6em}.pk-br{font-size:.72rem;color:var(--sub)}.pk-p{font-weight:800;white-space:nowrap}.pk-cc{color:var(--sub);font-size:.8rem;white-space:nowrap}
 .faqs{display:grid;gap:10px;margin:10px 0}
 .faq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .faq h3{margin:.1em 0 .3em;font-size:.95rem}.faq p{margin:0;font-size:.9rem;color:var(--sub)}
