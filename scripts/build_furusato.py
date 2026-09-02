@@ -419,10 +419,10 @@ def pref_of(shop):
     return ""
 
 # カテゴリ(slug)→グループ（チップ絞り込み用）
-HGROUPS = [("all","すべて"),("meat","肉"),("seafood","魚介"),("rice-egg","米・卵"),
+HGROUPS = [("all","すべて"),("rice","米"),("meat","肉"),("seafood","魚介"),("egg","卵"),
            ("fruit-sweets","果物・スイーツ"),("drink","飲料・お酒"),("daily","日用品"),("local","現地体験")]
-SLUG2GROUP = {"beef":"meat","pork":"meat","chicken":"meat","hamburg":"meat","seafood":"seafood",
-              "rice":"rice-egg","egg":"rice-egg","fruit":"fruit-sweets","sweets":"fruit-sweets",
+SLUG2GROUP = {"rice":"rice","egg":"egg","beef":"meat","pork":"meat","chicken":"meat","hamburg":"meat",
+              "seafood":"seafood","fruit":"fruit-sweets","sweets":"fruit-sweets",
               "frozen":"fruit-sweets","beer":"drink","drink":"drink","toilet-paper":"daily",
               "tissue":"daily","detergent":"daily","local":"local"}
 
