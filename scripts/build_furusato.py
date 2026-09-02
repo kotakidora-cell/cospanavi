@@ -550,6 +550,66 @@ def teiki_freq(n):
             return "隔月"
     return None
 
+def ftool(maxp, chips):
+    # カテゴリページと同じシグネチャ操作（重視ポイント/寄付額上限/並び替え）＋ジャンルチップ。共存させる。
+    return (f'<div class="tool">'
+            f'<div class="ctl"><label>重視ポイント</label>'
+            f'<div class="slrow"><span>お得さ</span><input type="range" id="fw" min="0" max="100" value="60"><span>満足度</span></div>'
+            f'<div class="wlabel"><span id="fwtxt"></span></div></div>'
+            f'<div class="ctl"><label>寄付額の上限</label>'
+            f'<div class="slrow"><input type="range" id="fb" min="1000" max="{maxp}" step="1000" value="{maxp}"><span id="fbtxt"></span></div></div>'
+            f'<div class="ctl"><label>並び替え</label>'
+            f'<div class="sorts fsorts"><button data-s="cospa" class="on">コスパ順</button>'
+            f'<button data-s="price">寄付額が安い順</button><button data-s="sat">満足度順</button>'
+            f'<button data-s="rc">レビュー数順</button></div></div>'
+            f'<div class="ctl"><label>ジャンル</label><div class="lchips">{chips}</div></div>'
+            f'</div>')
+
+# 定期便・日用品コスパ特集の共有ツールJS: チップ絞り込み × 重視ポイント/寄付額上限/並び替え を可変に。
+FTOOL_JS = r"""
+const FD=JSON.parse(document.getElementById('fdata').textContent);
+const flist=document.getElementById('flist'),fcnt=document.getElementById('fcnt');
+const fw=document.getElementById('fw'),fb=document.getElementById('fb');
+let selG='all', sortKey='cospa';
+const yen=v=>'¥'+v.toLocaleString();
+const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
+function frender(){
+  const wsat=(+fw.value)/100, wch=1-wsat, budget=+fb.value;
+  document.getElementById('fwtxt').textContent='満足度'+Math.round(wsat*100)+'% / お得さ'+Math.round(wch*100)+'%';
+  document.getElementById('fbtxt').textContent=yen(budget)+'以下';
+  let a=FD.filter(x=>(selG==='all'||x.g===selG)&&x.y<=budget).map(x=>({...x,cs:wsat*x.sat+wch*x.cheap}));
+  if(sortKey==='cospa')a.sort((p,q)=>q.cs-p.cs);
+  else if(sortKey==='price')a.sort((p,q)=>p.y-q.y);
+  else if(sortKey==='sat')a.sort((p,q)=>q.sat-p.sat);
+  else if(sortKey==='rc')a.sort((p,q)=>q.rc-p.rc);
+  fcnt.innerHTML='<b>'+a.length+'品</b>';
+  flist.innerHTML=a.slice(0,150).map(x=>{
+    const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
+    const rc=x.rc>0?'<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>':'';
+    const loc=x.p?('<div class="lmuni">'+x.p+(x.m&&x.m!==x.p?' '+x.m:'')+'</div>'):'';
+    const bar='<span class="bar"><i style="width:'+Math.max(4,x.cs)+'%"></i></span>';
+    const cos='<div class="ccospa">コスパ <b>'+x.cs.toFixed(0)+'</b>'+bar+'</div>';
+    const unitline='<div class="tunit"><b>¥'+x.unit.toLocaleString()+'</b>/'+x.ul+' <span class="muted">・総量'+x.amt+x.ul+(x.fr?'（'+x.fr+'）':'')+'</span></div>';
+    const ft=x.fr?'<span class="ftag">🔁 '+x.fr+'</span>':'';
+    return '<div class="card">'+img+'<div class="cbody">'
+      +'<span class="ltag">'+x.c+'</span>'+ft
+      +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+x.n.replace(/"/g,'')+'">'+x.n+'</a>'
+      +loc+cos+unitline
+      +'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rc
+      +'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+      +'</div></div>';
+  }).join('');
+  if(a.length>150){flist.innerHTML+='<p class="note">上位150品を表示中。</p>';}
+}
+fw.oninput=frender; fb.oninput=frender;
+document.querySelectorAll('.fsorts button').forEach(b=>b.onclick=()=>{sortKey=b.dataset.s;
+  document.querySelectorAll('.fsorts button').forEach(x=>x.classList.toggle('on',x.dataset.s===sortKey));frender();});
+document.querySelectorAll('.lchips button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.lchips button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');selG=b.dataset.g;frender();}));
+frender();
+"""
+
 def build_teiki():
     # 正規化データ(furusato-<slug>.json)を使う=定期便を総量換算した円/unit・コスパ値が算出済み。
     # コスパナビの核=「1回の寄付で総量いくら届く=円/kg」を定期便でも見せる。
@@ -567,17 +627,19 @@ def build_teiki():
             pref = pref_of(x.get("shop", ""))
             amt = x.get("amt", 0)
             pool.append({"g": SLUG2GROUP.get(slug, "other"), "c": FCATS[slug]["label"], "fr": fr,
-                         "cospa": round(x["cospa"]), "unit": round(x["unit"]), "ul": ul,
+                         "cospa": round(x["cospa"]), "sat": round(x["sat"]), "cheap": round(x["toku"]),
+                         "unit": round(x["unit"]), "ul": ul,
                          "amt": (round(amt, 1) if amt < 10 else round(amt)),
                          "n": x["name"].replace("【ふるさと納税】", "").strip()[:56],
                          "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
                          "y": x["price"], "r": round(x["review"], 2), "rc": x["reviewCount"],
                          "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
-    pool.sort(key=lambda z: -z["cospa"])  # コスパ順（円/unitの正規化スコア）
+    pool.sort(key=lambda z: -z["cospa"])  # 初期はコスパ順（ツールで可変に）
     pool = pool[:TOPN]
     present = {x["g"] for x in pool}
     items = pool
     total = len(items)
+    maxp = (max((x["y"] for x in items), default=100000) + 999) // 1000 * 1000
     chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>'
                     for g, lab in HGROUPS if g == "all" or g in present)
     DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
@@ -586,9 +648,11 @@ def build_teiki():
 <h1>ふるさと納税 定期便コスパランキング<span class="yr">2026</span></h1>
 <p class="lead">1回の寄付で<b>毎月・全〇回に分けて届く定期便</b>を、<b>寄付額あたりの総量（円/kg など）</b>でランキング。全回分を<b>総量に換算</b>して「量あたり本当にお得な定期便」が分かります。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>コスパ定期便を{total}品から。</p>
 {AD}
-<div class="lbar"><h2>定期便コスパランキング</h2><div class="lchips">{chips}</div></div>
-<p class="cnt"><b id="tcnt"></b></p>
-<div id="tlist" class="cards"></div>
+<h2>定期便コスパランキング</h2>
+<p class="lead">重視ポイント（満足度⇄お得さ）・寄付額の上限・並び替え・ジャンルを切り替えて、あなた基準の定期便が探せます。</p>
+{ftool(maxp, chips)}
+<p class="cnt"><b id="fcnt"></b></p>
+<div id="flist" class="cards"></div>
 <section class="guide">
 <h2>ふるさと納税「定期便」のコスパの見方</h2>
 <p>定期便は、1回の寄付で返礼品が<b>複数回に分けて届く</b>タイプ。お米やお水、トイレットペーパーのような<b>使い続ける消耗品</b>や、旬のフルーツ・お肉を毎月楽しみたい人に人気です。定期便のコスパは<b>「全回分の総量 ÷ 寄付額」＝円/kg（円/本など）</b>で決まります。当ページは全回分を総量に換算し、<b>量あたりが本当にお得な定期便</b>をコスパ順に並べています（例：寄付8,000円で全6回・総量12kg＝667円/kg）。一度の手続きで一年分をまかなえて、保管場所にも困りにくいのが魅力です。</p>
@@ -604,8 +668,8 @@ def build_teiki():
 <div class="faq"><h3>Q. コスパで選びたい場合は？</h3><p>A. 各カテゴリの<a href="/furusato">コスパランキング</a>では寄付額あたりの内容量（円/kg等）で選べます。定期便特集と合わせてご活用ください。</p></div>
 </div>
 </section>
-<script id="tdata" type="application/json">{DATA_JSON}</script>
-<script>{TEIKI_JS}</script>
+<script id="fdata" type="application/json">{DATA_JSON}</script>
+<script>{FTOOL_JS}</script>
 """
     title = "ふるさと納税 定期便コスパランキング2026｜円/kgで選ぶお得な定期便"
     desc = f"毎月・全〇回に分けて届く定期便を、寄付額あたりの総量（円/kg等）でコスパランキング。全回分を総量換算して量あたりお得な定期便を米・肉・ビール・日用品などジャンル別に{total}品。"
@@ -667,14 +731,16 @@ def build_nichiyo():
             pref = pref_of(x.get("shop", ""))
             amt = x.get("amt", 0)
             items.append({"g": slug, "c": FCATS[slug]["label"], "fr": teiki_freq(x["name"]),
-                          "cospa": round(x["cospa"]), "unit": round(x["unit"]), "ul": ul,
+                          "cospa": round(x["cospa"]), "sat": round(x["sat"]), "cheap": round(x["toku"]),
+                          "unit": round(x["unit"]), "ul": ul,
                           "amt": (round(amt, 1) if amt < 10 else round(amt)),
                           "n": x["name"].replace("【ふるさと納税】", "").strip()[:56],
                           "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
                           "y": x["price"], "r": round(x["review"], 2), "rc": x["reviewCount"],
                           "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
-    items.sort(key=lambda z: -z["cospa"])
+    items.sort(key=lambda z: -z["cospa"])  # 初期はコスパ順（ツールで可変に）
     total = len(items)
+    maxp = (max((x["y"] for x in items), default=100000) + 999) // 1000 * 1000
     present = {x["g"] for x in items}
     chip_defs = [("all", "すべて")] + [(s, FCATS[s]["label"]) for s in NICHIYO_CATS]
     chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>'
@@ -685,9 +751,11 @@ def build_nichiyo():
 <h1>ふるさと納税 日用品コスパ特集<span class="yr">2026</span></h1>
 <p class="lead">トイレットペーパー・ティッシュ・洗剤・水など、<b>必ず使う生活必需品（消耗品）</b>を、<b>寄付額あたりの量（円/ロール・円/kg など）</b>でコスパランキング。ふるさと納税なら<b>実質2,000円の自己負担で日用品が手に入る</b>＝毎日の出費を減らせる家計防衛術。{total}品からコスパ順に選べます。</p>
 {AD}
-<div class="lbar"><h2>日用品コスパランキング</h2><div class="lchips">{chips}</div></div>
-<p class="cnt"><b id="ncnt"></b></p>
-<div id="nlist" class="cards"></div>
+<h2>日用品コスパランキング</h2>
+<p class="lead">重視ポイント（満足度⇄お得さ）・寄付額の上限・並び替え・カテゴリを切り替えて、あなた基準の日用品が探せます。</p>
+{ftool(maxp, chips)}
+<p class="cnt"><b id="fcnt"></b></p>
+<div id="flist" class="cards"></div>
 <section class="guide">
 <h2>ふるさと納税で「日用品」を選ぶメリット</h2>
 <p>お米やお肉と違い、トイレットペーパー・ティッシュ・洗剤・水は<b>どの家庭でも必ず使う消耗品</b>。ふるさと納税で受け取れば、実質2,000円の自己負担で<b>普段の生活費そのものを削減</b>できます。日用品は味の好みが分かれないため<b>「コスパ（量あたりの安さ）」が唯一かつ最大の選定基準</b>。当ページは寄付額あたりの量（円/ロール・円/箱・円/kg・円/本）で並べているので、<b>実質いちばんお得な日用品</b>がひと目で分かります。かさばる消耗品は定期便を選べば保管場所にも困りません。</p>
@@ -703,8 +771,8 @@ def build_nichiyo():
 <div class="faq"><h3>Q. 定期便と単発どちらが良い？</h3><p>A. 保管場所に余裕があれば単発でまとめて、置き場所を圧迫したくないなら定期便がおすすめです。🔁マークの返礼品が定期便対応です。</p></div>
 </div>
 </section>
-<script id="ndata" type="application/json">{DATA_JSON}</script>
-<script>{NICHIYO_JS}</script>
+<script id="fdata" type="application/json">{DATA_JSON}</script>
+<script>{FTOOL_JS}</script>
 """
     title = "ふるさと納税 日用品コスパ特集2026｜円/ロール等で選ぶお得な生活必需品"
     desc = f"トイレットペーパー・ティッシュ・洗剤・水などの日用品を寄付額あたりの量（円/ロール・円/kg等）でコスパランキング。実質2,000円で生活必需品が手に入る家計防衛。{total}品。"
