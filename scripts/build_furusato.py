@@ -653,6 +653,101 @@ document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
 render();
 """
 
+# ================= 日用品コスパ特集（消耗品を実質節約・コスパ順で） =================
+NICHIYO_CATS = ["toilet-paper", "tissue", "detergent", "drink"]  # 生活必需品(消耗品)
+
+def build_nichiyo():
+    items = []
+    for slug in NICHIYO_CATS:
+        f = os.path.join(DATA, f"furusato-{slug}.json")
+        if not os.path.exists(f):
+            continue
+        ul = FCATS[slug]["suffix"]
+        for x in json.load(open(f, encoding="utf-8")):
+            pref = pref_of(x.get("shop", ""))
+            amt = x.get("amt", 0)
+            items.append({"g": slug, "c": FCATS[slug]["label"], "fr": teiki_freq(x["name"]),
+                          "cospa": round(x["cospa"]), "unit": round(x["unit"]), "ul": ul,
+                          "amt": (round(amt, 1) if amt < 10 else round(amt)),
+                          "n": x["name"].replace("【ふるさと納税】", "").strip()[:56],
+                          "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
+                          "y": x["price"], "r": round(x["review"], 2), "rc": x["reviewCount"],
+                          "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
+    items.sort(key=lambda z: -z["cospa"])
+    total = len(items)
+    present = {x["g"] for x in items}
+    chip_defs = [("all", "すべて")] + [(s, FCATS[s]["label"]) for s in NICHIYO_CATS]
+    chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>'
+                    for g, lab in chip_defs if g == "all" or g in present)
+    DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 日用品コスパ特集</nav>
+<h1>ふるさと納税 日用品コスパ特集<span class="yr">2026</span></h1>
+<p class="lead">トイレットペーパー・ティッシュ・洗剤・水など、<b>必ず使う生活必需品（消耗品）</b>を、<b>寄付額あたりの量（円/ロール・円/kg など）</b>でコスパランキング。ふるさと納税なら<b>実質2,000円の自己負担で日用品が手に入る</b>＝毎日の出費を減らせる家計防衛術。{total}品からコスパ順に選べます。</p>
+{AD}
+<div class="lbar"><h2>日用品コスパランキング</h2><div class="lchips">{chips}</div></div>
+<p class="cnt"><b id="ncnt"></b></p>
+<div id="nlist" class="cards"></div>
+<section class="guide">
+<h2>ふるさと納税で「日用品」を選ぶメリット</h2>
+<p>お米やお肉と違い、トイレットペーパー・ティッシュ・洗剤・水は<b>どの家庭でも必ず使う消耗品</b>。ふるさと納税で受け取れば、実質2,000円の自己負担で<b>普段の生活費そのものを削減</b>できます。日用品は味の好みが分かれないため<b>「コスパ（量あたりの安さ）」が唯一かつ最大の選定基準</b>。当ページは寄付額あたりの量（円/ロール・円/箱・円/kg・円/本）で並べているので、<b>実質いちばんお得な日用品</b>がひと目で分かります。かさばる消耗品は定期便を選べば保管場所にも困りません。</p>
+<div class="gpts">
+<div class="gpt"><h3>なぜ日用品がお得？</h3><p>日用品は生活で必ず消費するため、ふるさと納税で受け取った分そのまま生活費が浮きます。嗜好が分かれず「安さ＝正義」なので、コスパ最上位を選べば失敗しません。</p></div>
+<div class="gpt"><h3>コスパの見方は？</h3><p>「寄付額 ÷ 総量」＝円/ロール（トイレットペーパー）・円/箱（ティッシュ）・円/kg（洗剤）・円/本（水）です。数字が小さいほどお得。当ランキングはこれを0〜100のコスパ値に正規化しています。</p></div>
+<div class="gpt"><h3>まとめ買い・定期便は？</h3><p>かさばる日用品は、複数回に分けて届く定期便が便利です。🔁マークの付いた返礼品は定期便対応。保管場所を圧迫せず、使い切る前に次が届きます。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">
+<div class="faq"><h3>Q. 日用品はふるさと納税でお得ですか？</h3><p>A. はい。必ず使う消耗品なので、受け取った分だけ生活費が浮きます。特にトイレットペーパー・水などかさばる物は、実質2,000円負担で大量に確保でき家計に効きます。</p></div>
+<div class="faq"><h3>Q. どれを選べば失敗しませんか？</h3><p>A. 日用品は品質差より量あたりの安さが重要です。当ページのコスパ順上位から、必要なカテゴリ（トイレットペーパー等）で選べばまず外しません。</p></div>
+<div class="faq"><h3>Q. 定期便と単発どちらが良い？</h3><p>A. 保管場所に余裕があれば単発でまとめて、置き場所を圧迫したくないなら定期便がおすすめです。🔁マークの返礼品が定期便対応です。</p></div>
+</div>
+</section>
+<script id="ndata" type="application/json">{DATA_JSON}</script>
+<script>{NICHIYO_JS}</script>
+"""
+    title = "ふるさと納税 日用品コスパ特集2026｜円/ロール等で選ぶお得な生活必需品"
+    desc = f"トイレットペーパー・ティッシュ・洗剤・水などの日用品を寄付額あたりの量（円/ロール・円/kg等）でコスパランキング。実質2,000円で生活必需品が手に入る家計防衛。{total}品。"
+    open(os.path.join(SITE, "furusato-nichiyo.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-nichiyo.html", head=HALL_CSS + TEIKI_CSS + bc_furusato("日用品コスパ特集")))
+    print(f"  日用品コスパ特集ページ: {total}品")
+    return total
+
+NICHIYO_JS = r"""
+const ND=JSON.parse(document.getElementById('ndata').textContent);
+const list=document.getElementById('nlist'),cnt=document.getElementById('ncnt');
+let selG='all';
+const yen=v=>'¥'+v.toLocaleString();
+const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
+function render(){
+  let a=(selG==='all')?ND:ND.filter(x=>x.g===selG);
+  cnt.innerHTML='<b>'+a.length+'品</b>（コスパ順）';
+  list.innerHTML=a.slice(0,150).map(x=>{
+    const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
+    const rc=x.rc>0?'<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>':'';
+    const loc=x.p?('<div class="lmuni">'+x.p+(x.m&&x.m!==x.p?' '+x.m:'')+'</div>'):'';
+    const bar='<span class="bar"><i style="width:'+Math.max(4,x.cospa)+'%"></i></span>';
+    const cos='<div class="ccospa">コスパ <b>'+x.cospa+'</b>'+bar+'</div>';
+    const unitline='<div class="tunit"><b>¥'+x.unit.toLocaleString()+'</b>/'+x.ul
+      +' <span class="muted">・総量'+x.amt+x.ul+'</span></div>';
+    const ft=x.fr?'<span class="ftag">🔁 '+x.fr+'</span>':'';
+    return '<div class="card">'+img+'<div class="cbody">'
+      +'<span class="ltag">'+x.c+'</span>'+ft
+      +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+x.n.replace(/"/g,'')+'">'+x.n+'</a>'
+      +loc+cos+unitline
+      +'<div class="cprice">'+yen(x.y)+'<span class="muted"> 寄付</span></div>'+rc
+      +'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+      +'</div></div>';
+  }).join('');
+  if(a.length>150){list.innerHTML+='<p class="note">上位150品を表示中（コスパ順）。</p>';}
+}
+document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.lchip').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');selG=b.dataset.g;render();
+}));
+render();
+"""
+
 def build_hub(counts):
     # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
     parts = []
@@ -673,6 +768,7 @@ def build_hub(counts):
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-teiki"><div class="hico">🔁</div><div><h3>定期便特集 — 毎月・全〇回で届く<span class="n">NEW</span></h3><p>1回の寄付で<b>毎月・隔月・全〇回</b>に分けて届く定期便を厳選。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>返礼品をジャンル別に。</p></div><span class="fgo">見る →</span></a>
+<a class="fbanner" href="/furusato-nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ特集 — 実質節約<span class="n">NEW</span></h3><p>トイレットペーパー・ティッシュ・洗剤・水など<b>必ず使う消耗品</b>を円/ロール・円/kgのコスパ順に。<b>実質2,000円で生活必需品</b>が手に入る家計防衛術。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
@@ -691,7 +787,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -707,6 +803,7 @@ if __name__ == "__main__":
     nloc = build_local()
     nhall = build_hall()
     nteiki = build_teiki()
+    nnichi = build_nichiyo()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + 日用品({nnichi}品) + {len(CATS)}カテゴリ  {counts}")
