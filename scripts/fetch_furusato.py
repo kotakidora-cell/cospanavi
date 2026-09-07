@@ -13,7 +13,7 @@ except (ImportError, ModuleNotFoundError):
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
-URL = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601"
+URL = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
 HDR = {"Referer": REFERER, "Origin": REFERER.rstrip("/")}
 
 # カテゴリ設定は furusato_cats.py に集約
