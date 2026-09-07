@@ -157,6 +157,9 @@ FTITLE = {
     "tissue": "ふるさと納税 ティッシュのコスパ最強ランキング2026｜1箱あたり・大容量まとめ買いでお得に",
     "detergent": "ふるさと納税 洗剤のコスパ最強ランキング2026｜1kgあたり・詰め替え大容量でお得に",
     "drink": "ふるさと納税 水・飲料のコスパ最強ランキング2026｜1本あたり・ケース/定期便でお得に",
+    "diaper": "ふるさと納税 おむつのコスパ最強ランキング2026｜1枚あたり単価・大容量でお得に",
+    "kitchen-paper": "ふるさと納税 キッチンペーパーのコスパ最強ランキング2026｜1ロール単価・大容量でお得に",
+    "trash-bag": "ふるさと納税 ゴミ袋のコスパ最強ランキング2026｜1枚あたり単価・大容量でお得に",
 }
 FDESC = {
     "toilet-paper": "楽天ふるさと納税のトイレットペーパーを1ロールあたりの価格（円/ロール）でコスパランキング。5倍巻き・長巻き・大容量・備蓄向けを実質2,000円でお得に。おすすめの返礼品が分かります。",
@@ -169,6 +172,9 @@ FINTRO = {
     "tissue": " ティッシュは<b>1箱あたりの価格</b>で比較。大容量セットは1箱単価が安く、<b>備蓄・まとめ買い</b>向けです。",
     "detergent": " 洗剤は<b>1kgあたりの価格</b>で比較。<b>詰め替え大容量</b>がコスパ良好です。",
     "drink": " 水・お茶は<b>1本あたりの価格</b>で比較。<b>ケース・定期便</b>でまとめて確保するとお得です。",
+    "diaper": " おむつは<b>1枚あたりの価格</b>で比較。サイズ別に、大容量ケース・定期便がお得です。",
+    "kitchen-paper": " キッチンペーパーは<b>1ロールあたりの価格</b>で比較。大容量セットがコスパ良好です。",
+    "trash-bag": " ゴミ袋は<b>1枚あたりの価格</b>で比較。大容量・まとめ買いがお得です。",
 }
 
 def _fpct(vals, q):
@@ -477,7 +483,8 @@ HGROUPS = [("all","すべて"),("rice","米"),("meat","肉"),("seafood","魚介"
 SLUG2GROUP = {"rice":"rice","egg":"egg","beef":"meat","pork":"meat","chicken":"meat","hamburg":"meat",
               "seafood":"seafood","fruit":"fruit-sweets","sweets":"fruit-sweets",
               "frozen":"fruit-sweets","beer":"drink","drink":"drink","toilet-paper":"daily",
-              "tissue":"daily","detergent":"daily","local":"local"}
+              "tissue":"daily","detergent":"daily","diaper":"daily","kitchen-paper":"daily",
+              "trash-bag":"daily","local":"local"}
 
 def build_hall():
     MIN_R, MIN_RC, TOPN = 4.7, 50, 400
@@ -771,7 +778,7 @@ render();
 """
 
 # ================= 日用品コスパ特集（消耗品を実質節約・コスパ順で） =================
-NICHIYO_CATS = ["toilet-paper", "tissue", "detergent", "drink"]  # 生活必需品(消耗品)
+NICHIYO_CATS = ["toilet-paper", "tissue", "kitchen-paper", "detergent", "trash-bag", "diaper", "drink"]  # 生活必需品(消耗品)。データ未取得のものはbuild時にスキップ
 
 def build_nichiyo():
     items = []
