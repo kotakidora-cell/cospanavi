@@ -31,9 +31,12 @@ def amt_weight(name):   # → 総kg
     vals = sorted(kgs | gs)
     return vals[0] if len(vals) == 1 else None   # 複数重量(選べる等)は曖昧→スキップ
 
-def amt_count(name, noun):   # → 総数(本/ロール)
+def amt_count(name, noun):   # → 総数(本/ロール/枚)
     n = norm(name)
-    mul = re.findall(rf"(\d+)\s*{noun}\s*[×xX＊*]\s*(\d+)", n)   # 12ロール×8, 24本×2
+    # 総数=N×M: 「12ロール×8」「200枚入り×2」「44枚×4パック」等。入り/入を挟んでもマッチ
+    mul = re.findall(rf"(\d+)\s*{noun}\s*(?:入り|入)?\s*[×xX＊*]\s*(\d+)", n)
+    # 「200枚入り(2個セット)」「90枚入り（3袋）」等: N{noun}入り のあとに (M個/袋/箱/梱/ケース/パック/セット)
+    mul += re.findall(rf"(\d+)\s*{noun}\s*入り?\s*[（(]\s*(\d+)\s*(?:個|袋|箱|梱|ケース|パック|セット)", n)
     if mul:
         return max(int(a) * int(b) for a, b in mul)
     cnts = sorted({int(x) for x in re.findall(rf"(\d+)\s*{noun}", n)})

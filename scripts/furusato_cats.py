@@ -121,20 +121,20 @@ FCATS = {
     },
     "diaper": {
         "label": "おむつ", "keyword": "ふるさと納税 おむつ", "unit": "count", "count_noun": "枚",
-        "unit_label": "円/枚", "suffix": "枚", "min_unit": 40, "max_unit": 300, "min_review": 5,
+        "unit_label": "円/枚", "suffix": "枚", "min_unit": 40, "max_unit": 300, "min_review": 3,
         "include": ["おむつ", "オムツ", "パンパース", "メリーズ", "ムーニー", "グーン", "GOO.N", "マミーポコ", "ゲンキ"],
         "exclude": ["おしりふき", "お尻ふき", "ペット", "犬", "猫", "トレーニングパンツ", "水遊び", "プール",
                     "ケース", "ホルダー", "ポーチ", "スタイ"],
     },
     "kitchen-paper": {
         "label": "キッチンペーパー", "keyword": "ふるさと納税 キッチンペーパー", "unit": "count", "count_noun": "ロール",
-        "unit_label": "円/ロール", "suffix": "ロール", "min_unit": 40, "max_unit": 600, "min_review": 5,
+        "unit_label": "円/ロール", "suffix": "ロール", "min_unit": 40, "max_unit": 600, "min_review": 3,
         "include": ["キッチンペーパー", "キッチンタオル"],
         "exclude": ["トイレット", "ティッシュ", "ホルダー", "ケース", "スタンド", "ふきん", "布巾"],
     },
     "trash-bag": {
         "label": "ゴミ袋", "keyword": "ふるさと納税 ゴミ袋", "unit": "count", "count_noun": "枚",
-        "unit_label": "円/枚", "suffix": "枚", "min_unit": 2, "max_unit": 40, "min_review": 5,
+        "unit_label": "円/枚", "suffix": "枚", "min_unit": 2, "max_unit": 200, "min_review": 3,
         "include": ["ゴミ袋", "ごみ袋", "ポリ袋"],
         "exclude": ["水切り", "三角コーナー", "おむつ", "ペット", "犬", "猫", "収納", "保存袋", "ジップ", "マチ付き保存"],
     },

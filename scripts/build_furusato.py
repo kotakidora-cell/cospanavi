@@ -778,7 +778,7 @@ render();
 """
 
 # ================= 日用品コスパ特集（消耗品を実質節約・コスパ順で） =================
-NICHIYO_CATS = ["toilet-paper", "tissue", "kitchen-paper", "detergent", "trash-bag", "diaper", "drink"]  # 生活必需品(消耗品)。データ未取得のものはbuild時にスキップ
+NICHIYO_CATS = ["toilet-paper", "tissue", "kitchen-paper", "detergent", "diaper", "drink"]  # 生活必需品(消耗品)。ゴミ袋はふるさと納税での母数が薄く見送り
 
 def build_nichiyo():
     items = []
