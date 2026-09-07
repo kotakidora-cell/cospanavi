@@ -66,10 +66,10 @@ VC_320_OVERLAY = ('<script language="javascript" '
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "egg": "🥚", "fruit": "🍇", "sweets": "🍰", "frozen": "🥟", "beer": "🍺", "drink": "🥤",
-        "toilet-paper": "🧻", "tissue": "🤧", "detergent": "🧴"}
+        "toilet-paper": "🧻", "kitchen-paper": "📄", "tissue": "🤧", "detergent": "🧴", "diaper": "👶"}
 # ジャンル順(主食・肉→魚介・卵→果物・菓子→冷凍→飲料→日用品)でユーザーが探しやすく
 CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "egg", "fruit", "sweets",
-             "frozen", "beer", "drink", "toilet-paper", "tissue", "detergent"]
+             "frozen", "beer", "drink", "toilet-paper", "kitchen-paper", "tissue", "detergent", "diaper"]
 CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
          "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
          "desc": f"楽天ふるさと納税の{FCATS[s]['label']}を、寄付額あたりの内容量（{FCATS[s]['unit_label']}）とレビュー満足度でコスパランキング。"}

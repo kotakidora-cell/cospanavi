@@ -121,7 +121,7 @@ FCATS = {
     },
     "diaper": {
         "label": "おむつ", "keyword": "ふるさと納税 おむつ", "unit": "count", "count_noun": "枚",
-        "unit_label": "円/枚", "suffix": "枚", "min_unit": 8, "max_unit": 70, "min_review": 5,
+        "unit_label": "円/枚", "suffix": "枚", "min_unit": 40, "max_unit": 300, "min_review": 5,
         "include": ["おむつ", "オムツ", "パンパース", "メリーズ", "ムーニー", "グーン", "GOO.N", "マミーポコ", "ゲンキ"],
         "exclude": ["おしりふき", "お尻ふき", "ペット", "犬", "猫", "トレーニングパンツ", "水遊び", "プール",
                     "ケース", "ホルダー", "ポーチ", "スタイ"],

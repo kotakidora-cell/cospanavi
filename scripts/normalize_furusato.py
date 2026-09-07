@@ -70,6 +70,10 @@ for r in items:
     groups.setdefault(r["shop"] + "|" + str(r["amt"]) + "|" + str(round(r["unit"] / 50)), []).append(r)
 models = [max(g, key=lambda x: x["reviewCount"]) for g in groups.values()]
 
+if not models:  # 抽出0件(単位レンジ外/名称パース失敗)はcrashせず既存を保持してスキップ
+    print(f"[SKIP] {slug}: 内容量抽出できた返礼品が0件（min_unit/max_unitや抽出ロジック要調整）。保存せず終了")
+    raise SystemExit(0)
+
 C = st.mean([m["review"] for m in models]); M = 50
 def bayes(m):
     v, R = m["reviewCount"], m["review"]
