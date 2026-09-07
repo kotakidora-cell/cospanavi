@@ -151,6 +151,58 @@ document.querySelectorAll('.sorts button').forEach(b=>b.onclick=()=>{sortKey=b.d
 render();
 """
 
+# 日用品(消耗品)は成約が実証済み(トイレットペーパー等)。高意図キーワードでSEO強化する上書き。
+FTITLE = {
+    "toilet-paper": "ふるさと納税 トイレットペーパーのコスパ最強ランキング2026｜1ロール単価・大容量・備蓄でお得に",
+    "tissue": "ふるさと納税 ティッシュのコスパ最強ランキング2026｜1箱あたり・大容量まとめ買いでお得に",
+    "detergent": "ふるさと納税 洗剤のコスパ最強ランキング2026｜1kgあたり・詰め替え大容量でお得に",
+    "drink": "ふるさと納税 水・飲料のコスパ最強ランキング2026｜1本あたり・ケース/定期便でお得に",
+}
+FDESC = {
+    "toilet-paper": "楽天ふるさと納税のトイレットペーパーを1ロールあたりの価格（円/ロール）でコスパランキング。5倍巻き・長巻き・大容量・備蓄向けを実質2,000円でお得に。おすすめの返礼品が分かります。",
+    "tissue": "楽天ふるさと納税のティッシュを1箱あたりの価格でコスパランキング。大容量まとめ買い・備蓄向けを実質2,000円でお得に。おすすめが分かります。",
+    "detergent": "楽天ふるさと納税の洗剤を1kgあたりの価格でコスパランキング。詰め替え大容量でお得に。おすすめの返礼品が分かります。",
+    "drink": "楽天ふるさと納税の水・飲料を1本あたりの価格でコスパランキング。ケース・定期便でまとめてお得に確保。おすすめが分かります。",
+}
+FINTRO = {
+    "toilet-paper": " トイレットペーパーは<b>1ロールあたりの価格（円/ロール）</b>で選ぶのが鉄則。5倍巻き・長巻きや大容量セットは1ロール単価が安く、<b>備蓄・まとめ買い</b>に最適です。",
+    "tissue": " ティッシュは<b>1箱あたりの価格</b>で比較。大容量セットは1箱単価が安く、<b>備蓄・まとめ買い</b>向けです。",
+    "detergent": " 洗剤は<b>1kgあたりの価格</b>で比較。<b>詰め替え大容量</b>がコスパ良好です。",
+    "drink": " 水・お茶は<b>1本あたりの価格</b>で比較。<b>ケース・定期便</b>でまとめて確保するとお得です。",
+}
+
+def _fpct(vals, q):
+    vals = sorted(vals); n = len(vals)
+    if n == 1:
+        return vals[0]
+    i = q * (n - 1); lo = int(i); frac = i - lo
+    return vals[lo] if lo + 1 >= n else round(vals[lo] + (vals[lo + 1] - vals[lo]) * frac)
+
+# 単価相場＋単価が安い順TOP5（=寄付額あたり最もお得）の静的ブロック。「〇〇 コスパ/安い/相場/おすすめ」検索に直答（SEO実コンテンツ）。
+def render_fpicks(cfg, data):
+    label = cfg["label"]; sf = cfg["suffix"]
+    units = [m["unit"] for m in data if m.get("unit")]
+    if not units:
+        return ""
+    lo = round(min(units)); med = round(_fpct(units, 0.5)); q1 = round(_fpct(units, 0.25)); q3 = round(_fpct(units, 0.75))
+    soba = (f'<div class="soba"><span class="sicon">💰</span><div><b>{label}の{cfg["unit_label"]}相場</b>'
+            f'<span class="smt">（{UPDATED}時点・{len(data)}件の寄付額あたり単価より）</span><br>'
+            f'最安 <b>¥{lo:,}/{sf}</b> ／ 中央値 <b>¥{med:,}/{sf}</b> ／ ボリュームゾーン <b>¥{q1:,}〜¥{q3:,}/{sf}</b></div></div>')
+    rel = [m for m in data if m["reviewCount"] >= 5] or data
+    best = sorted(rel, key=lambda m: m["unit"])[:5]
+    rows = "".join(
+        f'<tr><td class="pk-r">{i+1}</td>'
+        f'<td><a href="{m["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">{H.escape(m["name"].replace("【ふるさと納税】", "")[:28])}</a></td>'
+        f'<td class="pk-p">¥{round(m["unit"]):,}/{sf}</td>'
+        f'<td class="pk-cc">総量{(round(m["amt"],1) if m["amt"]<10 else round(m["amt"]))}{sf}</td>'
+        f'<td class="pk-cc">¥{m["price"]:,}寄付</td>'
+        f'<td><a class="buy sm" href="{m["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">見る<span class="pr">PR</span></a></td></tr>'
+        for i, m in enumerate(best))
+    tbl = (f'<h2>{label}の単価が安い順TOP5（寄付額あたり最もお得な返礼品）</h2>'
+           f'<p class="note">寄付額あたりの{cfg["unit_label"]}が安い＝実質いちばんお得。定期便は総量に換算して算出しています。</p>'
+           f'<table class="kv pk"><tr><th></th><th>返礼品</th><th>単価</th><th>総量</th><th>寄付額</th><th></th></tr>{rows}</table>')
+    return f'<section class="picks">{soba}{tbl}</section>'
+
 def build_cat(cfg):
     data = json.load(open(os.path.join(DATA, f"furusato-{cfg['slug']}.json"), encoding="utf-8"))
     slim = [{"id": m["id"], "name": m["name"], "price": m["price"], "amt": m["amt"], "unit": m["unit"],
@@ -161,7 +213,7 @@ def build_cat(cfg):
     body = f"""
 <nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › {cfg['label']}</nav>
 <h1>ふるさと納税 {cfg['label']} コスパランキング<span class="yr">2026</span></h1>
-<p class="lead">楽天ふるさと納税の{cfg['label']}を、<b>寄付額あたりの内容量（{cfg['unit_label']}）</b>とレビュー満足度から独自コスパ値でランキング。<b>{len(data)}件</b>を比較。定期便も総量に換算しています。<b>スライダーで「満足度／お得さ」を調整</b>できます。</p>
+<p class="lead">楽天ふるさと納税の{cfg['label']}を、<b>寄付額あたりの内容量（{cfg['unit_label']}）</b>とレビュー満足度から独自コスパ値でランキング。<b>{len(data)}件</b>を比較。定期便も総量に換算しています。{FINTRO.get(cfg['slug'], '')}<b>スライダーで「満足度／お得さ」を調整</b>できます。</p>
 <div class="scallout">💡 掲載は楽天ふるさと納税の寄付額ですが、<b>寄付額は自治体が決めるため他サイトでも同額</b>です。どのサイトで申し込むのが良いかは <a href="/furusato-sites">ふるさと納税サイトの選び方（2025年ポイント廃止後）→</a></div>
 {AD}
 <div class="tool">
@@ -180,14 +232,15 @@ def build_cat(cfg):
 <p class="cnt"><b id="cnt"></b></p>
 <div id="list" class="cards"></div>
 <p class="note">※コスパ値＝満足度（レビューをレビュー数で信頼補正）×お得さ（{cfg['unit_label']}が安いほど高い）の独自指標。内容量は商品名から自動抽出のため、複数重量が選べる返礼品は掲載していません。<a href="/furusato">ふるさと納税コスパとは</a></p>
+{render_fpicks(cfg, data)}
 <script id="data" type="application/json">{json.dumps(slim, ensure_ascii=False, separators=(",", ":"))}</script>
 <script>const UL={json.dumps(cfg['unit_label'], ensure_ascii=False)},SF={json.dumps(cfg['suffix'], ensure_ascii=False)};</script>
 <script>{TOOL_JS}</script>
 {AD}
 {GUIDE_HTML}
 """
-    title = f"ふるさと納税 {cfg['label']}のコスパ最強ランキング2026｜{cfg['unit_label']}で比較"
-    desc = cfg["desc"]
+    title = FTITLE.get(cfg["slug"], f"ふるさと納税 {cfg['label']}のコスパ最強ランキング2026｜{cfg['unit_label']}・おすすめを比較")
+    desc = FDESC.get(cfg["slug"], cfg["desc"])
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"], "name": m["name"]} for m in data[:20]]}
     ld_list = [ld] + ([faq_ld] if faq_ld else [])
