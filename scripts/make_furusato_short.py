@@ -152,15 +152,18 @@ def scene_rank(cat, rank, m, img):
 def scene_outro(cat):
     bg = vgrad((255, 138, 76), (255, 92, 138))
     d = ImageDraw.Draw(bg)
-    ctext(d, W/2, 320, "気になる続きは…", font(70), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 520, "全順位＆", font(96), WHITE, stroke=6, sfill=NAVY)
-    ctext(d, W/2, 660, "他カテゴリも！", font(96), WHITE, stroke=6, sfill=NAVY)
-    rrect(d, [80, 900, W-80, 1240], 50, fill=WHITE)
-    ctext(d, W/2, 950, "コスパナビ", font(150), ORANGE)
-    ctext(d, W/2, 1130, "cospa-navi.com", font(72), NAVY)
-    ctext(d, W/2, 1360, "「コスパナビ」で検索🔍", font(60), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 1520, "円/kgで選ぶ、損しない", font(56), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 1600, "ふるさと納税コスパ比較", font(56), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 300, "全順位＆他カテゴリは", font(66), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 400, "コチラ！", font(120), WHITE, stroke=6, sfill=NAVY)
+    # URLカード(主役)=直接アクセス用。名前検索は同名サイトが出るのでURLで誘導
+    rrect(d, [50, 650, W-50, 1010], 50, fill=WHITE)
+    ctext(d, W/2, 700, "コスパナビ", font(72), NAVY)
+    ctext(d, W/2, 810, "cospa-navi.com", font(100), ORANGE)
+    # リンク誘導(検索NG→概要欄/コメントの直リンク)
+    rrect(d, [W/2-470, 1150, W/2+470, 1300], 40, fill=NAVY)
+    ctext(d, W/2, 1178, "▼ リンクは 概要欄・コメント欄", font(50), YEL)
+    ctext(d, W/2, 1420, "タップして今すぐチェック！", font(60), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 1600, "円/kgで選ぶ、損しない", font(54), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 1676, "ふるさと納税コスパ比較", font(54), WHITE, stroke=4, sfill=NAVY)
     return bg
 
 def build_video(pngs, durs, out, bgm=None, xf=0.45):
@@ -206,8 +209,9 @@ def main():
     bgm = os.path.join(BASE, "shorts", "bgm.mp3")
     build_video(pngs, durs, out, bgm=bgm if os.path.exists(bgm) else None)
     print(f"生成: {out}  ({sum(durs):.0f}秒, BGM={'有' if os.path.exists(bgm) else '無'})")
-    # 確認用に1位フレームも書き出し
+    # 確認用に1位・CTAフレームも書き出し
     scenes[3][0].save(os.path.join(outdir, f"furusato-{slug}-frame1.png"))
+    scenes[4][0].save(os.path.join(outdir, f"furusato-{slug}-outro.png"))
 
 if __name__ == "__main__":
     main()
