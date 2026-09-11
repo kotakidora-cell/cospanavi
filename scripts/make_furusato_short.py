@@ -163,13 +163,27 @@ def scene_outro(cat):
     ctext(d, W/2, 1600, "ふるさと納税コスパ比較", font(56), WHITE, stroke=4, sfill=NAVY)
     return bg
 
-def clip(png, dur, out):
-    # 静止画→ゆっくりズーム(POPな動き)付き動画クリップ
-    vf = (f"zoompan=z='min(zoom+0.0012,1.10)':d={int(dur*30)}:x='iw/2-(iw/zoom/2)':"
-          f"y='ih/2-(ih/zoom/2)':s={W}x{H}:fps=30,format=yuv420p")
-    subprocess.run([FFMPEG, "-y", "-loop", "1", "-i", png, "-t", str(dur), "-r", "30",
-                    "-vf", vf, "-c:v", "libx264", "-pix_fmt", "yuv420p", out],
-                   check=True, capture_output=True)
+def build_video(pngs, durs, out, bgm=None, xf=0.45):
+    # 静止カードをクロスフェードで繋ぐ(zoompanのカクつき回避。切替のみ滑らかに動かす)
+    inputs = []
+    for p, d in zip(pngs, durs):
+        inputs += ["-loop", "1", "-t", str(d), "-i", p]
+    fc = [f"[{i}:v]fps=30,format=yuv420p,setsar=1,scale={W}:{H}[v{i}]" for i in range(len(pngs))]
+    prev, offset, chain = "v0", durs[0] - xf, []
+    for i in range(1, len(pngs)):
+        lbl = "vout" if i == len(pngs) - 1 else f"x{i}"
+        chain.append(f"[{prev}][v{i}]xfade=transition=fade:duration={xf}:offset={offset:.2f}[{lbl}]")
+        prev = lbl
+        offset += durs[i] - xf
+    fcx = ";".join(fc + chain)
+    cmd = [FFMPEG, "-y"] + inputs
+    if bgm and os.path.exists(bgm):
+        cmd += ["-i", bgm, "-filter_complex", fcx, "-map", "[vout]", "-map", f"{len(pngs)}:a",
+                "-c:v", "libx264", "-c:a", "aac", "-shortest"]
+    else:
+        cmd += ["-filter_complex", fcx, "-map", "[vout]", "-c:v", "libx264"]
+    cmd += ["-r", "30", "-pix_fmt", "yuv420p", out]
+    subprocess.run(cmd, check=True, capture_output=True)
 
 def main():
     slug = sys.argv[1] if len(sys.argv) > 1 else "rice"
@@ -185,21 +199,13 @@ def main():
               (scene_rank(cat, 2, top[1], imgs[1]), 5.0),
               (scene_rank(cat, 1, top[0], imgs[0]), 7.0),
               (scene_outro(cat), 5.0)]
-    clips = []
+    pngs, durs = [], []
     for i, (img, dur) in enumerate(scenes):
-        p = os.path.join(tmp, f"s{i}.png"); img.save(p)
-        c = os.path.join(tmp, f"c{i}.mp4"); clip(p, dur, c); clips.append(c)
-    listf = os.path.join(tmp, "list.txt")
-    open(listf, "w").write("".join(f"file '{c}'\n" for c in clips))
+        p = os.path.join(tmp, f"s{i}.png"); img.save(p); pngs.append(p); durs.append(dur)
     out = os.path.join(outdir, f"furusato-{slug}-top3.mp4")
-    cmd = [FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", listf]
     bgm = os.path.join(BASE, "shorts", "bgm.mp3")
-    if os.path.exists(bgm):
-        cmd += ["-i", bgm, "-c:v", "libx264", "-c:a", "aac", "-shortest", "-pix_fmt", "yuv420p", out]
-    else:
-        cmd += ["-c:v", "libx264", "-pix_fmt", "yuv420p", out]
-    subprocess.run(cmd, check=True, capture_output=True)
-    print(f"生成: {out}  ({sum(d for _,d in scenes):.0f}秒, BGM={'有' if os.path.exists(bgm) else '無(要追加)'})")
+    build_video(pngs, durs, out, bgm=bgm if os.path.exists(bgm) else None)
+    print(f"生成: {out}  ({sum(durs):.0f}秒, BGM={'有' if os.path.exists(bgm) else '無'})")
     # 確認用に1位フレームも書き出し
     scenes[3][0].save(os.path.join(outdir, f"furusato-{slug}-frame1.png"))
 
