@@ -12,3 +12,6 @@ data/*_raw.json
 Thumbs.db
 .DS_Store
 node_modules/
+
+# Shorts動画の出力(バイナリ)は除外
+shorts/
