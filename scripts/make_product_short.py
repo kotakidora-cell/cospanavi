@@ -10,7 +10,9 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 PCATS = {"microwave": "電子レンジ", "hair-dryer": "ドライヤー", "humidifier": "加湿器",
          "tablet": "タブレット", "air-purifier": "空気清浄機", "robot-cleaner": "ロボット掃除機",
-         "earbuds": "ワイヤレスイヤホン", "monitor": "モニター", "kettle": "電気ケトル"}
+         "earbuds": "ワイヤレスイヤホン", "monitor": "モニター", "kettle": "電気ケトル",
+         "portable-power": "ポータブル電源", "stick-cleaner": "スティック掃除機",
+         "refrigerator": "冷蔵庫", "washer": "洗濯機", "rice-cooker": "炊飯器", "tv": "テレビ"}
 
 def bg_scene(c1, c2):
     from PIL import Image
