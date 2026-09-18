@@ -19,17 +19,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # ↓push時はスキップ（コミット済みsite/を即デプロイ）。定時/手動のみ全取得。
       - name: Setup Python
+        if: github.event_name != 'push'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        if: github.event_name != 'push'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Fetch, normalize & build all categories
+        if: github.event_name != 'push'
         working-directory: scripts
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
