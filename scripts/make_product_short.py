@@ -1,7 +1,7 @@
 # 家電コスパランキングのYouTube Short(縦型1080x1920,約23秒)を生成。
 # 家電は「最安値・コスパ値」主役(ふるさと版の円/kgとは別)。描画部品はmake_furusato_shortを再利用。
 # 使い方: python make_product_short.py <slug(例:microwave)>
-import json, os, sys, tempfile
+import json, os, sys, tempfile, html
 from PIL import ImageDraw
 from make_furusato_short import (font, ctext, tsize, wrap, vgrad, rrect, paste_card, dl_image,
                                  build_video, W, H, ORANGE, PINK, YEL, NAVY, WHITE)
@@ -13,7 +13,7 @@ PCATS = {"microwave": "電子レンジ", "hair-dryer": "ドライヤー", "humid
          "earbuds": "ワイヤレスイヤホン", "monitor": "モニター", "kettle": "電気ケトル",
          "portable-power": "ポータブル電源", "stick-cleaner": "スティック掃除機",
          "refrigerator": "冷蔵庫", "washer": "洗濯機", "rice-cooker": "炊飯器", "tv": "テレビ",
-         "smartwatch": "スマートウォッチ"}
+         "smartwatch": "スマートウォッチ", "coffee-maker": "コーヒーメーカー"}
 
 def bg_scene(c1, c2):
     from PIL import Image
@@ -88,6 +88,8 @@ def main():
     data = json.load(open(os.path.join(DATA, f"{slug}.json"), encoding="utf-8"))
     top = sorted(data, key=lambda z: -z["cospa"])[:3]
     for m in top:
+        m["name"] = html.unescape(m["name"])   # Yahoo由来の &lt; 等を実体化
+        m["brand"] = html.unescape(m["brand"])
         m["_img"] = dl_image(m.get("image", ""))
     scenes = [(scene_intro(label), 3.0),
               (scene_rank(3, top[2]), 5.0), (scene_rank(2, top[1]), 5.0),

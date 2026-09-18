@@ -27,7 +27,8 @@ from guides import GUIDES
 from compares import COMPARES
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
-             "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch"]
+             "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
+             "coffee-maker"]
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
          "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
