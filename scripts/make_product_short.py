@@ -13,7 +13,7 @@ PCATS = {"microwave": "電子レンジ", "hair-dryer": "ドライヤー", "humid
          "earbuds": "ワイヤレスイヤホン", "monitor": "モニター", "kettle": "電気ケトル",
          "portable-power": "ポータブル電源", "stick-cleaner": "スティック掃除機",
          "refrigerator": "冷蔵庫", "washer": "洗濯機", "rice-cooker": "炊飯器", "tv": "テレビ",
-         "smartwatch": "スマートウォッチ", "coffee-maker": "コーヒーメーカー"}
+         "smartwatch": "スマートウォッチ", "coffee-maker": "コーヒーメーカー", "kotatsu": "こたつ"}
 
 def bg_scene(c1, c2):
     from PIL import Image
