@@ -14,12 +14,17 @@ W, H = 1080, 1920
 FONT = "C:/Windows/Fonts/BIZ-UDGothicB.ttc"
 FONT2 = "C:/Windows/Fonts/meiryob.ttc"
 
-# カテゴリ別の見せ方（単位ラベル・タイトル・絵文字代替の色）
-CATS = {
+# カテゴリ別の見せ方（単位ラベル・タイトル）。FCATSから全ふるさとカテゴリを自動生成し、
+# 一部だけ見栄えのよいタイトルで上書き（新カテゴリでも単位が必ず正しく出る）。
+from furusato_cats import FCATS
+CATS = {slug: {"title": cfg["label"], "unit": cfg.get("suffix", ""),
+               "unitlabel": cfg.get("unit_label", "円"), "emoji": ""}
+        for slug, cfg in FCATS.items()}
+CATS.update({
     "rice":  {"title": "お米", "unit": "kg", "unitlabel": "円/kg", "emoji": "🍚"},
     "beef":  {"title": "牛肉", "unit": "kg", "unitlabel": "円/kg", "emoji": "🥩"},
     "toilet-paper": {"title": "トイレットペーパー", "unit": "ロール", "unitlabel": "円/ロール", "emoji": "🧻"},
-}
+})
 
 def font(sz, bold=True):
     try:

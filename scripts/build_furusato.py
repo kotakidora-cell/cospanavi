@@ -911,6 +911,78 @@ document.querySelectorAll('.lchip').forEach(b=>b.addEventListener('click',()=>{
 render();
 """
 
+# ================= 訳あり・大容量コスパ特集（家庭用まとめ買い＝実成約が最も濃い軸） =================
+WAKE_KW = ["訳あり", "訳アリ", "わけあり", "ワケあり", "規格外", "不揃い", "不ぞろい",
+           "大容量", "どっさり", "たっぷり", "メガ盛", "増量", "山盛り", "どっさり"]
+
+def build_wakeari():
+    # 正規化データ(furusato-<slug>.json=円/unit・総量・コスパ算出済)から「訳あり・大容量」品を横断抽出。
+    # 実成約(海老/牛/豚/干物=訳あり大容量のまとめ寄付)が最も濃い軸を、コスパ順の発見ページに。
+    TOPN = 400
+    pool = []
+    for slug in FCATS:
+        f = os.path.join(DATA, f"furusato-{slug}.json")
+        if not os.path.exists(f):
+            continue
+        ul = FCATS[slug]["suffix"]
+        for x in json.load(open(f, encoding="utf-8")):
+            nm = x["name"]
+            if not any(k in nm for k in WAKE_KW):
+                continue
+            pref = pref_of(x.get("shop", ""))
+            amt = x.get("amt", 0)
+            fr = teiki_freq(nm)  # 訳あり定期便なら🔁も出す
+            pool.append({"g": SLUG2GROUP.get(slug, "other"), "c": FCATS[slug]["label"], "fr": fr,
+                         "cospa": round(x["cospa"]), "sat": round(x["sat"]), "cheap": round(x["toku"]),
+                         "unit": round(x["unit"]), "ul": ul,
+                         "amt": (round(amt, 1) if amt < 10 else round(amt)),
+                         "n": nm.replace("【ふるさと納税】", "").strip()[:56],
+                         "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
+                         "y": x["price"], "r": round(x["review"], 2), "rc": x["reviewCount"],
+                         "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
+    pool.sort(key=lambda z: -z["cospa"])
+    items = pool[:TOPN]
+    total = len(items)
+    present = {x["g"] for x in items}
+    maxp = (max((x["y"] for x in items), default=100000) + 999) // 1000 * 1000
+    chips = "".join(f'<button class="lchip{" on" if g=="all" else ""}" data-g="{g}">{lab}</button>'
+                    for g, lab in HGROUPS if g == "all" or g in present)
+    DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 訳あり・大容量特集</nav>
+<h1>ふるさと納税 訳あり・大容量コスパランキング<span class="yr">2026</span></h1>
+<p class="lead"><b>訳あり・規格外・大容量</b>の返礼品を、<b>寄付額あたりの内容量（円/kg など）</b>でコスパ順にランキング。品質は問題なくても<b>サイズ不揃い・パッケージ簡易などで“お得”</b>な、量で選びたい人向けの返礼品を全カテゴリから{total}品。むき海老・牛こま・豚バラ・干物など<b>まとめ買いで一番おトク</b>な一品が見つかります。</p>
+{AD}
+<h2>訳あり・大容量コスパランキング</h2>
+<p class="lead">重視ポイント（満足度⇄お得さ）・寄付額の上限・並び替え・ジャンルを切り替えて、あなた基準の“訳あり・大容量”が探せます。</p>
+{ftool(maxp, chips)}
+<p class="cnt"><b id="fcnt"></b></p>
+<div id="flist" class="cards"></div>
+<section class="guide">
+<h2>「訳あり・大容量」ふるさと納税の選び方</h2>
+<p>「訳あり」は、<b>味や品質はそのままに、サイズ不揃い・傷・パッケージ簡易・端材などの理由で通常品よりお得</b>になった返礼品です。ふるさと納税は<b>「同じ寄付額でどれだけ量がもらえるか（円/kg）」</b>がコスパの本質なので、家庭用・普段使いなら訳あり・大容量が最も効率的。当ページは全カテゴリの返礼品から訳あり・大容量品だけを抜き出し、<b>寄付額あたりの内容量でコスパ順</b>に並べています。むき海老・切り落とし肉・豚こま・干物・冷凍フルーツなど、<b>使い切れる量とコスパの両立</b>で選べます。</p>
+<div class="gpts">
+<div class="gpt"><h3>どんな人に向く？</h3><p>見た目より量とコスパ重視の人、家族が多い人、普段使い・作り置き・冷凍ストックをしたい人に向いています。</p></div>
+<div class="gpt"><h3>注意点は？</h3><p>「訳あり」の理由（不揃い・傷・簡易包装など）は返礼品ごとに異なります。贈答用には不向きな場合があるため、用途に合わせて申込前に商品説明をご確認ください。冷凍品は保管スペースにもご注意を。</p></div>
+<div class="gpt"><h3>寄付額はサイトで違う？</h3><p>寄付額は自治体が決めるため、どのふるさと納税サイトでも同額です。掲載は楽天ふるさと納税のデータです。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">
+<div class="faq"><h3>Q. 「訳あり」は品質が悪いのですか？</h3><p>A. いいえ。多くはサイズ不揃い・傷・簡易包装・端材など、<b>味や中身の品質に問題のない理由</b>でお得になっています。理由は各返礼品ページに記載されています。</p></div>
+<div class="faq"><h3>Q. コスパはどう見ればいい？</h3><p>A. 各カードの<b>円/kg（円/本など）＝寄付額あたりの内容量</b>で比べてください。数字が小さいほど量あたりお得です。並び替えやジャンル絞り込みも使えます。</p></div>
+<div class="faq"><h3>Q. 定期便の訳あり大容量もありますか？</h3><p>A. あります。🔁マーク付きが定期便です。<a href="/furusato-teiki">定期便特集</a>も合わせてご覧ください。</p></div>
+</div>
+</section>
+<script id="fdata" type="application/json">{DATA_JSON}</script>
+<script>{FTOOL_JS}</script>
+"""
+    title = "ふるさと納税 訳あり・大容量コスパランキング2026｜円/kgで選ぶまとめ買い返礼品"
+    desc = f"訳あり・規格外・大容量の返礼品を寄付額あたりの内容量（円/kg等）でコスパランキング。むき海老・切り落とし肉・豚こま・干物など、まとめ買いで一番お得な返礼品を全カテゴリから{total}品。"
+    open(os.path.join(SITE, "furusato-wakeari.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-wakeari.html", head=HALL_CSS + TEIKI_CSS + bc_furusato("訳あり・大容量特集")))
+    print(f"  訳あり・大容量特集ページ: {total}品")
+    return total
+
 def build_hub(counts):
     # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
     parts = []
@@ -931,6 +1003,7 @@ def build_hub(counts):
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-teiki"><div class="hico">🔁</div><div><h3>定期便特集 — 毎月・全〇回で届く<span class="n">NEW</span></h3><p>1回の寄付で<b>毎月・隔月・全〇回</b>に分けて届く定期便を厳選。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>返礼品をジャンル別に。</p></div><span class="fgo">見る →</span></a>
+<a class="fbanner" href="/furusato-wakeari"><div class="hico">🏷️</div><div><h3>訳あり・大容量コスパ特集 — まとめ買いで得<span class="n">NEW</span></h3><p>味や品質はそのまま、<b>不揃い・簡易包装で“お得”な訳あり・大容量</b>を円/kgのコスパ順に。むき海老・切り落とし肉・豚こま・干物など、<b>家庭用まとめ買いで一番おトク</b>な返礼品を横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ特集 — 実質節約<span class="n">NEW</span></h3><p>トイレットペーパー・ティッシュ・洗剤・水など<b>必ず使う消耗品</b>を円/ロール・円/kgのコスパ順に。<b>実質2,000円で生活必需品</b>が手に入る家計防衛術。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
@@ -950,7 +1023,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html", "furusato-wakeari.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -967,6 +1040,7 @@ if __name__ == "__main__":
     nhall = build_hall()
     nteiki = build_teiki()
     nnichi = build_nichiyo()
+    nwake = build_wakeari()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + 日用品({nnichi}品) + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + 日用品({nnichi}品) + 訳あり大容量({nwake}品) + {len(CATS)}カテゴリ  {counts}")
