@@ -66,10 +66,11 @@ VC_320_OVERLAY = ('<script language="javascript" '
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "egg": "🥚", "fruit": "🍇", "sweets": "🍰", "frozen": "🥟", "beer": "🍺", "drink": "🥤",
+        "cheese": "🧀",
         "toilet-paper": "🧻", "kitchen-paper": "📄", "tissue": "🤧", "detergent": "🧴", "diaper": "👶"}
-# ジャンル順(主食・肉→魚介・卵→果物・菓子→冷凍→飲料→日用品)でユーザーが探しやすく
+# ジャンル順(主食・肉→魚介・卵→果物・菓子→冷凍→乳製品→飲料→日用品)でユーザーが探しやすく
 CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "egg", "fruit", "sweets",
-             "frozen", "beer", "drink", "toilet-paper", "kitchen-paper", "tissue", "detergent", "diaper"]
+             "frozen", "cheese", "beer", "drink", "toilet-paper", "kitchen-paper", "tissue", "detergent", "diaper"]
 CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
          "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
          "desc": f"楽天ふるさと納税の{FCATS[s]['label']}を、寄付額あたりの内容量（{FCATS[s]['unit_label']}）とレビュー満足度でコスパランキング。"}
@@ -171,6 +172,7 @@ FTITLE = {
     "frozen": "ふるさと納税 冷凍食品のコスパ最強ランキング2026｜円/kg・餃子/唐揚げ等をお得に",
     "egg": "ふるさと納税 卵のコスパ最強ランキング2026｜1個あたり・定期便でお得に",
     "beer": "ふるさと納税 ビールのコスパ最強ランキング2026｜1本あたり・定期便でお得に",
+    "cheese": "ふるさと納税 チーズ・乳製品のコスパ最強ランキング2026｜円/kg・カマンベール/バター等をお得に",
 }
 FDESC = {
     "toilet-paper": "楽天ふるさと納税のトイレットペーパーを1ロールあたりの価格（円/ロール）でコスパランキング。5倍巻き・長巻き・大容量・備蓄向けを実質2,000円でお得に。おすすめの返礼品が分かります。",
@@ -190,6 +192,7 @@ FDESC = {
     "frozen": "楽天ふるさと納税の冷凍食品を1kgあたりの価格でコスパランキング。餃子・唐揚げ等の大容量を比較し、お得なおすすめが分かります。",
     "egg": "楽天ふるさと納税の卵を1個あたりの価格でコスパランキング。定期便も総量換算で比較し、お得なおすすめが分かります。",
     "beer": "楽天ふるさと納税のビールを1本あたりの価格でコスパランキング。定期便も総量換算で比較し、お得なおすすめが分かります。",
+    "cheese": "楽天ふるさと納税のチーズ・乳製品を1kgあたりの価格でコスパランキング。カマンベール・モッツァレラ・ゴーダ・バター・ヨーグルトの食べ比べ・詰め合わせを比較し、お得なおすすめが分かります。",
 }
 FINTRO = {
     "toilet-paper": " トイレットペーパーは<b>1ロールあたりの価格（円/ロール）</b>で選ぶのが鉄則。5倍巻き・長巻きや大容量セットは1ロール単価が安く、<b>備蓄・まとめ買い</b>に最適です。",
@@ -210,6 +213,7 @@ FINTRO = {
     "frozen": " 冷凍食品は<b>1kgあたりの価格</b>で比較。餃子・唐揚げなど<b>大容量</b>がお得です。",
     "egg": " 卵は<b>1個あたりの価格</b>で比較。定期便でまとめて届くタイプもお得です。",
     "beer": " ビールは<b>1本あたりの価格</b>で比較。ケース・定期便でまとめると単価が下がりお得です。",
+    "cheese": " チーズ・乳製品は<b>1kgあたりの価格</b>で比較。<b>食べ比べ・詰め合わせ</b>や大容量セットが円/kgで見るとお得。国産カマンベール・モッツァレラ・ゴーダやバターが人気です。",
 }
 
 def _fpct(vals, q):
@@ -516,7 +520,7 @@ def pref_of(shop):
 HGROUPS = [("all","すべて"),("rice","米"),("meat","肉"),("seafood","魚介"),("egg","卵"),
            ("fruit-sweets","果物・スイーツ"),("drink","飲料・お酒"),("daily","日用品"),("local","現地体験")]
 SLUG2GROUP = {"rice":"rice","egg":"egg","beef":"meat","pork":"meat","chicken":"meat","hamburg":"meat",
-              "seafood":"seafood","fruit":"fruit-sweets","sweets":"fruit-sweets",
+              "seafood":"seafood","fruit":"fruit-sweets","sweets":"fruit-sweets","cheese":"fruit-sweets",
               "frozen":"fruit-sweets","beer":"drink","drink":"drink","toilet-paper":"daily",
               "tissue":"daily","detergent":"daily","diaper":"daily","kitchen-paper":"daily",
               "trash-bag":"daily","local":"local"}
