@@ -46,8 +46,8 @@ def bc_furusato(leaf):
     return breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("ふるさと納税", SITE_URL + "/furusato"), (leaf, None)])
 UPDATED = datetime.date.today().isoformat()
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
-# バリューコマース LinkSwitch: 提携済みモール(さとふる等)へのリンクを自動でアフィリ化(全ふるさとページ)
-LINKSWITCH = '<script type="text/javascript">var vc_pid="892664777";</script><script type="text/javascript" src="//aml.valuecommerce.com/vcdal.js" async></script>'
+# 2026-09-25 楽天アフィリ一本化: 食べログ/さとふる等のバリューコマース広告・LinkSwitchは全撤去。
+LINKSWITCH = ''
 VERIFY = '<meta name="google-site-verification" content="9Lq7hmAO3CeIlcT6nM2tB2_AksHlZsugoZ_VIeeY5Dc">'
 AD = ''
 # バリューコマース広告バナー(カテゴリカード風に1枠としてグリッド内へ)。ステマ規制対応で「広告」表記付き。
@@ -57,12 +57,11 @@ def _vc(pid, cls="adcard"):
             f'<noscript><a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3775700&pid={pid}" target="_blank" rel="nofollow sponsored noopener">'
             f'<img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3775700&pid={pid}" border="0"></a></noscript></div>')
 
-IN_GRID_ADS = [_vc("892664055")]   # 食べログ 120×60。偶数行(2,4,6…)の中央に配置(PCのみ表示、スマホは非表示)
-# PC用 468×60 帯(現在はグリッド内120×60を使用のため未使用。戻す場合は body に {VC_468_PC} を復活)
+# 2026-09-25 楽天アフィリ一本化: 食べログ(VC)のグリッド内広告・PC帯・スマホ320×50オーバーレイは全撤去。
+# _vc/VC_468_PCは将来復活用に残置(未使用)。IN_GRID_ADSを空にするとハブのグリッドは自動で詰まる。
+IN_GRID_ADS = []
 VC_468_PC = _vc("892664051", "adbanner-pc")
-# スマホ用: 食べログ 320×50 オーバーレイ(VCがスマホ時のみ画面下部に固定表示。スクリプトを置くだけ)
-VC_320_OVERLAY = ('<script language="javascript" '
-                  'src="//ad.jp.ap.valuecommerce.com/servlet/smartphonebanner?sid=3775700&pid=892664050&position=overlay"></script>')
+VC_320_OVERLAY = ''
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "egg": "🥚", "fruit": "🍇", "sweets": "🍰", "frozen": "🥟", "beer": "🍺", "drink": "🥤",
@@ -295,11 +294,11 @@ def build_cat(cfg):
     return len(data)
 
 # (サイト名, 説明, MyLink pid or None, 公式URL or None)。pidがある広告主(提携済)は公式サイトへのアフィリリンクを付与。
+# 2026-09-25 楽天アフィリ一本化: 提携が通らないさとふる/ふるなびの個別カードは撤去し、楽天ふるさと納税を主役に。
+# (サイト名, 説明, MyLink pid or None, 公式URL or None)。当サイトは楽天ふるさと納税アフィリのみ運用。
 SITES = [
-    ("楽天ふるさと納税", "楽天市場と同じ操作感で使える最大級のサイト。返礼品数が多く、楽天カード・楽天ペイ決済に対応。普段から楽天を使う人はカード決済のポイントを貯めやすい。当サイトのランキングも楽天のデータを利用。", None, None),
-    ("さとふる", "返礼品の掲載数が最大級で、初心者にも分かりやすいUI。発送が早い返礼品が多く、PayPay・クレジットカード決済に対応。「とにかく選択肢を広く見たい」人に。", None, None),  # 提携見送り(2026-07)→再申請までリンク無し
+    ("楽天ふるさと納税", "楽天市場と同じ操作感で使える最大級のサイト。返礼品数が多く、楽天カード・楽天ペイ決済に対応。普段から楽天を使う人はカード決済のポイントを貯めやすい。当サイトのコスパランキングも楽天のデータを利用しており、そのまま楽天ふるさと納税で寄付できます。", None, None),
     ("ふるさとチョイス", "掲載自治体数No.1クラスで、地方の穴場返礼品まで最も網羅的。Amazon Pay・各種決済に対応。「他に無い返礼品を探したい」網羅性重視の人向け。", None, None),
-    ("ふるなび", "家電・電化製品の返礼品に強く、初心者向けの見やすさが特徴。独自の「ふるなびコイン」やキャンペーンあり。家電狙いの人に。", None, None),  # 提携見送り(2026-07)→再申請までリンク無し
     ("au PAY ふるさと納税", "au・Pontaユーザーと相性が良く、Pontaポイントでの決済も可能。auの経済圏を使っている人向け。", None, None),
 ]
 
@@ -328,12 +327,14 @@ def build_guide():
 <p>2025年10月1日の総務省ルール改正により、<b>楽天・さとふる・ふるなび・ふるさとチョイス・au PAY など全てのポータルサイトで、サイト独自のポイント付与が禁止</b>されました。つまり「還元率が高いサイトを選ぶ」という選び方は<b>もうできません</b>。同じ返礼品なら寄付額もポイントも各サイト横並びです。</p>
 <h2>では今、どうやってお得にする？</h2>
 <p>ポイント付与の禁止は「ポータルサイトが配るポイント」の話です。<b>寄付の支払いに使うクレジットカードや◯◯Pay決済で、カード会社・決済事業者側が付与するポイントは従来どおり受け取れます</b>。そのため今は「どのサイトか」よりも<b>「どの決済手段（カード）で払うか」</b>のほうが実質的なお得さに直結します。<br>※各社の付与ルールやキャンペーンは変わりやすいので、寄付前に必ず最新の条件をご確認ください。</p>
+<div class="scallout">🛒 <b>当サイトは楽天ふるさと納税のデータでコスパランキングを作成しています。</b>気になる返礼品はそのまま楽天で寄付できます → <a href="/furusato">ふるさと納税コスパランキングを見る →</a></div>
 <h2>主要ふるさと納税サイト比較</h2>
+<p>当サイトは、普段使いのしやすさと返礼品数から<b>楽天ふるさと納税</b>を基準にコスパランキングを作成しています。網羅性や決済の好みで他サイトも選択肢になります。</p>
 <div class="gpts">{site_cards}</div>
 <h2>ポイント廃止後の「サイトの選び方」4つの基準</h2>
 <div class="gpts">
 <div class="gpt"><h3>① 普段使う決済・経済圏</h3><p>楽天カードなら楽天、au/Pontaならau PAY など、自分が普段ポイントを貯めている決済が使えるサイトを選ぶと、カード側ポイントで実質お得になります。</p></div>
-<div class="gpt"><h3>② 返礼品の品揃え</h3><p>欲しい返礼品があるかが最優先。掲載数が多いさとふる、掲載自治体が最も広いふるさとチョイスなどは選択肢が豊富です。</p></div>
+<div class="gpt"><h3>② 返礼品の品揃え</h3><p>欲しい返礼品があるかが最優先。返礼品数が多い楽天ふるさと納税、掲載自治体が最も広いふるさとチョイスなどは選択肢が豊富です。</p></div>
 <div class="gpt"><h3>③ 使いやすさ・発送の早さ</h3><p>初めてなら操作の分かりやすいサイトを。年末の駆け込みでは発送が早い返礼品が多いサイトが安心です。</p></div>
 <div class="gpt"><h3>④ 控除シミュレーターの有無</h3><p>上限額を超えると自己負担になります。各サイトのシミュレーターで、年収・家族構成に応じた目安額を先に確認しましょう。</p></div>
 </div>
@@ -342,8 +343,8 @@ def build_guide():
 <p class="note">本ページは制度の一般的な解説です。控除・ポイント・キャンペーンの最新条件は各サイト・自治体の公式情報をご確認ください。当サイトのランキングは<a href="/furusato">ふるさと納税コスパ分析</a>から。</p>
 </div>
 """
-    title = "ふるさと納税サイトの選び方2026｜ポイント廃止後の比較とお得な方法"
-    desc = "2025年10月のポイント付与廃止後、ふるさと納税サイトはどう選ぶ？楽天・さとふる・ふるさとチョイス・ふるなび等を比較し、今もお得にする方法（決済ポイント）を解説。"
+    title = "ふるさと納税サイトの選び方2026｜ポイント廃止後の比較と楽天がお得な理由"
+    desc = "2025年10月のポイント付与廃止後、ふるさと納税サイトはどう選ぶ？楽天ふるさと納税を中心に主要サイトを比較し、今もお得にする方法（決済ポイント）を解説。コスパランキングは楽天データで作成。"
     head = f'<script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>'
     head += bc_furusato("ふるさと納税サイトの選び方")
     open(os.path.join(SITE, "furusato-sites.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato-sites.html", head))
