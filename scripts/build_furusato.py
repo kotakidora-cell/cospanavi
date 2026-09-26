@@ -991,6 +991,97 @@ def build_wakeari():
     print(f"  訳あり・大容量特集ページ: {total}品")
     return total
 
+# ================= 実質還元率ランキング（楽天通常相場から市場価値を推定＝ポータルが出せない指標） =================
+KANPU_CATS = ["rice"]  # 相場が均質で信頼できるカテゴリから。順次拡大(beef/seafood/sake…)
+KANPU_CSS = ("<style>.krate{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0}"
+             ".krate .big{color:var(--accent);font-size:1.7rem;font-weight:800;line-height:1}"
+             ".krate .sub{color:var(--sub);font-size:.78rem;margin-top:2px}.krate .sub b{color:var(--ink)}"
+             ".kmethod{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:14px 0;font-size:.9rem}</style>")
+
+def build_kanpu():
+    bench_all = {}
+    bp = os.path.join(DATA, "market_bench.json")
+    if os.path.exists(bp):
+        bench_all = json.load(open(bp, encoding="utf-8"))
+    pool = []
+    for slug in KANPU_CATS:
+        b = bench_all.get(slug)
+        f = os.path.join(DATA, f"furusato-{slug}.json")
+        if not b or not os.path.exists(f):
+            continue
+        ul = FCATS[slug]["suffix"]
+        for x in json.load(open(f, encoding="utf-8")):
+            amt, price = x.get("amt"), x.get("price")
+            if not amt or not price:
+                continue
+            ppk, br = b["overall"], "相場"
+            for bd in b["order"]:
+                if bd in x["name"] and bd in b["brands"]:
+                    ppk, br = b["brands"][bd], bd
+                    break
+            mv = ppk * amt
+            rate = mv / price * 100
+            if rate < 10 or rate > 90:   # >90%は「選べる」の寄付額×総量ミスマッチ等の異常値→除外
+                continue
+            pref = pref_of(x.get("shop", ""))
+            pool.append({"g": SLUG2GROUP.get(slug, "other"), "c": FCATS[slug]["label"], "ul": ul,
+                         "rate": round(rate), "mv": round(mv), "ppk": round(ppk), "br": br,
+                         "amt": (round(amt, 1) if amt < 10 else round(amt)),
+                         "n": x["name"].replace("【ふるさと納税】", "").strip()[:56],
+                         "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
+                         "y": price, "r": round(x["review"], 2), "rc": x["reviewCount"],
+                         "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
+    pool.sort(key=lambda z: -z["rate"])
+    items = pool[:300]
+    total = len(items)
+    asof = bench_all.get(KANPU_CATS[0], {}).get("asof", UPDATED)
+    cards = []
+    for i, x in enumerate(items, 1):
+        img = f'<div class="cimg"><img loading="lazy" src="{x["img"]}" alt=""></div>' if x["img"] else ""
+        star = "★" * round(x["r"]) + "☆" * (5 - round(x["r"]))
+        rc = f'<div class="cstars">{star} <span class="muted">{x["r"]:.2f}（{x["rc"]:,}件）</span></div>' if x["rc"] else ""
+        loc = f'<div class="lmuni">{H.escape(x["p"])}{" " + H.escape(x["m"]) if x["m"] and x["m"] != x["p"] else ""}</div>' if x["p"] else ""
+        rank = f'<span class="hrank{" top" if i <= 3 else ""}">{i}</span>'
+        cards.append(
+            f'<div class="card">{img}<div class="cbody">{rank}<span class="ltag">{x["c"]}</span>'
+            f'<a class="cname" href="{x["a"]}" target="_blank" rel="nofollow sponsored noopener" title="{H.escape(x["n"])}">{H.escape(x["n"])}</a>{loc}'
+            f'<div class="krate"><span class="big">実質還元率 約{x["rate"]}%</span>'
+            f'<div class="sub">想定市場価 <b>¥{x["mv"]:,}</b> ÷ 寄付 <b>¥{x["y"]:,}</b>　'
+            f'（相場 {x["ppk"]:,}円/{x["ul"]}・{H.escape(x["br"])}／総量{x["amt"]}{x["ul"]}）</div></div>'
+            f'{rc}<a class="buy sm" href="{x["a"]}" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+            f'</div></div>')
+    grid = '<div class="cards">' + "".join(cards) + "</div>"
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 実質還元率ランキング</nav>
+<h1>ふるさと納税 実質還元率ランキング<span class="yr">2026</span></h1>
+<p class="lead"><b>「寄付額に対して、実際いくら分もらえる？」</b>——ポイント付与が廃止された今、いちばん知りたいのは<b>実質的なお得さ＝還元率</b>です。当サイトは<b>楽天の通常販売価格から返礼品の“市場価値”を自動推定</b>し、寄付額に対する<b>実質還元率</b>を独自にランキング。{total}品を還元率順に掲載しています（現在は米。順次カテゴリ拡大）。</p>
+<div class="kmethod">🔎 <b>実質還元率の出し方</b>：返礼品の<b>総量</b>に、楽天通常販売の<b>市場相場（銘柄別の円/{FCATS[KANPU_CATS[0]]['suffix']}）</b>を掛けて「想定市場価格」を算出し、<b>寄付額で割った割合</b>です。相場は毎回自動取得しています（相場更新日: {asof}）。数値は小売相場ベースの<b>目安</b>で、送料・時期・銘柄差で上下します。</div>
+{AD}
+<h2>実質還元率ランキング（米）</h2>
+{grid}
+<section class="guide">
+<h2>ふるさと納税「還元率」の考え方</h2>
+<p>ふるさと納税の返礼品は、総務省ルールで<b>調達価格が寄付額の30%以下</b>と定められています。ただしこれは自治体の<b>仕入れ値</b>基準。私たちが実際に気にするのは「<b>お店で買ったらいくら？（小売価格）</b>」に対してどれだけお得か、です。当ランキングは<b>楽天の通常販売価格＝小売相場</b>を基準に、寄付額に対する実質的な価値（＝実質還元率）を推定しています。一般に米は還元率が高めに出やすく、<b>大容量・無洗米・銘柄指定なし</b>ほどお得になりやすい傾向です。</p>
+<div class="gpts">
+<div class="gpt"><h3>なぜポータルは還元率を出さない？</h3><p>2025年10月のルール改正で、ポータルサイトが還元率や割安をうたう表示は難しくなりました。当サイトは第三者として、公開されている通常販売価格から独自に推定しています。</p></div>
+<div class="gpt"><h3>数字はどこまで正確？</h3><p>市場相場は多数の通常商品の中央値を用いた<b>目安</b>です。同じ銘柄でも産地・時期・送料で価格は動くため、最終的な判断は返礼品ページの内容量・レビューもあわせてご確認ください。</p></div>
+<div class="gpt"><h3>還元率が高い返礼品の選び方</h3><p>同じ寄付額なら<b>総量が多い・大容量・普段使いの定番</b>が有利です。米・お肉・日用品などの<a href="/furusato">コスパランキング</a>や<a href="/furusato-wakeari">訳あり・大容量特集</a>も合わせてどうぞ。</p></div>
+</div>
+<h2>よくある質問</h2>
+<div class="faqs">
+<div class="faq"><h3>Q. 実質還元率100%超えは無いの？</h3><p>A. 理論上は寄付額より市場価値が高い返礼品もあり得ますが、当ランキングでは「選べる内容量」等による寄付額と総量の不整合を避けるため、極端な数値は除外し、信頼できる範囲で掲載しています。</p></div>
+<div class="faq"><h3>Q. どの銘柄相場を使っていますか？</h3><p>A. 楽天通常販売から銘柄別の中央値（例：コシヒカリ・つや姫・無洗米など）を自動集計し、返礼品名に含まれる銘柄に合わせて適用しています。該当が無い場合は全体中央値を使用します。</p></div>
+<div class="faq"><h3>Q. 他のカテゴリは？</h3><p>A. まずは相場が安定している米から公開しています。お肉・海鮮・日本酒（円/L）などへ順次拡大予定です。</p></div>
+</div>
+</section>
+"""
+    title = "ふるさと納税 実質還元率ランキング2026｜市場価格から独自推定（米）"
+    desc = f"楽天の通常販売価格から返礼品の市場価値を推定し、寄付額に対する実質還元率でランキング。ポイント廃止後に本当にお得な返礼品が分かる独自指標。米{total}品を還元率順に掲載。"
+    open(os.path.join(SITE, "furusato-kanpu.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-kanpu.html", head=HALL_CSS + KANPU_CSS + bc_furusato("実質還元率ランキング")))
+    print(f"  実質還元率ランキングページ: {total}品")
+    return total
+
 def build_hub(counts):
     # 3列グリッドで偶数行(2,4,6…)の中央=最終位置4,10,16…(pos%6==4)に広告を差し込む。banner循環。
     parts = []
@@ -1011,6 +1102,7 @@ def build_hub(counts):
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 <a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-teiki"><div class="hico">🔁</div><div><h3>定期便特集 — 毎月・全〇回で届く<span class="n">NEW</span></h3><p>1回の寄付で<b>毎月・隔月・全〇回</b>に分けて届く定期便を厳選。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>返礼品をジャンル別に。</p></div><span class="fgo">見る →</span></a>
+<a class="fbanner" href="/furusato-kanpu"><div class="hico">💹</div><div><h3>実質還元率ランキング — 本当にお得な返礼品<span class="n">NEW</span></h3><p>楽天の<b>通常販売価格から市場価値を独自推定</b>し、寄付額に対する<b>実質還元率</b>でランキング。ポイント廃止後に<b>「結局どれが一番お得？」</b>が分かる、ポータルにはない指標。（まず米）</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-wakeari"><div class="hico">🏷️</div><div><h3>訳あり・大容量コスパ特集 — まとめ買いで得<span class="n">NEW</span></h3><p>味や品質はそのまま、<b>不揃い・簡易包装で“お得”な訳あり・大容量</b>を円/kgのコスパ順に。むき海老・切り落とし肉・豚こま・干物など、<b>家庭用まとめ買いで一番おトク</b>な返礼品を横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ特集 — 実質節約<span class="n">NEW</span></h3><p>トイレットペーパー・ティッシュ・洗剤・水など<b>必ず使う消耗品</b>を円/ロール・円/kgのコスパ順に。<b>実質2,000円で生活必需品</b>が手に入る家計防衛術。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
@@ -1031,7 +1123,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html", "furusato-wakeari.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html", "furusato-wakeari.html", "furusato-kanpu.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -1049,6 +1141,7 @@ if __name__ == "__main__":
     nteiki = build_teiki()
     nnichi = build_nichiyo()
     nwake = build_wakeari()
+    nkanpu = build_kanpu()
     build_hub(counts)
     add_to_sitemap()
-    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + 日用品({nnichi}品) + 訳あり大容量({nwake}品) + {len(CATS)}カテゴリ  {counts}")
+    print(f"生成: furusato.html(ハブ) + サイト選び方 + 現地体験({nloc}件) + 殿堂({nhall}品) + 定期便({nteiki}品) + 日用品({nnichi}品) + 訳あり大容量({nwake}品) + 実質還元率({nkanpu}品) + {len(CATS)}カテゴリ  {counts}")
