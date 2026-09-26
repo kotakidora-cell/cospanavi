@@ -31,6 +31,38 @@ def amt_weight(name):   # → 総kg
     vals = sorted(kgs | gs)
     return vals[0] if len(vals) == 1 else None   # 複数重量(選べる等)は曖昧→スキップ
 
+L_MUL = re.compile(r"(\d+(?:\.\d+)?)\s*(?:l|リットル)\s*[×xX＊*]\s*(\d+)")
+ML_MUL = re.compile(r"(\d+(?:\.\d+)?)\s*ml\s*[×xX＊*]\s*(\d+)")
+L1 = re.compile(r"(\d+(?:\.\d+)?)\s*(?:l|リットル)")
+ML1 = re.compile(r"(\d+(?:\.\d+)?)\s*ml")
+# 日本酒の和式容量表記→ml（一升瓶=1800ml, 四合瓶=720ml 等）
+SHO_GO = [("一升瓶", "1800ml"), ("四合瓶", "720ml"), ("一升", "1800ml"), ("四合", "720ml"),
+          ("五合", "900ml"), ("三合", "540ml"), ("二合", "360ml"), ("一合", "180ml"), ("一斗", "18000ml")]
+
+def amt_volume(name):   # → 総L（日本酒等。720ml/1800ml・一升/四合・×N本セットに対応）
+    n = norm(name).lower()
+    for k, v in SHO_GO:
+        n = n.replace(k, v)
+    m = ML_MUL.findall(n)
+    if m:
+        return max(float(a) * int(b) for a, b in m) / 1000
+    m = L_MUL.findall(n)
+    if m:
+        return max(float(a) * int(b) for a, b in m)
+    mls = {round(float(x) / 1000, 3) for x in ML1.findall(n) if 100 <= float(x) <= 5400}
+    ls = {round(float(x), 3) for x in L1.findall(n) if 0.1 <= float(x) <= 18}
+    vols = sorted(mls | ls)
+    if len(vols) != 1:
+        return None   # 複数容量(選べる)は曖昧→スキップ
+    vol = vols[0]
+    bottles = [int(x) for x in re.findall(r"(\d+)\s*本", n)]
+    if bottles:
+        return vol * max(bottles)
+    setc = [int(x) for x in re.findall(r"(\d+)\s*(?:セット|ケース|箱)", n)]
+    if setc:
+        return vol * max(setc)
+    return vol
+
 def amt_count(name, noun):   # → 総数(本/ロール/枚)
     n = norm(name)
     # 総数=N×M: 「12ロール×8」「200枚入り×2」「44枚×4パック」等。入り/入を挟んでもマッチ
@@ -46,6 +78,8 @@ def amt_count(name, noun):   # → 総数(本/ロール/枚)
 def amount(name):
     if cfg["unit"] == "weight":
         return amt_weight(name)
+    if cfg["unit"] == "volume":
+        return amt_volume(name)
     return amt_count(name, cfg["count_noun"])
 
 items = []
