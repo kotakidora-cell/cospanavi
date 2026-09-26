@@ -1012,7 +1012,7 @@ def build_hub(counts):
 <a class="fbanner" href="/furusato-nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ特集 — 実質節約<span class="n">NEW</span></h3><p>トイレットペーパー・ティッシュ・洗剤・水など<b>必ず使う消耗品</b>を円/ロール・円/kgのコスパ順に。<b>実質2,000円で生活必需品</b>が手に入る家計防衛術。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
-<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">チーズ・乳製品</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
+<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="/about">コスパ値とは</a>。</p>
 """
