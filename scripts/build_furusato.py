@@ -3,6 +3,7 @@
 import json, os, sys, html as H, datetime, urllib.parse, re
 from furusato_cats import FCATS
 from furusato_guides import FGUIDES
+from furusato_sim import simulator_html, nennai_flag, SIM_CSS
 
 # カテゴリ別 選び方ガイド＋FAQ (HTML, FAQPage構造化データ) を返す
 def render_fguide(slug, label):
@@ -996,7 +997,44 @@ KANPU_CATS = ["rice"]  # 相場が均質で信頼できるカテゴリから。�
 KANPU_CSS = ("<style>.krate{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0}"
              ".krate .big{color:var(--accent);font-size:1.7rem;font-weight:800;line-height:1}"
              ".krate .sub{color:var(--sub);font-size:.78rem;margin-top:2px}.krate .sub b{color:var(--ink)}"
-             ".kmethod{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:14px 0;font-size:.9rem}</style>")
+             ".kmethod{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:14px 0;font-size:.9rem}"
+             ".kchk{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;cursor:pointer}.kchk input{width:auto}"
+             ".knen{display:inline-block;background:#2f855a;color:#fff;border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin:0 0 3px 5px}</style>")
+
+# 実質還元率ページの操作JS: シミュレーター上限/寄付額上限/年内発送で絞り込み、還元率順に描画。
+KANPU_JS = r"""
+const KD=JSON.parse(document.getElementById('kdata').textContent);
+const klist=document.getElementById('klist'),kcnt=document.getElementById('kcnt');
+const kbud=document.getElementById('kbud'),kbudv=document.getElementById('kbudv'),knen=document.getElementById('knen');
+const yen=v=>'¥'+v.toLocaleString();
+const esc=s=>(s||'').replace(/"/g,'&quot;');
+const star=v=>{v=Math.round(v);return '★'.repeat(v)+'☆'.repeat(5-v);};
+function krender(){
+  const b=+kbud.value, nen=knen.checked;
+  kbudv.textContent=yen(b)+'以下';
+  let a=KD.filter(x=>x.y<=b&&(!nen||x.nen));
+  kcnt.innerHTML='<b>'+a.length+'品</b>（寄付'+yen(b)+'以下・還元率順'+(nen?'・年内発送の目安あり':'')+'）';
+  klist.innerHTML=a.slice(0,150).map((x,i)=>{
+    const img=x.img?'<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>':'';
+    const rc=x.rc>0?'<div class="cstars">'+star(x.r)+' <span class="muted">'+x.r.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>':'';
+    const loc=x.p?('<div class="lmuni">'+x.p+(x.m&&x.m!==x.p?' '+x.m:'')+'</div>'):'';
+    const rank='<span class="hrank'+(i<3?' top':'')+'">'+(i+1)+'</span>';
+    const nb=x.nen?'<span class="knen">📦 年内発送の目安</span>':'';
+    return '<div class="card">'+img+'<div class="cbody">'+rank+'<span class="ltag">'+x.c+'</span>'+nb
+      +'<a class="cname" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener" title="'+esc(x.n)+'">'+x.n+'</a>'+loc
+      +'<div class="krate"><span class="big">実質還元率 約'+x.rate+'%</span>'
+      +'<div class="sub">想定市場価 <b>¥'+x.mv.toLocaleString()+'</b> ÷ 寄付 <b>¥'+x.y.toLocaleString()+'</b>　'
+      +'（相場 '+x.ppk.toLocaleString()+'円/'+x.ul+'・'+x.br+'／総量'+x.amt+x.ul+'）</div></div>'
+      +rc+'<a class="buy sm" href="'+x.a+'" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
+      +'</div></div>';
+  }).join('');
+  if(a.length>150){klist.innerHTML+='<p class="note">上位150品を表示中（還元率順）。</p>';}
+}
+window.__kanpuSetBudget=function(v){ if(v>0){ kbud.value=Math.min(v,+kbud.max); } krender(); };
+kbud.oninput=krender; knen.onchange=krender;
+(function(){ const p=new URLSearchParams(location.search); const qb=+p.get('budget'); if(qb>0){kbud.value=Math.min(qb,+kbud.max);} })();
+krender();
+"""
 
 def build_kanpu():
     bench_all = {}
@@ -1030,35 +1068,32 @@ def build_kanpu():
                          "n": x["name"].replace("【ふるさと納税】", "").strip()[:56],
                          "p": pref, "m": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
                          "y": price, "r": round(x["review"], 2), "rc": x["reviewCount"],
+                         "nen": nennai_flag(x["name"]),
                          "img": x.get("image", ""), "a": x.get("affiliate") or x.get("url")})
     pool.sort(key=lambda z: -z["rate"])
     items = pool[:300]
     total = len(items)
+    nen_n = sum(1 for x in items if x["nen"])
     asof = bench_all.get(KANPU_CATS[0], {}).get("asof", UPDATED)
-    cards = []
-    for i, x in enumerate(items, 1):
-        img = f'<div class="cimg"><img loading="lazy" src="{x["img"]}" alt=""></div>' if x["img"] else ""
-        star = "★" * round(x["r"]) + "☆" * (5 - round(x["r"]))
-        rc = f'<div class="cstars">{star} <span class="muted">{x["r"]:.2f}（{x["rc"]:,}件）</span></div>' if x["rc"] else ""
-        loc = f'<div class="lmuni">{H.escape(x["p"])}{" " + H.escape(x["m"]) if x["m"] and x["m"] != x["p"] else ""}</div>' if x["p"] else ""
-        rank = f'<span class="hrank{" top" if i <= 3 else ""}">{i}</span>'
-        cards.append(
-            f'<div class="card">{img}<div class="cbody">{rank}<span class="ltag">{x["c"]}</span>'
-            f'<a class="cname" href="{x["a"]}" target="_blank" rel="nofollow sponsored noopener" title="{H.escape(x["n"])}">{H.escape(x["n"])}</a>{loc}'
-            f'<div class="krate"><span class="big">実質還元率 約{x["rate"]}%</span>'
-            f'<div class="sub">想定市場価 <b>¥{x["mv"]:,}</b> ÷ 寄付 <b>¥{x["y"]:,}</b>　'
-            f'（相場 {x["ppk"]:,}円/{x["ul"]}・{H.escape(x["br"])}／総量{x["amt"]}{x["ul"]}）</div></div>'
-            f'{rc}<a class="buy sm" href="{x["a"]}" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る<span class="pr">PR</span></a>'
-            f'</div></div>')
-    grid = '<div class="cards">' + "".join(cards) + "</div>"
+    maxp = (max((x["y"] for x in items), default=100000) + 999) // 1000 * 1000
+    DATA_JSON = json.dumps(items, ensure_ascii=False, separators=(",", ":"))
     body = f"""
 <nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › 実質還元率ランキング</nav>
 <h1>ふるさと納税 実質還元率ランキング<span class="yr">2026</span></h1>
 <p class="lead"><b>「寄付額に対して、実際いくら分もらえる？」</b>——ポイント付与が廃止された今、いちばん知りたいのは<b>実質的なお得さ＝還元率</b>です。当サイトは<b>楽天の通常販売価格から返礼品の“市場価値”を自動推定</b>し、寄付額に対する<b>実質還元率</b>を独自にランキング。{total}品を還元率順に掲載しています（現在は米。順次カテゴリ拡大）。</p>
+{simulator_html()}
 <div class="kmethod">🔎 <b>実質還元率の出し方</b>：返礼品の<b>総量</b>に、楽天通常販売の<b>市場相場（銘柄別の円/{FCATS[KANPU_CATS[0]]['suffix']}）</b>を掛けて「想定市場価格」を算出し、<b>寄付額で割った割合</b>です。相場は毎回自動取得しています（相場更新日: {asof}）。数値は小売相場ベースの<b>目安</b>で、送料・時期・銘柄差で上下します。</div>
 {AD}
 <h2>実質還元率ランキング（米）</h2>
-{grid}
+<p class="lead">シミュレーターの上限額や、下の<b>寄付額の上限</b>・<b>年内発送</b>で絞り込めます。{f"年内発送の目安がつく返礼品は{nen_n}品。" if nen_n else ""}</p>
+<div class="tool">
+<div class="ctl"><label>寄付額の上限</label><div class="slrow"><input type="range" id="kbud" min="2000" max="{maxp}" step="1000" value="{maxp}"><span id="kbudv"></span></div></div>
+<div class="ctl"><label class="kchk"><input type="checkbox" id="knen"> 年内発送の目安があるものだけ</label></div>
+</div>
+<p class="cnt"><b id="kcnt"></b></p>
+<div id="klist" class="cards"></div>
+<script id="kdata" type="application/json">{DATA_JSON}</script>
+<script>{KANPU_JS}</script>
 <section class="guide">
 <h2>ふるさと納税「還元率」の考え方</h2>
 <p>ふるさと納税の返礼品は、総務省ルールで<b>調達価格が寄付額の30%以下</b>と定められています。ただしこれは自治体の<b>仕入れ値</b>基準。私たちが実際に気にするのは「<b>お店で買ったらいくら？（小売価格）</b>」に対してどれだけお得か、です。当ランキングは<b>楽天の通常販売価格＝小売相場</b>を基準に、寄付額に対する実質的な価値（＝実質還元率）を推定しています。一般に米は還元率が高めに出やすく、<b>大容量・無洗米・銘柄指定なし</b>ほどお得になりやすい傾向です。</p>
@@ -1078,7 +1113,7 @@ def build_kanpu():
     title = "ふるさと納税 実質還元率ランキング2026｜市場価格から独自推定（米）"
     desc = f"楽天の通常販売価格から返礼品の市場価値を推定し、寄付額に対する実質還元率でランキング。ポイント廃止後に本当にお得な返礼品が分かる独自指標。米{total}品を還元率順に掲載。"
     open(os.path.join(SITE, "furusato-kanpu.html"), "w", encoding="utf-8").write(
-        shell(title, desc, body, "furusato-kanpu.html", head=HALL_CSS + KANPU_CSS + bc_furusato("実質還元率ランキング")))
+        shell(title, desc, body, "furusato-kanpu.html", head=HALL_CSS + KANPU_CSS + SIM_CSS + bc_furusato("実質還元率ランキング")))
     print(f"  実質還元率ランキングページ: {total}品")
     return total
 
@@ -1099,7 +1134,7 @@ def build_hub(counts):
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
-<div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
+{simulator_html()}
 <a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-teiki"><div class="hico">🔁</div><div><h3>定期便特集 — 毎月・全〇回で届く<span class="n">NEW</span></h3><p>1回の寄付で<b>毎月・隔月・全〇回</b>に分けて届く定期便を厳選。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>返礼品をジャンル別に。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-kanpu"><div class="hico">💹</div><div><h3>実質還元率ランキング — 本当にお得な返礼品<span class="n">NEW</span></h3><p>楽天の<b>通常販売価格から市場価値を独自推定</b>し、寄付額に対する<b>実質還元率</b>でランキング。ポイント廃止後に<b>「結局どれが一番お得？」</b>が分かる、ポータルにはない指標。（まず米）</p></div><span class="fgo">見る →</span></a>
@@ -1110,11 +1145,12 @@ def build_hub(counts):
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="/about">コスパ値とは</a>。</p>
+<div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
 """
     title = "ふるさと納税コスパ分析2026｜円/kgで選ぶお得な返礼品ランキング"
     desc = "楽天ふるさと納税の返礼品を寄付額あたりの内容量（円/kg等）とレビュー満足度で独自コスパランキング。定期便も総量換算で比較。米など。"
     hub_bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("ふるさと納税", None)])
-    open(os.path.join(SITE, "furusato.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato.html", hub_bc))
+    open(os.path.join(SITE, "furusato.html"), "w", encoding="utf-8").write(shell(title, desc, body, "furusato.html", SIM_CSS + hub_bc))
 
 def add_to_sitemap():
     # build_site生成のsitemap.xmlにふるさと納税ページを追記(未登録なら)
