@@ -2,11 +2,12 @@
 # 流れ: ①控除上限シミュレーターで確認 → ②上限に合った実質還元率の返礼品 → ③コスパ/価格で調整 → ④cospa-navi。
 # 通常のTOP3テンプレとは別構成。BGMは shorts/bgm.mp3（前回と同じ）。
 import os, tempfile
-from PIL import ImageDraw
+from PIL import ImageDraw, Image, ImageFilter
 from make_furusato_short import (font, ctext, tsize, vgrad, rrect, build_video,
                                  W, H, ORANGE, PINK, YEL, NAVY, WHITE)
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SHOT = os.path.join(BASE, "shorts", "kanpu-slide2.png")  # 実HPのスマホ幅スクショ(shot_kanpu.pyで生成)
 LIGHT = (228, 233, 240)
 SUB = (120, 126, 140)
 GREEN = (34, 160, 90)
@@ -22,6 +23,18 @@ def slider(d, x1, x2, y, frac, h=26, knob=ORANGE):
     fx = x1 + (x2 - x1) * frac
     rrect(d, [x1, y - h / 2, fx, y + h / 2], h / 2, fill=knob)
     d.ellipse([fx - 32, y - 32, fx + 32, y + 32], fill=WHITE, outline=knob, width=8)
+
+
+def framed(bg, img, cx, cy, w, h, rad=28):
+    """スクショを角丸＋影付きで貼る"""
+    im = img.resize((w, h), Image.LANCZOS)
+    mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, w, h], rad, fill=255)
+    sh = Image.new("RGBA", (w + 70, h + 70), (0, 0, 0, 0))
+    ImageDraw.Draw(sh).rounded_rectangle([35, 42, w + 35, h + 42], rad, fill=(0, 0, 0, 110))
+    sh = sh.filter(ImageFilter.GaussianBlur(16))
+    bg.paste(sh, (int(cx - w / 2 - 35), int(cy - h / 2 - 35)), sh)
+    bg.paste(im, (int(cx - w / 2), int(cy - h / 2)), mask)
 
 
 def scene1():
@@ -47,22 +60,29 @@ def scene1():
 
 def scene2():
     img = vgrad((120, 170, 255), (86, 124, 214)); d = D(img)
-    ctext(d, W/2, 150, "あなたの上限に合った", font(58), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 245, "実質還元率", font(118), YEL, stroke=8, sfill=NAVY)
-    ctext(d, W/2, 415, "が高い返礼品を探せる", font(56), WHITE, stroke=4, sfill=NAVY)
-    rows = [("お米 無洗米 10kg", "66%"), ("牛こま切れ 1.8kg", "62%"), ("じゃがいも 10kg", "60%")]
-    for i, (nm, rt) in enumerate(rows):
-        y = 560 + i * 250
-        rrect(d, [70, y, W-70, y+210], 34, fill=WHITE)
-        d.ellipse([120, y+68, 200, y+148], fill=NAVY)
-        ctext(d, 160, y+78, str(i+1), font(64), YEL)
-        d.text((250, y+55), nm, font=font(48), fill=NAVY)
-        rrect(d, [W-370, y+55, W-110, y+155], 28, fill=GREEN)
-        ctext(d, W-240, y+63, "還元率", font(34), WHITE)
-        ctext(d, W-240, y+98, rt, font(50), WHITE)
-    ctext(d, W/2, 1370, "② 市場価格から独自に算出", font(54), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 1560, "ポータルにはない指標", font(52), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 1760, "コスパナビ", font(60), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 60, "あなたの上限に合った", font(52), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 140, "\"実質還元率\"の高い返礼品", font(58), YEL, stroke=5, sfill=NAVY)
+    if os.path.exists(SHOT):
+        s = Image.open(SHOT).convert("RGB")
+        w = 830; h = int(w * s.height / s.width)
+        if h > 1470:
+            h = 1470; w = int(h * s.width / s.height)
+        framed(img, s, W/2, 250 + h/2, w, h)
+        ctext(d, W/2, 1770, "② 市場価格から独自に算出（実際の画面）", font(46), WHITE, stroke=4, sfill=NAVY)
+    else:
+        rows = [("お米 無洗米 10kg", "66%"), ("牛こま切れ 1.8kg", "62%"), ("じゃがいも 10kg", "60%")]
+        for i, (nm, rt) in enumerate(rows):
+            y = 560 + i * 250
+            rrect(d, [70, y, W-70, y+210], 34, fill=WHITE)
+            d.ellipse([120, y+68, 200, y+148], fill=NAVY)
+            ctext(d, 160, y+78, str(i+1), font(64), YEL)
+            d.text((250, y+55), nm, font=font(48), fill=NAVY)
+            rrect(d, [W-370, y+55, W-110, y+155], 28, fill=GREEN)
+            ctext(d, W-240, y+63, "還元率", font(34), WHITE)
+            ctext(d, W-240, y+98, rt, font(50), WHITE)
+        ctext(d, W/2, 1370, "② 市場価格から独自に算出", font(54), WHITE, stroke=4, sfill=NAVY)
+        ctext(d, W/2, 1560, "ポータルにはない指標", font(52), WHITE, stroke=4, sfill=NAVY)
+        ctext(d, W/2, 1760, "コスパナビ", font(60), WHITE, stroke=4, sfill=NAVY)
     return img
 
 
