@@ -66,10 +66,10 @@ VC_320_OVERLAY = ''
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "egg": "🥚", "fruit": "🍇", "sweets": "🍰", "frozen": "🥟", "beer": "🍺", "drink": "🥤",
-        "cheese": "🧀", "sake": "🍶",
+        "cheese": "🧀", "sake": "🍶", "vegetable": "🥬",
         "toilet-paper": "🧻", "kitchen-paper": "📄", "tissue": "🤧", "detergent": "🧴", "diaper": "👶"}
-# ジャンル順(主食・肉→魚介・卵→果物・菓子→冷凍→乳製品→酒・飲料→日用品)でユーザーが探しやすく
-CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "egg", "fruit", "sweets",
+# ジャンル順(主食・肉→魚介・卵→野菜・果物・菓子→冷凍→乳製品→酒・飲料→日用品)でユーザーが探しやすく
+CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "egg", "vegetable", "fruit", "sweets",
              "frozen", "cheese", "sake", "beer", "drink", "toilet-paper", "kitchen-paper", "tissue", "detergent", "diaper"]
 CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
          "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
@@ -174,6 +174,7 @@ FTITLE = {
     "beer": "ふるさと納税 ビールのコスパ最強ランキング2026｜1本あたり・定期便でお得に",
     "cheese": "ふるさと納税 チーズ・乳製品のコスパ最強ランキング2026｜円/kg・カマンベール/バター等をお得に",
     "sake": "ふるさと納税 日本酒のコスパ最強ランキング2026｜円/L・飲み比べ/一升瓶/純米大吟醸をお得に",
+    "vegetable": "ふるさと納税 野菜のコスパ最強ランキング2026｜円/kg・じゃがいも/玉ねぎ/大容量をお得に",
 }
 FDESC = {
     "toilet-paper": "楽天ふるさと納税のトイレットペーパーを1ロールあたりの価格（円/ロール）でコスパランキング。5倍巻き・長巻き・大容量・備蓄向けを実質2,000円でお得に。おすすめの返礼品が分かります。",
@@ -195,6 +196,7 @@ FDESC = {
     "beer": "楽天ふるさと納税のビールを1本あたりの価格でコスパランキング。定期便も総量換算で比較し、お得なおすすめが分かります。",
     "cheese": "楽天ふるさと納税のチーズ・乳製品を1kgあたりの価格でコスパランキング。カマンベール・モッツァレラ・ゴーダ・バター・ヨーグルトの食べ比べ・詰め合わせを比較し、お得なおすすめが分かります。",
     "sake": "楽天ふるさと納税の日本酒を1Lあたりの価格（円/L）でコスパランキング。純米大吟醸・本醸造・飲み比べセット・一升瓶を容量換算で比較し、お得なおすすめの地酒が分かります。",
+    "vegetable": "楽天ふるさと納税の野菜を1kgあたりの価格でコスパランキング。じゃがいも・玉ねぎ・さつまいも・大容量の詰め合わせを比較し、実質お得なおすすめが分かります。",
 }
 FINTRO = {
     "toilet-paper": " トイレットペーパーは<b>1ロールあたりの価格（円/ロール）</b>で選ぶのが鉄則。5倍巻き・長巻きや大容量セットは1ロール単価が安く、<b>備蓄・まとめ買い</b>に最適です。",
@@ -217,6 +219,7 @@ FINTRO = {
     "beer": " ビールは<b>1本あたりの価格</b>で比較。ケース・定期便でまとめると単価が下がりお得です。",
     "cheese": " チーズ・乳製品は<b>1kgあたりの価格</b>で比較。<b>食べ比べ・詰め合わせ</b>や大容量セットが円/kgで見るとお得。国産カマンベール・モッツァレラ・ゴーダやバターが人気です。",
     "sake": " 日本酒は瓶のサイズがバラバラなので<b>1Lあたりの価格（円/L）</b>で比較するのがコスパの基本。<b>一升瓶（1.8L）や飲み比べセット</b>は容量あたりが割安。純米大吟醸・本醸造などを容量換算で並べています。",
+    "vegetable": " 野菜は<b>1kgあたりの価格</b>で比較。<b>じゃがいも・玉ねぎ・さつまいもの10kg級大容量</b>は円/kgが安く、日常使いにお得です。",
 }
 
 def _fpct(vals, q):
@@ -523,9 +526,9 @@ def pref_of(shop):
 
 # カテゴリ(slug)→グループ（チップ絞り込み用）
 HGROUPS = [("all","すべて"),("rice","米"),("meat","肉"),("seafood","魚介"),("egg","卵"),
-           ("fruit-sweets","果物・スイーツ"),("drink","飲料・お酒"),("daily","日用品"),("local","現地体験")]
+           ("vegetable","野菜"),("fruit-sweets","果物・スイーツ"),("drink","飲料・お酒"),("daily","日用品"),("local","現地体験")]
 SLUG2GROUP = {"rice":"rice","egg":"egg","beef":"meat","pork":"meat","chicken":"meat","hamburg":"meat",
-              "seafood":"seafood","fruit":"fruit-sweets","sweets":"fruit-sweets","cheese":"fruit-sweets",
+              "seafood":"seafood","vegetable":"vegetable","fruit":"fruit-sweets","sweets":"fruit-sweets","cheese":"fruit-sweets",
               "frozen":"fruit-sweets","sake":"drink","beer":"drink","drink":"drink","toilet-paper":"daily",
               "tissue":"daily","detergent":"daily","diaper":"daily","kitchen-paper":"daily",
               "trash-bag":"daily","local":"local"}
@@ -1142,7 +1145,7 @@ def build_hub(counts):
 <a class="fbanner" href="/furusato-nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ特集 — 実質節約<span class="n">NEW</span></h3><p>トイレットペーパー・ティッシュ・洗剤・水など<b>必ず使う消耗品</b>を円/ロール・円/kgのコスパ順に。<b>実質2,000円で生活必需品</b>が手に入る家計防衛術。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
-<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">野菜</span><span class="soon">パン</span><span class="soon">調味料</span><span class="soon">日本酒・焼酎</span><span class="soon">コーヒー</span></div>
+<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">パン</span><span class="soon">調味料</span><span class="soon">コーヒー</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="/about">コスパ値とは</a>。</p>
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
