@@ -131,7 +131,7 @@ models.sort(key=lambda m: m["cospa"], reverse=True)
 for i, m in enumerate(models, 1):
     m["rank"] = i
 keep = ["id", "rank", "name", "price", "amt", "unit", "review", "reviewCount", "sat", "toku", "cospa", "bayes", "shop", "image", "affiliate", "url"]
-out = [{k: m[k] for k in keep} for m in models]
+out = [{**{k: m[k] for k in keep}, "affRate": m.get("affRate", 0)} for m in models]
 json.dump(out, open(os.path.join(DATA, f"furusato-{slug}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 print(f"[{cfg['label']}] 返礼品数 {len(models)}  (raw {len(raw)}→本体{len(items)}→重複除去{len(models)})  単位={cfg['unit_label']}")

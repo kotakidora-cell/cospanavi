@@ -24,6 +24,9 @@ subprocess.run([PY, "fetch_local.py", "6"], check=False)
 # 実質還元率用の市場相場(通常楽天)を取得しキャッシュ更新(取得不足時は既存キャッシュ保持)
 print("\n==== market相場(実質還元率用) ====")
 subprocess.run([PY, "fetch_market.py"], check=False)
+# 料率ウォッチ: 楽天イベント等で料率が跳ねた返礼品を検出・記録(取りこぼし防止)
+print("\n==== 料率ウォッチ ====")
+subprocess.run([PY, "rate_watch.py"], check=False)
 subprocess.run([PY, "build_furusato.py"], check=False)   # build_site後に実行(sitemap追記のため。build_localも内包)
 
 # 空データでのデプロイ防止ガード: ふるさと納税の取得が失敗(レート制限等)して空になった場合、

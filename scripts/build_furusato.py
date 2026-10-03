@@ -556,6 +556,7 @@ def build_hall():
                          "name": x["name"].replace("【ふるさと納税】", "").strip()[:56],
                          "muni": _muni(x.get("shop", ""), pref) if pref else x.get("shop", ""),
                          "price": x["price"], "img": x.get("image", ""),
+                         "ar": float(x.get("affRate") or 0),  # 内部的な料率ティブレーク用(表示しない)
                          "aff": x.get("affiliate") or x.get("url")}
             if rc > 0:
                 revs.append(r)
@@ -564,7 +565,10 @@ def build_hall():
     pool = [x for x in seen.values() if x["r"] >= MIN_R and x["rc"] >= MIN_RC]
     for x in pool:
         x["bayes"] = (x["rc"] / (x["rc"] + m)) * x["r"] + (m / (x["rc"] + m)) * C
-    pool.sort(key=lambda z: -z["bayes"])
+        # 品質(bayes)が主。同格帯では料率が跳ねた返礼品(楽天イベント等)を内部的に優先=収益最適化。
+        # 通常はaffRate≒4%でボーナス0、イベントで10-15%に跳ねた時だけ効く。品質基準(★4.7+)は維持。
+        x["score"] = x["bayes"] + max(0.0, x["ar"] - 4.0) * 0.01
+    pool.sort(key=lambda z: -z["score"])
     pool = pool[:TOPN]
     items = [{"k": i + 1, "g": SLUG2GROUP.get(x["slug"], "other"), "c": x["cat"],
               "n": x["name"], "p": x["pref"], "m": x["muni"], "y": x["price"],

@@ -35,6 +35,9 @@ def fetch(keyword, pages=30):
                     "review": i["reviewAverage"], "reviewCount": i["reviewCount"],
                     "shop": i["shopName"], "url": i["itemUrl"], "affiliate": i["affiliateUrl"],
                     "image": (i.get("mediumImageUrls") or [{}])[0].get("imageUrl", "") if i.get("mediumImageUrls") else "",
+                    # 料率(アフィリエイト報酬率)。楽天イベント/復興支援で一時的に跳ねる→高料率返礼品の捕捉に使う
+                    "affRate": float(i.get("affiliateRate") or 0),
+                    "pointRate": float(i.get("pointRate") or 0),
                 })
             print(f"  page{pg}: 計{len(items)} / 総{j.get('count')}")
             if pg >= j.get("pageCount", pg):
