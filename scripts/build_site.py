@@ -28,11 +28,11 @@ from compares import COMPARES
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
-             "coffee-maker", "kotatsu"]
+             "coffee-maker", "kotatsu", "printer"]
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
          "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
-COMING = ["ゲーミングチェア", "扇風機", "プリンター"]
+COMING = ["ゲーミングチェア", "扇風機", "コーヒーミル"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
