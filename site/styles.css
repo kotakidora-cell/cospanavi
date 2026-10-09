@@ -4,9 +4,16 @@
 :root[data-theme=dark]{--bg:#0f141c;--card:#161d29;--ink:#e8ecf3;--sub:#9aa6b8;--line:#26303f;--accent:#ff7a45;--accent2:#5b8cff;--bar:#3a2418;--chip:#241a14}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7}
 a{color:var(--accent2)}
-.nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:1000px;margin:0 auto;padding:12px 16px}
-.brand{font-weight:800;text-decoration:none;color:var(--ink);font-size:1.1rem}.brand b{color:var(--accent)}
-.nav nav a{margin-left:14px;text-decoration:none;color:var(--sub);font-size:.9rem}.nav nav a:hover{color:var(--accent)}
+.navwrap{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:10px;max-width:1000px;margin:0 auto;padding:9px 14px}
+.brand{flex:none;font-weight:800;text-decoration:none;color:var(--ink);font-size:1.1rem}.brand b{color:var(--accent)}
+.gnav{display:flex;gap:5px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.gnav::-webkit-scrollbar{display:none}
+.gnav a{white-space:nowrap;text-decoration:none;color:var(--sub);font-size:.84rem;font-weight:700;padding:5px 10px;border-radius:9px;background:var(--chip)}
+.gnav a:hover{color:var(--accent)}
+.go5{background:#d7262e;text-align:center}.go5 a{display:block;color:#fff;text-decoration:none;padding:8px 14px;font-size:.88rem;font-weight:700}.go5 a b{color:#ffe14d}
+.ebridge{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--chip),var(--card));border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:12px 16px;margin:14px 0;text-decoration:none;color:var(--ink)}
+.ebridge .eico{font-size:1.8rem;flex:none}.ebridge h3{margin:0;font-size:1rem}.ebridge p{margin:2px 0 0;font-size:.82rem;color:var(--sub)}.ebridge .ego{margin-left:auto;color:var(--accent);font-weight:700;white-space:nowrap}
 main{max-width:1000px;margin:0 auto;padding:8px 16px 50px}
 h1{font-size:1.6rem;margin:.3em 0}.yr{color:var(--accent);margin-left:.2em}
 h2{font-size:1.15rem;margin:1.3em 0 .4em;border-left:4px solid var(--accent);padding-left:8px}

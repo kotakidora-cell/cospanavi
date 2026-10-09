@@ -62,10 +62,11 @@ def U(file):
     return "/" + f.lstrip("/")
 
 def nav(base=""):
-    # 上部ナビはシンプルに（カテゴリはハブのカードとフッターから辿れる）
-    return ('<header class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
-            '<nav><a href="/">ホーム</a><a href="/furusato">ふるさと納税</a>'
-            '<a href="/about">コスパ値とは</a><a href="/privacy">プライバシー</a></nav></header>')
+    # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。主要セクションへ即移動。
+    return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
+            '<nav class="gnav"><a href="/">🔌家電コスパ</a><a href="/furusato">🍚ふるさと納税</a>'
+            '<a href="/furusato-kanpu">💹実質還元率</a><a href="/compare">🆚徹底比較</a>'
+            '<a href="/about">❓コスパ値とは</a></nav></div></header>')
 
 def foot(base=""):
     catlinks = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)
@@ -139,7 +140,13 @@ def shell(title, desc, body, base="", head="", path=None, image=None, noindex=Fa
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
             f"{robots}{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css\">{ADSENSE}{head}</head><body>"
-            + nav(base) + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
+            + nav(base) + GO5 + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
+
+# 「5と0のつく日」(毎月5/10/15/20/25/30日)は楽天カードでポイントアップ=ふるさと納税が特にお得→その日だけ告知バナー表示
+GO5 = ('<div id="go5bar"></div>'
+       '<script>(function(){try{var d=new Date().getDate();'
+       'if([5,10,15,20,25,30].indexOf(d)>=0){var b=document.getElementById("go5bar");b.className="go5";'
+       'b.innerHTML=\'<a href="/furusato">本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ ▶ お得な返礼品を見る</a>\';}}catch(e){}})();</script>')
 
 AD = ''
 
@@ -243,6 +250,7 @@ def build_category(cfg):
 <p class="note">※コスパ値＝満足度（レビュー評価をレビュー数で信頼補正）×安さ の独自指標（0〜100）。<a href="/about">算出方法</a></p>
 {AD}
 {render_picks(cfg, data)}
+<a class="ebridge" href="/furusato"><span class="eico">🍚</span><div><h3>年末はふるさと納税でもっとお得に</h3><p>実質2,000円で返礼品がもらえる「ふるさと納税」。控除上限シミュレーター＆実質還元率ランキングで、あなたに一番お得な返礼品が見つかります。</p></div><span class="ego">見る →</span></a>
 {GUIDE_HTML}
 {render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
@@ -645,9 +653,16 @@ CSS = r"""
 :root[data-theme=dark]{--bg:#0f141c;--card:#161d29;--ink:#e8ecf3;--sub:#9aa6b8;--line:#26303f;--accent:#ff7a45;--accent2:#5b8cff;--bar:#3a2418;--chip:#241a14}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7}
 a{color:var(--accent2)}
-.nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:1000px;margin:0 auto;padding:12px 16px}
-.brand{font-weight:800;text-decoration:none;color:var(--ink);font-size:1.1rem}.brand b{color:var(--accent)}
-.nav nav a{margin-left:14px;text-decoration:none;color:var(--sub);font-size:.9rem}.nav nav a:hover{color:var(--accent)}
+.navwrap{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:10px;max-width:1000px;margin:0 auto;padding:9px 14px}
+.brand{flex:none;font-weight:800;text-decoration:none;color:var(--ink);font-size:1.1rem}.brand b{color:var(--accent)}
+.gnav{display:flex;gap:5px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.gnav::-webkit-scrollbar{display:none}
+.gnav a{white-space:nowrap;text-decoration:none;color:var(--sub);font-size:.84rem;font-weight:700;padding:5px 10px;border-radius:9px;background:var(--chip)}
+.gnav a:hover{color:var(--accent)}
+.go5{background:#d7262e;text-align:center}.go5 a{display:block;color:#fff;text-decoration:none;padding:8px 14px;font-size:.88rem;font-weight:700}.go5 a b{color:#ffe14d}
+.ebridge{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--chip),var(--card));border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:12px 16px;margin:14px 0;text-decoration:none;color:var(--ink)}
+.ebridge .eico{font-size:1.8rem;flex:none}.ebridge h3{margin:0;font-size:1rem}.ebridge p{margin:2px 0 0;font-size:.82rem;color:var(--sub)}.ebridge .ego{margin-left:auto;color:var(--accent);font-weight:700;white-space:nowrap}
 main{max-width:1000px;margin:0 auto;padding:8px 16px 50px}
 h1{font-size:1.6rem;margin:.3em 0}.yr{color:var(--accent);margin-left:.2em}
 h2{font-size:1.15rem;margin:1.3em 0 .4em;border-left:4px solid var(--accent);padding-left:8px}

@@ -83,10 +83,18 @@ def U(file):
     f = file[:-5] if file.endswith(".html") else file
     return "/" + f.lstrip("/")
 
+# 「5と0のつく日」ポイントアップ告知(build_siteと同一)。該当日だけ表示しふるさとへ誘導。
+GO5 = ('<div id="go5bar"></div>'
+       '<script>(function(){try{var d=new Date().getDate();'
+       'if([5,10,15,20,25,30].indexOf(d)>=0){var b=document.getElementById("go5bar");b.className="go5";'
+       'b.innerHTML=\'<a href="/furusato">本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ ▶ お得な返礼品を見る</a>\';}}catch(e){}})();</script>')
+
 def nav():
-    return ('<header class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
-            '<nav><a href="/">ホーム</a><a href="/furusato">ふるさと納税</a>'
-            '<a href="/about">コスパ値とは</a><a href="/privacy">プライバシー</a></nav></header>')
+    # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。build_siteと同一。
+    return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
+            '<nav class="gnav"><a href="/">🔌家電コスパ</a><a href="/furusato">🍚ふるさと納税</a>'
+            '<a href="/furusato-kanpu">💹実質還元率</a><a href="/compare">🆚徹底比較</a>'
+            '<a href="/about">❓コスパ値とは</a></nav></div></header>')
 
 def foot():
     cl = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)
@@ -113,7 +121,7 @@ def shell(title, desc, body, path, head=""):
             '.adbanner-pc{display:flex;flex-direction:column;align-items:center;gap:4px;margin:18px 0}.adbanner-pc img{max-width:100%;height:auto}'
             '@media(max-width:640px){.adbanner-pc{display:none}}'  # 横長帯はPCのみ(スマホはオーバーレイ320×50が出る)
             '.adlabel{align-self:flex-start;color:var(--sub);font-size:.68rem;border:1px solid var(--line);border-radius:4px;padding:0 5px}</style>'
-            f'</head><body>{nav()}<main>{body}</main>{foot()}{VC_320_OVERLAY}'
+            f'</head><body>{nav()}{GO5}<main>{body}</main>{foot()}{VC_320_OVERLAY}'
             # VC広告バナー(document.writeでtarget=_topで生成される)を別タブで開くよう書き換え
             '<script>window.addEventListener("load",function(){document.querySelectorAll(".adcard a,.adbanner-pc a").forEach(function(a){a.target="_blank";a.rel="nofollow sponsored noopener";});});</script>'
             f'{LINKSWITCH}</body></html>')
