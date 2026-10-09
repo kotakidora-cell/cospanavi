@@ -139,14 +139,14 @@ def shell(title, desc, body, base="", head="", path=None, image=None, noindex=Fa
     return ("<!doctype html><html lang=\"ja\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
-            f"{robots}{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css\">{ADSENSE}{head}</head><body>"
+            f"{robots}{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css?v={UPDATED}\">{ADSENSE}{head}</head><body>"
             + nav(base) + GO5 + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
 
 # 「5と0のつく日」(毎月5/10/15/20/25/30日)は楽天カードでポイントアップ=ふるさと納税が特にお得→その日だけ告知バナー表示
 GO5 = ('<div id="go5bar"></div>'
        '<script>(function(){try{var d=new Date().getDate();'
        'if([5,10,15,20,25,30].indexOf(d)>=0){var b=document.getElementById("go5bar");b.className="go5";'
-       'b.innerHTML=\'<a href="/furusato">本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ ▶ お得な返礼品を見る</a>\';}}catch(e){}})();</script>')
+       'b.innerHTML=\'<a href="/furusato"><span class="gift">🎁</span>本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ<span class="gbtn">お得な返礼品を見る ▶</span></a>\';}}catch(e){}})();</script>')
 
 AD = ''
 
@@ -653,16 +653,19 @@ CSS = r"""
 :root[data-theme=dark]{--bg:#0f141c;--card:#161d29;--ink:#e8ecf3;--sub:#9aa6b8;--line:#26303f;--accent:#ff7a45;--accent2:#5b8cff;--bar:#3a2418;--chip:#241a14}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7}
 a{color:var(--accent2)}
-.navwrap{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;gap:10px;max-width:1000px;margin:0 auto;padding:9px 14px}
-.brand{flex:none;font-weight:800;text-decoration:none;color:var(--ink);font-size:1.1rem}.brand b{color:var(--accent)}
-.gnav{display:flex;gap:5px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.navwrap{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.nav{display:flex;align-items:center;gap:12px;max-width:1040px;margin:0 auto;padding:9px 14px}
+.brand{flex:none;font-weight:900;text-decoration:none;color:var(--ink);font-size:1.3rem;letter-spacing:.01em}.brand b{color:var(--accent)}
+.gnav{display:flex;gap:7px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:auto}
 .gnav::-webkit-scrollbar{display:none}
-.gnav a{white-space:nowrap;text-decoration:none;color:var(--sub);font-size:.84rem;font-weight:700;padding:5px 10px;border-radius:9px;background:var(--chip)}
-.gnav a:hover{color:var(--accent)}
-.go5{background:#d7262e;text-align:center}.go5 a{display:block;color:#fff;text-decoration:none;padding:8px 14px;font-size:.88rem;font-weight:700}.go5 a b{color:#ffe14d}
-.ebridge{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--chip),var(--card));border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:12px 16px;margin:14px 0;text-decoration:none;color:var(--ink)}
-.ebridge .eico{font-size:1.8rem;flex:none}.ebridge h3{margin:0;font-size:1rem}.ebridge p{margin:2px 0 0;font-size:.82rem;color:var(--sub)}.ebridge .ego{margin-left:auto;color:var(--accent);font-weight:700;white-space:nowrap}
+.gnav a{white-space:nowrap;text-decoration:none;color:var(--ink);font-size:.86rem;font-weight:700;padding:7px 14px;border-radius:999px;background:var(--chip);border:1px solid var(--line);transition:background .15s,color .15s,border-color .15s}
+.gnav a:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.go5{background:linear-gradient(90deg,#e0242b,#ff6a3d);box-shadow:0 3px 12px rgba(224,36,43,.28)}
+.go5 a{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;color:#fff;text-decoration:none;padding:9px 14px;font-size:.92rem;font-weight:800}
+.go5 a b{color:#ffe14d}.go5 .gift{font-size:1.25rem}
+.go5 .gbtn{background:#fff;color:#e0242b;border-radius:999px;padding:4px 14px;font-size:.82rem;font-weight:800;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.ebridge{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#fff3ec,#ffe6f0);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:14px;padding:14px 18px;margin:16px 0;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(255,122,69,.12)}
+.ebridge .eico{font-size:2rem;flex:none}.ebridge h3{margin:0;font-size:1.05rem;color:#c2410c}.ebridge p{margin:3px 0 0;font-size:.82rem;color:#6b5a52}.ebridge .ego{margin-left:auto;color:#fff;background:var(--accent);border-radius:999px;padding:7px 16px;font-weight:800;white-space:nowrap}
 main{max-width:1000px;margin:0 auto;padding:8px 16px 50px}
 h1{font-size:1.6rem;margin:.3em 0}.yr{color:var(--accent);margin-left:.2em}
 h2{font-size:1.15rem;margin:1.3em 0 .4em;border-left:4px solid var(--accent);padding-left:8px}

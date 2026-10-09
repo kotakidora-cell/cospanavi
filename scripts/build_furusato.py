@@ -87,7 +87,7 @@ def U(file):
 GO5 = ('<div id="go5bar"></div>'
        '<script>(function(){try{var d=new Date().getDate();'
        'if([5,10,15,20,25,30].indexOf(d)>=0){var b=document.getElementById("go5bar");b.className="go5";'
-       'b.innerHTML=\'<a href="/furusato">本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ ▶ お得な返礼品を見る</a>\';}}catch(e){}})();</script>')
+       'b.innerHTML=\'<a href="/furusato"><span class="gift">🎁</span>本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ<span class="gbtn">お得な返礼品を見る ▶</span></a>\';}}catch(e){}})();</script>')
 
 def nav():
     # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。build_siteと同一。
@@ -111,7 +111,7 @@ def shell(title, desc, body, path, head=""):
     return ('<!doctype html><html lang="ja"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>{H.escape(title)}</title><meta name="description" content="{H.escape(desc)}">'
-            f'{VERIFY}{canon}<link rel="stylesheet" href="/styles.css">{ADSENSE}{head}'
+            f'{VERIFY}{canon}<link rel="stylesheet" href="/styles.css?v={UPDATED}">{ADSENSE}{head}'
             '<style>.fk{font-weight:800;color:var(--accent)}.metar{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem;color:var(--sub);margin:2px 0}'
             '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
             '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
