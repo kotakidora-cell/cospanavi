@@ -92,9 +92,13 @@ GO5 = ('<div id="go5bar"></div>'
 def nav():
     # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。build_siteと同一。
     return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
-            '<nav class="gnav"><a href="/">🔌家電コスパ</a><a href="/furusato">🍚ふるさと納税</a>'
-            '<a href="/furusato-kanpu">💹実質還元率</a><a href="/compare">🆚徹底比較</a>'
-            '<a href="/about">❓コスパ値とは</a></nav></div></header>')
+            '<nav class="gnav">'
+            '<span class="gsec"><span class="glabel e">🔌家電</span><a href="/">ランキング</a><a href="/compare">徹底比較</a></span>'
+            '<span class="gsep"></span>'
+            '<span class="gsec"><span class="glabel f">🍚ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
+            '<span class="gsep"></span>'
+            '<a class="gabout" href="/about">❓コスパ値とは</a>'
+            '</nav></div></header>')
 
 def foot():
     cl = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)
