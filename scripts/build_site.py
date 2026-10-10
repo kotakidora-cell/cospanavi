@@ -143,7 +143,7 @@ def shell(title, desc, body, base="", head="", path=None, image=None, noindex=Fa
     return ("<!doctype html><html lang=\"ja\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{H.escape(title)}</title><meta name=\"description\" content=\"{H.escape(desc)}\">"
-            f"{robots}{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css?v={UPDATED}\">{ADSENSE}{head}</head><body>"
+            f"{robots}{verify}{canon}<link rel=\"stylesheet\" href=\"/styles.css?v={CSS_VER}\">{ADSENSE}{head}</head><body>"
             + nav(base) + GO5 + "<main>" + body + "</main>" + foot(base) + LINKSWITCH + "</body></html>")
 
 # 「5と0のつく日」(毎月5/10/15/20/25/30日)は楽天カードでポイントアップ=ふるさと納税が特にお得→その日だけ告知バナー表示
@@ -756,6 +756,14 @@ table.pk td{border-bottom:1px solid var(--line);padding:8px;font-size:.88rem;ver
 .cmp3 td{vertical-align:top;font-size:.9rem}.cmp3 td:first-child{color:var(--sub);width:26%}
 @media(max-width:560px){.vs{grid-template-columns:1fr 1fr;gap:8px}.vsbadge{grid-column:1/3;order:-1;padding:2px}.cmp3 td:first-child{width:34%}}
 """
+
+# CSS内容のハッシュでキャッシュバスト(?v=)。CSSを変えるたびURLが変わり、ブラウザが必ず再取得する。
+# build_furusatoも同じ版を使えるよう data/css_ver.txt に書き出す。
+CSS_VER = hashlib.md5(CSS.encode("utf-8")).hexdigest()[:8]
+try:
+    open(os.path.join(DATA, "css_ver.txt"), "w", encoding="utf-8").write(CSS_VER)
+except Exception:
+    pass
 
 if __name__ == "__main__":
     built = {}

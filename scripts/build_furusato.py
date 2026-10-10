@@ -46,6 +46,11 @@ def bc_furusato(leaf):
     # コスパナビ > ふるさと納税 > leaf
     return breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("ふるさと納税", SITE_URL + "/furusato"), (leaf, None)])
 UPDATED = datetime.date.today().isoformat()
+# styles.cssのキャッシュバスト版(build_siteがCSS内容ハッシュを css_ver.txt に出力)。無ければ日付で代替。
+try:
+    CSS_VER = open(os.path.join(DATA, "css_ver.txt"), encoding="utf-8").read().strip() or UPDATED
+except Exception:
+    CSS_VER = UPDATED
 ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8706760047070867" crossorigin="anonymous"></script>'
 # 2026-09-25 楽天アフィリ一本化: 食べログ/さとふる等のバリューコマース広告・LinkSwitchは全撤去。
 LINKSWITCH = ''
@@ -115,7 +120,7 @@ def shell(title, desc, body, path, head=""):
     return ('<!doctype html><html lang="ja"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>{H.escape(title)}</title><meta name="description" content="{H.escape(desc)}">'
-            f'{VERIFY}{canon}<link rel="stylesheet" href="/styles.css?v={UPDATED}">{ADSENSE}{head}'
+            f'{VERIFY}{canon}<link rel="stylesheet" href="/styles.css?v={CSS_VER}">{ADSENSE}{head}'
             '<style>.fk{font-weight:800;color:var(--accent)}.metar{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem;color:var(--sub);margin:2px 0}'
             '.metar b{color:var(--ink)}.badge{background:var(--chip);color:var(--accent);border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:700}'
             '.scallout{background:var(--chip);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem}.scallout a{font-weight:700;white-space:nowrap}'
