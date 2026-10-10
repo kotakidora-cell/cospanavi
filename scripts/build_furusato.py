@@ -93,10 +93,8 @@ def nav():
     # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。build_siteと同一。
     return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
             '<nav class="gnav">'
-            '<span class="gsec"><span class="glabel e">🔌家電</span><a href="/">ランキング</a><a href="/compare">徹底比較</a></span>'
-            '<span class="gsep"></span>'
-            '<span class="gsec"><span class="glabel f">🍚ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
-            '<span class="gsep"></span>'
+            '<span class="gseg e"><span class="ghead">🔌家電</span><a href="/">ランキング</a><a href="/compare">徹底比較</a></span>'
+            '<span class="gseg f"><span class="ghead">🍚ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
             '<a class="gabout" href="/about">❓コスパ値とは</a>'
             '</nav></div></header>')
 

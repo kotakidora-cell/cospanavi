@@ -65,10 +65,8 @@ def nav(base=""):
     # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。主要セクションへ即移動。
     return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
             '<nav class="gnav">'
-            '<span class="gsec"><span class="glabel e">🔌家電</span><a href="/">ランキング</a><a href="/compare">徹底比較</a></span>'
-            '<span class="gsep"></span>'
-            '<span class="gsec"><span class="glabel f">🍚ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
-            '<span class="gsep"></span>'
+            '<span class="gseg e"><span class="ghead">🔌家電</span><a href="/">ランキング</a><a href="/compare">徹底比較</a></span>'
+            '<span class="gseg f"><span class="ghead">🍚ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
             '<a class="gabout" href="/about">❓コスパ値とは</a>'
             '</nav></div></header>')
 
@@ -660,13 +658,16 @@ a{color:var(--accent2)}
 .navwrap{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.06)}
 .nav{display:flex;align-items:center;gap:12px;max-width:1040px;margin:0 auto;padding:9px 14px}
 .brand{flex:none;font-weight:900;text-decoration:none;color:var(--ink);font-size:1.3rem;letter-spacing:.01em}.brand b{color:var(--accent)}
-.gnav{display:flex;align-items:center;gap:9px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:auto}
+.gnav{display:flex;align-items:center;gap:10px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:auto}
 .gnav::-webkit-scrollbar{display:none}
-.gsec{display:flex;align-items:center;gap:5px;white-space:nowrap}
-.glabel{font-size:.76rem;font-weight:800;white-space:nowrap}.glabel.e{color:var(--accent2)}.glabel.f{color:var(--accent)}
-.gnav a{white-space:nowrap;text-decoration:none;color:var(--ink);font-size:.84rem;font-weight:700;padding:6px 12px;border-radius:999px;background:var(--chip);border:1px solid var(--line);transition:background .15s,color .15s,border-color .15s}
-.gnav a:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-.gsep{width:1px;height:20px;background:var(--line);flex:none}
+.gseg{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);box-shadow:0 1px 5px rgba(0,0,0,.06);white-space:nowrap}
+.gseg .ghead{display:flex;align-items:center;font-size:.8rem;font-weight:800;padding:7px 13px}
+.gseg.e .ghead{background:rgba(91,140,255,.13);color:var(--accent2)}
+.gseg.f .ghead{background:rgba(255,122,69,.15);color:var(--accent)}
+.gseg a{display:flex;align-items:center;padding:7px 15px;font-size:.85rem;font-weight:700;color:var(--ink);text-decoration:none;border-left:1px solid var(--line);transition:background .15s,color .15s}
+.gseg a:hover{background:var(--chip)}.gseg.e a:hover{color:var(--accent2)}.gseg.f a:hover{color:var(--accent)}
+.gabout{white-space:nowrap;text-decoration:none;color:var(--sub);font-size:.84rem;font-weight:700;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card)}
+.gabout:hover{color:var(--accent);border-color:var(--accent)}
 .go5{background:linear-gradient(90deg,#e0242b,#ff6a3d);box-shadow:0 3px 12px rgba(224,36,43,.28)}
 .go5 a{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;color:#fff;text-decoration:none;padding:9px 14px;font-size:.92rem;font-weight:800}
 .go5 a b{color:#ffe14d}.go5 .gift{font-size:1.25rem}
