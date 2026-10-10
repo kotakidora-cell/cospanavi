@@ -65,9 +65,11 @@ def nav(base=""):
     # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。主要セクションへ即移動。
     return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
             '<nav class="gnav">'
-            '<span class="gseg e"><span class="ghead">🔌家電</span><a href="/">ランキング</a><a href="/compare">徹底比較</a></span>'
-            '<span class="gseg f"><span class="ghead">🍚ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
-            '<a class="gabout" href="/about">❓コスパ値とは</a>'
+            '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
+            '<span class="gdiv"></span>'
+            '<span class="ggrp"><span class="gcap">ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
+            '<span class="gdiv"></span>'
+            '<a class="gabout" href="/about">コスパとは</a>'
             '</nav></div></header>')
 
 def foot(base=""):
@@ -588,13 +590,14 @@ def build_hub(built):
         f'<div><h3>{H.escape(c["title"].split("｜")[0])}</h3>'
         f'<p>{H.escape(CAT_BY_SLUG[c["category"]]["label"])}の人気ブランドを徹底比較</p></div></a>'
         for c in COMPARES)
-    cmp_section = (f'<h2>徹底比較</h2><p class="lead">人気ブランドを1対1で比較。価格・満足度・機能・向いている人がひと目で分かります。</p>'
+    cmp_section = (f'<h2 id="compare">徹底比較</h2><p class="lead">人気ブランドを1対1で比較。価格・満足度・機能・向いている人がひと目で分かります。</p>'
                    f'<div class="hgrid">{cmp_cards}</div>') if COMPARES else ""
     body = f"""
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
 {AD}
 <a class="fbanner" href="/furusato"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
+<h2 id="ranking">家電コスパ ランキング</h2>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
 {cmp_section}
@@ -653,21 +656,20 @@ CSS = r"""
 :root{--bg:#f6f7f9;--card:#fff;--ink:#1a2130;--sub:#5a6478;--line:#e6e9ef;--accent:#ff5a1f;--accent2:#2563eb;--bar:#ffe0d3;--chip:#fff1eb}
 @media(prefers-color-scheme:dark){:root{--bg:#0f141c;--card:#161d29;--ink:#e8ecf3;--sub:#9aa6b8;--line:#26303f;--accent:#ff7a45;--accent2:#5b8cff;--bar:#3a2418;--chip:#241a14}}
 :root[data-theme=dark]{--bg:#0f141c;--card:#161d29;--ink:#e8ecf3;--sub:#9aa6b8;--line:#26303f;--accent:#ff7a45;--accent2:#5b8cff;--bar:#3a2418;--chip:#241a14}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7}
 a{color:var(--accent2)}
+:target{scroll-margin-top:72px}h2[id]{scroll-margin-top:72px}
 .navwrap{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.06)}
 .nav{display:flex;align-items:center;gap:12px;max-width:1040px;margin:0 auto;padding:9px 14px}
 .brand{flex:none;font-weight:900;text-decoration:none;color:var(--ink);font-size:1.3rem;letter-spacing:.01em}.brand b{color:var(--accent)}
-.gnav{display:flex;align-items:center;gap:10px;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:auto}
+.gnav{display:flex;align-items:center;gap:0;overflow-x:auto;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:auto}
 .gnav::-webkit-scrollbar{display:none}
-.gseg{flex:none;display:flex;align-items:stretch;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);box-shadow:0 1px 5px rgba(0,0,0,.06);white-space:nowrap}
-.gseg .ghead{display:flex;align-items:center;font-size:.8rem;font-weight:800;padding:7px 13px}
-.gseg.e .ghead{background:rgba(91,140,255,.13);color:var(--accent2)}
-.gseg.f .ghead{background:rgba(255,122,69,.15);color:var(--accent)}
-.gseg a{display:flex;align-items:center;padding:7px 15px;font-size:.85rem;font-weight:700;color:var(--ink);text-decoration:none;border-left:1px solid var(--line);transition:background .15s,color .15s}
-.gseg a:hover{background:var(--chip)}.gseg.e a:hover{color:var(--accent2)}.gseg.f a:hover{color:var(--accent)}
-.gabout{flex:none;white-space:nowrap;text-decoration:none;color:var(--sub);font-size:.84rem;font-weight:700;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card)}
-.gabout:hover{color:var(--accent);border-color:var(--accent)}
+.ggrp{flex:none;display:flex;align-items:center;gap:18px}
+.gcap{flex:none;font-size:.7rem;color:var(--sub);font-weight:800;white-space:nowrap;letter-spacing:.03em}
+.gnav a{flex:none;white-space:nowrap;text-decoration:none;color:var(--ink);font-size:.92rem;font-weight:700;padding:4px 0;transition:color .15s}
+.gnav a:hover{color:var(--accent)}
+.gdiv{flex:none;width:1px;height:20px;background:var(--line);margin:0 18px}
+.gabout{color:var(--sub);font-size:.88rem;font-weight:700}
 .go5{background:linear-gradient(90deg,#e0242b,#ff6a3d);box-shadow:0 3px 12px rgba(224,36,43,.28)}
 .go5 a{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;color:#fff;text-decoration:none;padding:9px 14px;font-size:.92rem;font-weight:800}
 .go5 a b{color:#ffe14d}.go5 .gift{font-size:1.25rem}
