@@ -32,7 +32,7 @@ CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
          "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
-COMING = ["ゲーミングチェア", "コーヒーミル", "サーキュレーター"]
+COMING = ["ゲーミングチェア", "コーヒーミル", "食洗機"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
@@ -398,10 +398,14 @@ def render_compare_box(slug):
     links = "".join(f'<a class="cmpbox-a" href="/compare/{c["slug"]}">{H.escape(c["title"].split("｜")[0])} →</a>' for c in cs)
     return f'<div class="cmpbox"><span class="cmpbox-t">🔍 徹底比較</span>{links}</div>'
 
-def _top_model(data, match, name_incl=None):
+def _top_model(data, match, name_incl=None, name_excl=None):
     # ブランド部分一致で、現在の最コスパ機種を1台返す（無ければNone）
     # name_incl指定時は機種名にもいずれかのトークンを含む機種に限定（例: パナソニックの"ナノケア"）。該当0ならブランド全体にフォールバック
+    # name_excl指定時は機種名にいずれかのトークンを含む機種を除外（例: AirPodsの"片耳/単品/交換品"を除く）
     cand = [m for m in data if match in m["brand"]]
+    if name_excl:
+        f = [m for m in cand if not any(t.lower() in m["name"].lower() for t in name_excl)]
+        cand = f or cand
     if name_incl:
         f = [m for m in cand if any(t.lower() in m["name"].lower() for t in name_incl)]
         cand = f or cand
@@ -417,7 +421,7 @@ def build_compares():
         rank_of = {m["id"]: i + 1 for i, m in enumerate(ranked)}
         picks = []
         for b in c["brands"]:
-            m = _top_model(data, b["match"], b.get("name_incl"))
+            m = _top_model(data, b["match"], b.get("name_incl"), b.get("name_excl"))
             if m:
                 picks.append((b, m))
         if len(picks) < 2:
