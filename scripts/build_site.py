@@ -65,9 +65,9 @@ def nav(base=""):
     # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。主要セクションへ即移動。
     return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
             '<nav class="gnav">'
-            '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
-            '<span class="gdiv"></span>'
             '<span class="ggrp"><span class="gcap">ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
+            '<span class="gdiv"></span>'
+            '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
             '<span class="gdiv"></span>'
             '<a class="gabout" href="/about">コスパとは</a>'
             '</nav></div></header>')
@@ -153,6 +153,14 @@ GO5 = ('<div id="go5bar"></div>'
        'b.innerHTML=\'<a href="/furusato"><span class="gift">🎁</span>本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ<span class="gbtn">お得な返礼品を見る ▶</span></a>\';}}catch(e){}})();</script>')
 
 AD = ''
+
+# 楽天お買い物マラソン告知バナー(トップのふるさと⇔家電の間)。開催中だけTrueにしてビルドするとONになる。
+# お買い物マラソンは不定期(月1-2回/数日間)なので、開催に合わせて MARATHON_ON を切り替える運用。
+MARATHON_ON = True
+MARATHON = ('<a class="mbanner" href="/furusato"><span class="mico">🎉</span>'
+            '<span class="mtxt"><span class="mtag">楽天お買い物マラソン 開催中</span>'
+            '<span class="mmain">掲載アイテムがお得！<b>最大半額クーポン</b>・買い回りでポイント最大<b>10倍</b></span></span>'
+            '<span class="mgo">お得な返礼品を見る →</span></a>') if MARATHON_ON else ''
 
 def load(slug):
     d = json.load(open(os.path.join(DATA, slug + ".json"), encoding="utf-8"))
@@ -601,6 +609,7 @@ def build_hub(built):
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
 {AD}
 <a class="fbanner" href="/furusato"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
+{MARATHON}
 <h2 id="ranking">家電コスパ ランキング</h2>
 <div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
@@ -678,6 +687,13 @@ a{color:var(--accent2)}
 .go5 a{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;color:#fff;text-decoration:none;padding:9px 14px;font-size:.92rem;font-weight:800}
 .go5 a b{color:#ffe14d}.go5 .gift{font-size:1.25rem}
 .go5 .gbtn{background:#fff;color:#e0242b;border-radius:999px;padding:4px 14px;font-size:.82rem;font-weight:800;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.mbanner{display:flex;align-items:center;gap:14px;background:linear-gradient(100deg,#ff6b8a,#e81f46);border-radius:16px;padding:14px 20px;margin:16px 0;text-decoration:none;color:#fff;box-shadow:0 5px 20px rgba(232,31,70,.30)}
+.mbanner .mico{font-size:2rem;flex:none}
+.mbanner .mtxt{flex:1;min-width:0}
+.mbanner .mtag{display:inline-block;background:rgba(255,255,255,.22);border-radius:999px;padding:2px 11px;font-size:.73rem;font-weight:800;margin-bottom:4px}
+.mbanner .mmain{display:block;font-size:.96rem;font-weight:800;line-height:1.45}.mbanner .mmain b{color:#ffe14d}
+.mbanner .mgo{flex:none;background:#fff;color:#e0243a;border-radius:999px;padding:9px 18px;font-size:.84rem;font-weight:800;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+@media(max-width:560px){.mbanner{flex-wrap:wrap;gap:8px 12px}.mbanner .mgo{margin-left:auto}}
 .ebridge{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#fff3ec,#ffe6f0);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:14px;padding:14px 18px;margin:16px 0;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(255,122,69,.12)}
 .ebridge .eico{font-size:2rem;flex:none}.ebridge h3{margin:0;font-size:1.05rem;color:#c2410c}.ebridge p{margin:3px 0 0;font-size:.82rem;color:#6b5a52}.ebridge .ego{margin-left:auto;color:#fff;background:var(--accent);border-radius:999px;padding:7px 16px;font-weight:800;white-space:nowrap}
 main{max-width:1000px;margin:0 auto;padding:8px 16px 50px}
