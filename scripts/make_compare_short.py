@@ -11,7 +11,8 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 # 家電カテゴリの日本語ラベル(make_product_shortと同じ主要分)
 CATLABEL = {"earbuds": "ワイヤレスイヤホン", "robot-cleaner": "ロボット掃除機", "portable-power": "ポータブル電源",
-            "hair-dryer": "ドライヤー", "air-purifier": "空気清浄機", "tablet": "タブレット"}
+            "hair-dryer": "ドライヤー", "air-purifier": "空気清浄機", "tablet": "タブレット",
+            "coffee-maker": "コーヒーメーカー", "smartwatch": "スマートウォッチ", "kettle": "電気ケトル"}
 
 
 def top_model(data, match, name_incl=None, name_excl=None):
