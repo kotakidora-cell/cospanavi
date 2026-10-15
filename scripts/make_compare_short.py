@@ -131,9 +131,22 @@ def main():
         p = os.path.join(tmp, f"s{i}.png"); im.save(p); pngs.append(p); durs.append(du)
     bgm = os.path.join(outdir, "bgm.mp3")
     out = os.path.join(outdir, f"compare-{slug}.mp4")
-    build_video(pngs, durs, out, bgm=bgm if os.path.exists(bgm) else None)
-    print(f"生成: {out} ({sum(durs):.0f}秒)")
+    bgmp = bgm if os.path.exists(bgm) else None
     scenes[1][0].save(os.path.join(outdir, f"compare-{slug}-frame.png"))
+    # 各シーンの日本語ナレーション台本(VOICEVOX起動時のみ音声付き)
+    texts = [
+        f"{na}対{nb}、{label}のコスパが高いのはどっち？徹底比較します。",
+        f"{na}は{ma['minPrice']:,}円でコスパ{round(ma['cospa'])}。{nb}は{mb['minPrice']:,}円でコスパ{round(mb['cospa'])}。数字はすべて最新の実データです。",
+        f"結論。{va}{na}、{vb}{nb}です。",
+        "詳しい比較表と最新価格はコスパナビで。概要欄のリンクからチェックしてね。",
+    ]
+    import narrate
+    if narrate.available():
+        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp)
+        print(f"生成(ナレーション付): {out}")
+    else:
+        build_video(pngs, durs, out, bgm=bgmp)
+        print(f"生成(BGMのみ/VOICEVOX未起動): {out} ({sum(durs):.0f}秒)")
 
 
 if __name__ == "__main__":

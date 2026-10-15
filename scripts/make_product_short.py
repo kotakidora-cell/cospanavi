@@ -100,9 +100,24 @@ def main():
         p = os.path.join(tmp, f"s{i}.png"); im.save(p); pngs.append(p); durs.append(du)
     bgm = os.path.join(outdir, "bgm.mp3")
     out = os.path.join(outdir, f"{slug}-top3.mp4")
-    build_video(pngs, durs, out, bgm=bgm if os.path.exists(bgm) else None)
-    print(f"生成: {out}  ({sum(durs):.0f}秒, BGM={'有' if os.path.exists(bgm) else '無'})")
+    bgmp = bgm if os.path.exists(bgm) else None
     scenes[3][0].save(os.path.join(outdir, f"{slug}-frame1.png"))
+    def bp(m):  # ブランド読み上げ(ノーブランドは省略)
+        return f"{m['brand']}、" if "ノーブランド" not in m["brand"] else ""
+    texts = [
+        f"{label}のコスパ最強ランキング、トップ3！安くて満足度が高いのはどれ？",
+        f"第3位。{bp(top[2])}最安{top[2]['minPrice']:,}円、コスパ{round(top[2]['cospa'])}。",
+        f"第2位。{bp(top[1])}最安{top[1]['minPrice']:,}円、コスパ{round(top[1]['cospa'])}。",
+        f"そして第1位は、{bp(top[0])}最安{top[0]['minPrice']:,}円、コスパ{round(top[0]['cospa'])}！これが今いちばんお得です。",
+        "全順位とコスパ比較はコスパナビで。概要欄のリンクからどうぞ。",
+    ]
+    import narrate
+    if narrate.available():
+        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp)
+        print(f"生成(ナレーション付): {out}")
+    else:
+        build_video(pngs, durs, out, bgm=bgmp)
+        print(f"生成(BGMのみ/VOICEVOX未起動): {out} ({sum(durs):.0f}秒)")
 
 if __name__ == "__main__":
     main()

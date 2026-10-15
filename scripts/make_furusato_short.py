@@ -212,11 +212,28 @@ def main():
         p = os.path.join(tmp, f"s{i}.png"); img.save(p); pngs.append(p); durs.append(dur)
     out = os.path.join(outdir, f"furusato-{slug}-top3.mp4")
     bgm = os.path.join(BASE, "shorts", "bgm.mp3")
-    build_video(pngs, durs, out, bgm=bgm if os.path.exists(bgm) else None)
-    print(f"生成: {out}  ({sum(durs):.0f}秒, BGM={'有' if os.path.exists(bgm) else '無'})")
+    bgmp = bgm if os.path.exists(bgm) else None
     # 確認用に1位・CTAフレームも書き出し
     scenes[3][0].save(os.path.join(outdir, f"furusato-{slug}-frame1.png"))
     scenes[4][0].save(os.path.join(outdir, f"furusato-{slug}-outro.png"))
+    ul = cat.get("unit", "")
+    def u(m):  # 寄付額あたり単価の読み上げ
+        return f"寄付額あたり{round(m['unit']):,}円、1{ul}" if ul else f"{round(m['unit']):,}円"
+    title = cat.get("title", slug)
+    texts = [
+        f"ふるさと納税、{title}のコスパ最強ランキング、トップ3！実質2000円で一番お得なのはどれ？",
+        f"第3位。{u(top[2])}あたり。コスパ{round(top[2]['cospa'])}です。",
+        f"第2位。{u(top[1])}あたり。コスパ{round(top[1]['cospa'])}。",
+        f"そして第1位は、{u(top[0])}あたりでコスパ{round(top[0]['cospa'])}！実質2000円で一番お得です。",
+        "全順位とコスパ比較はコスパナビで。概要欄のリンクからどうぞ。",
+    ]
+    import narrate
+    if narrate.available():
+        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp)
+        print(f"生成(ナレーション付): {out}")
+    else:
+        build_video(pngs, durs, out, bgm=bgmp)
+        print(f"生成(BGMのみ/VOICEVOX未起動): {out} ({sum(durs):.0f}秒)")
 
 if __name__ == "__main__":
     main()
