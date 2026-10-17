@@ -29,10 +29,16 @@ CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
              "coffee-maker", "kotatsu", "printer", "fan"]
+NICHIYO_ORDER = ["toilet-paper", "rice", "tissue"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
+ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
-         "desc": CATEGORIES[s]["desc"]} for s in CAT_ORDER]
+         "section": CATEGORIES[s].get("section", "kaden"),
+         "desc": CATEGORIES[s]["desc"]} for s in ALL_ORDER]
+KADEN_CATS = [c for c in CATS if c["section"] == "kaden"]
+NICHIYO_CATS = [c for c in CATS if c["section"] == "nichiyo"]
 COMING = ["ゲーミングチェア", "コーヒーミル", "食洗機"]
+NICHIYO_COMING = ["洗剤", "ゴミ袋", "キッチンペーパー", "ラップ", "乾電池"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
@@ -69,6 +75,8 @@ def nav(base=""):
             '<span class="gdiv"></span>'
             '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
             '<span class="gdiv"></span>'
+            '<span class="ggrp"><span class="gcap">日用品</span><a href="/nichiyo#ranking">ランキング</a><a href="/nichiyo#compare">徹底比較</a></span>'
+            '<span class="gdiv"></span>'
             '<a class="gabout" href="/about">コスパとは</a>'
             '</nav></div></header>')
 
@@ -88,6 +96,7 @@ CLUSTERS = [
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
     ["hair-dryer", "portable-power"],                        # 生活・その他
+    ["toilet-paper", "rice", "tissue"],                      # 日用品
 ]
 SLUG2CLUSTER = {s: i for i, cl in enumerate(CLUSTERS) for s in cl}
 POPULAR = ["robot-cleaner", "air-purifier", "tablet", "hair-dryer", "microwave"]
@@ -231,13 +240,17 @@ def build_category(cfg):
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
     GUIDE_HTML, faq_ld = render_guide(cfg["slug"], cfg["label"])
     lo, med, q1, q3 = price_stats(data)
+    sec = CATEGORIES[cfg["slug"]].get("section", "kaden")
+    unit = "品" if sec == "nichiyo" else "機種"
     soba = (f'<div class="soba"><span class="sicon">💰</span><div><b>{cfg["label"]}の価格相場</b>'
-            f'<span class="smt">（{UPDATED}時点・{len(data)}機種の実売最安値より）</span><br>'
+            f'<span class="smt">（{UPDATED}時点・{len(data)}{unit}の実売最安値より）</span><br>'
             f'最安 <b>¥{lo:,}</b> ／ 相場（中央値） <b>¥{med:,}</b> ／ ボリュームゾーン <b>¥{q1:,}〜¥{q3:,}</b></div></div>')
+    crumb = ('<a href="/">コスパナビ</a> › <a href="/nichiyo">日用品</a> › ' + cfg["label"]) if sec == "nichiyo" \
+            else ('<a href="/">コスパナビ</a> › ' + cfg["label"])
     body = f"""
-<nav class="crumb"><a href="/">コスパナビ</a> › {cfg['label']}</nav>
+<nav class="crumb">{crumb}</nav>
 <h1>{cfg['label']} コスパ最強ランキング＆価格相場<span class="yr">2026</span></h1>
-<p class="lead">{cfg['desc']} <b>{len(data)}機種</b>を、価格相場と満足度から比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
+<p class="lead">{cfg['desc']} <b>{len(data)}{unit}</b>を、価格相場と満足度から比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
 {soba}
 {render_compare_box(cfg['slug'])}
 {render_brand_links(cfg['slug'])}
@@ -266,6 +279,7 @@ def build_category(cfg):
 {GUIDE_HTML}
 {render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
+<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};</script>
 <script>{TOOL_JS}</script>
 """
     title = f"{cfg['label']}のコスパ最強ランキング2026｜価格相場・安い順に比較"
@@ -274,7 +288,11 @@ def build_category(cfg):
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": title,
           "itemListElement": [{"@type": "ListItem", "position": m["rank"],
                                "url": f"{SITE_URL}/product/{m['id']}", "name": m["name"]} for m in data[:20]]}
-    ld_list = [ld, breadcrumb_ld([("コスパナビ", SITE_URL + "/"), (cfg["label"], None)])]
+    bc_items = [("コスパナビ", SITE_URL + "/")]
+    if sec == "nichiyo":
+        bc_items.append(("日用品", SITE_URL + "/nichiyo"))
+    bc_items.append((cfg["label"], None))
+    ld_list = [ld, breadcrumb_ld(bc_items)]
     if faq_ld:
         ld_list.append(faq_ld)
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld_list)
@@ -307,7 +325,7 @@ function render(){
  else if(sortKey==='price')a.sort((p,q)=>p.price-q.price);
  else if(sortKey==='sat')a.sort((p,q)=>q.sat-p.sat);
  else if(sortKey==='rc')a.sort((p,q)=>q.rc-p.rc);
- document.getElementById('cnt').textContent=a.length+'機種';
+ document.getElementById('cnt').textContent=a.length+(window.UNIT||'機種');
  list.innerHTML='';
  a.slice(0,60).forEach((x,i)=>{const c=document.createElement('div');c.className='card';
   c.innerHTML='<div class="cimg"><img loading="lazy" src="'+x.img+'" alt=""></div>'+
@@ -590,35 +608,71 @@ def build_brands():
     return n
 
 # ================= ハブ =================
-def build_hub(built):
-    cards = ""
-    for cfg in CATS:
-        n = built.get(cfg["slug"], 0)
-        cards += (f'<a class="hcard" href="{U(cfg["file"])}"><div class="hico">{cfg["icon"]}</div>'
-                  f'<div><h3>{cfg["label"]}<span class="n">{n}機種</span></h3><p>{cfg["desc"]}</p></div></a>')
-    coming = "".join(f'<span class="soon">{c}</span>' for c in COMING)
-    cmp_cards = "".join(
+FURU_BANNER = ('<a class="fbanner" href="/furusato"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3>'
+               '<p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>')
+NICHIYO_BANNER = ('<a class="fbanner" href="/nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ分析<span class="n">NEW</span></h3>'
+                  '<p>トイレットペーパー・米・ティッシュなど<b>毎日使う日用品</b>を、価格×満足度の独自コスパ値でランキング。まとめ買い・大容量の最適解が分かる。</p></div><span class="fgo">見る →</span></a>')
+KADEN_BANNER = ('<a class="fbanner" href="/"><div class="hico">🔌</div><div><h3>家電コスパ ランキング</h3>'
+                '<p>ロボット掃除機・空気清浄機・イヤホンなど、満足度×価格の独自コスパ値で家電をランキング。重視ポイントや予算で選べる。</p></div><span class="fgo">見る →</span></a>')
+
+def _hubcards(cats, built):
+    return "".join(f'<a class="hcard" href="{U(c["file"])}"><div class="hico">{c["icon"]}</div>'
+                   f'<div><h3>{c["label"]}<span class="n">{built.get(c["slug"], 0)}{"品" if c["section"]=="nichiyo" else "機種"}</span></h3>'
+                   f'<p>{c["desc"]}</p></div></a>' for c in cats)
+
+def _cmp_section(cats, section_label):
+    sec = {c["slug"] for c in cats}
+    comps = [c for c in COMPARES if c["category"] in sec]
+    if not comps:
+        return f'<h2 id="compare">徹底比較</h2><p class="lead">{section_label}の人気ブランド対決は準備中です。近日公開します。</p>'
+    cards = "".join(
         f'<a class="hcard" href="/compare/{c["slug"]}"><div class="hico">🔍</div>'
         f'<div><h3>{H.escape(c["title"].split("｜")[0])}</h3>'
-        f'<p>{H.escape(CAT_BY_SLUG[c["category"]]["label"])}の人気ブランドを徹底比較</p></div></a>'
-        for c in COMPARES)
-    cmp_section = (f'<h2 id="compare">徹底比較</h2><p class="lead">人気ブランドを1対1で比較。価格・満足度・機能・向いている人がひと目で分かります。</p>'
-                   f'<div class="hgrid">{cmp_cards}</div>') if COMPARES else ""
+        f'<p>{H.escape(CAT_BY_SLUG[c["category"]]["label"])}の人気ブランドを徹底比較</p></div></a>' for c in comps)
+    return (f'<h2 id="compare">徹底比較</h2><p class="lead">人気ブランドを1対1で比較。価格・満足度・機能・向いている人がひと目で分かります。</p>'
+            f'<div class="hgrid">{cards}</div>')
+
+ABOUT_SEC = ('<h2>コスパナビとは</h2><p>価格.comのように"全部載せ"で迷わせるのではなく、<b>「満足度×価格」の独自コスパ値</b>と'
+             '<b>調整できるツール</b>で、あなたの条件に合う最適解を提示します。データは楽天市場・Yahoo!ショッピングのレビュー・価格に基づき毎日更新。'
+             '詳しくは<a href="/about">コスパ値とは</a>。</p>')
+
+def build_hub(built):
+    # 家電ハブ(トップ /)
+    coming = "".join(f'<span class="soon">{c}</span>' for c in COMING)
     body = f"""
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
-{AD}
-<a class="fbanner" href="/furusato"><div class="hico">🍚</div><div><h3>ふるさと納税コスパ分析<span class="n">NEW</span></h3><p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>
-{MARATHON}
+{AD}{FURU_BANNER}{NICHIYO_BANNER}{MARATHON}
 <h2 id="ranking">家電コスパ ランキング</h2>
-<div class="hgrid">{cards}</div>
+<div class="hgrid">{_hubcards(KADEN_CATS, built)}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
-{cmp_section}
-<h2>コスパナビとは</h2>
-<p>価格.comのように"全部載せ"で迷わせるのではなく、<b>「満足度×価格」の独自コスパ値</b>と<b>調整できるツール</b>で、あなたの条件に合う最適解を提示します。データは楽天市場のレビュー・価格に基づき毎日更新。詳しくは<a href="/about">コスパ値とは</a>。</p>
+{_cmp_section(KADEN_CATS, "家電")}
+{ABOUT_SEC}
 """
     open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(
-        shell("コスパナビ2026｜満足度×価格で選ぶ商品コスパ比較", "レビュー満足度と価格から独自コスパ値で製品をランキング。ロボット掃除機など。重視ポイント・予算で最適な1台が選べる。", body, path="index.html"))
+        shell("コスパナビ2026｜満足度×価格で選ぶ商品コスパ比較", "レビュー満足度と価格から独自コスパ値で製品をランキング。家電・日用品・ふるさと納税。重視ポイント・予算で最適な1台が選べる。", body, path="index.html"))
+
+def build_nichiyo_hub(built):
+    # 日用品ハブ(/nichiyo)
+    coming = "".join(f'<span class="soon">{c}</span>' for c in NICHIYO_COMING)
+    body = f"""
+<nav class="crumb"><a href="/">コスパナビ</a> › 日用品</nav>
+<div class="hero"><h1>日用品コスパ分析<span class="yr">2026</span></h1>
+<p class="lead">トイレットペーパー・米・ティッシュなど<b>毎日使う日用品</b>を、価格とレビュー満足度の<b>独自コスパ値</b>でランキング。<b>まとめ買い・大容量の「本当にお得な1つ」</b>が見つかります。毎日価格を自動更新。</p></div>
+{AD}{FURU_BANNER}{MARATHON}
+<h2 id="ranking">日用品コスパ ランキング</h2>
+<div class="hgrid">{_hubcards(NICHIYO_CATS, built)}</div>
+<div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
+{_cmp_section(NICHIYO_CATS, "日用品")}
+{KADEN_BANNER}
+{ABOUT_SEC}
+"""
+    bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("日用品", None)])
+    bc_head = f'<script type="application/ld+json">{json.dumps(bc, ensure_ascii=False)}</script>'
+    open(os.path.join(SITE, "nichiyo.html"), "w", encoding="utf-8").write(
+        shell("日用品コスパ分析2026｜トイレットペーパー・米・ティッシュを価格×満足度で比較",
+              "毎日使う日用品を独自コスパ値でランキング。トイレットペーパー・米・ティッシュの大容量・まとめ買いのコスパ最強が分かる。毎日自動更新。",
+              body, path="nichiyo.html", head=bc_head))
 
 # ================= about / privacy =================
 def build_static():
@@ -796,6 +850,7 @@ if __name__ == "__main__":
     ncmp = build_compares()
     nbrand = build_brands()
     build_hub(built)
+    build_nichiyo_hub(built)
     build_static()
     build_seo()
     # styles.css

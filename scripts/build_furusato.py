@@ -102,6 +102,8 @@ def nav():
             '<span class="gdiv"></span>'
             '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
             '<span class="gdiv"></span>'
+            '<span class="ggrp"><span class="gcap">日用品</span><a href="/nichiyo#ranking">ランキング</a><a href="/nichiyo#compare">徹底比較</a></span>'
+            '<span class="gdiv"></span>'
             '<a class="gabout" href="/about">コスパとは</a>'
             '</nav></div></header>')
 

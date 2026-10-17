@@ -21,10 +21,10 @@ def bg_scene(c1, c2):
     img = vgrad(c1, c2)
     return img, ImageDraw.Draw(img)
 
-def scene_intro(label):
+def scene_intro(label, sec_label="家電"):
     img, d = bg_scene((255, 138, 76), (255, 92, 138))
     rrect(d, [W/2-260, 150, W/2+260, 250], 50, fill=WHITE)
-    ctext(d, W/2, 168, "家電のコスパ比較", font(48), ORANGE)
+    ctext(d, W/2, 168, f"{sec_label}のコスパ比較", font(48), ORANGE)
     ctext(d, W/2, 430, "コスパ", font(170), WHITE, stroke=8, sfill=NAVY)
     ctext(d, W/2, 620, "ランキング", font(150), YEL, stroke=8, sfill=NAVY)
     lbl = f"【{label}編】"
@@ -72,9 +72,9 @@ def scene_rank(rank, m):
     ctext(d, W/2, 1722, f"コスパ {round(m['cospa'])}", font(50), YEL)
     return img
 
-def scene_outro(label, slug):
+def scene_outro(label, slug, sec_label="家電"):
     img, d = bg_scene((255, 138, 76), (255, 92, 138))
-    ctext(d, W/2, 300, "全順位＆他の家電も", font(64), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 300, f"全順位＆他の{sec_label}も", font(64), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 400, "コチラ！", font(120), WHITE, stroke=6, sfill=NAVY)
     rrect(d, [50, 650, W-50, 1010], 50, fill=WHITE)
     ctext(d, W/2, 700, "コスパナビ", font(72), NAVY)
@@ -88,16 +88,22 @@ def scene_outro(label, slug):
 def main():
     slug = sys.argv[1] if len(sys.argv) > 1 else "microwave"
     outdir = os.path.join(BASE, "shorts"); os.makedirs(outdir, exist_ok=True)
-    label = PCATS.get(slug, slug)
+    try:
+        from categories import CATEGORIES
+        label = CATEGORIES[slug]["label"]
+        sec = CATEGORIES[slug].get("section", "kaden")
+    except Exception:
+        label, sec = PCATS.get(slug, slug), "kaden"
+    sec_label = "日用品" if sec == "nichiyo" else "家電"
     data = json.load(open(os.path.join(DATA, f"{slug}.json"), encoding="utf-8"))
     top = sorted(data, key=lambda z: -z["cospa"])[:3]
     for m in top:
         m["name"] = html.unescape(m["name"])   # Yahoo由来の &lt; 等を実体化
         m["brand"] = html.unescape(m["brand"])
         m["_img"] = dl_image(m.get("image", ""))
-    scenes = [(scene_intro(label), 3.0),
+    scenes = [(scene_intro(label, sec_label), 3.0),
               (scene_rank(3, top[2]), 5.0), (scene_rank(2, top[1]), 5.0),
-              (scene_rank(1, top[0]), 7.0), (scene_outro(label, slug), 5.0)]
+              (scene_rank(1, top[0]), 7.0), (scene_outro(label, slug, sec_label), 5.0)]
     tmp = tempfile.mkdtemp(); pngs, durs = [], []
     for i, (im, du) in enumerate(scenes):
         p = os.path.join(tmp, f"s{i}.png"); im.save(p); pngs.append(p); durs.append(du)
