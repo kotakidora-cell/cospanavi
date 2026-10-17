@@ -5,7 +5,7 @@ import os, json, wave, tempfile, subprocess, urllib.request, urllib.parse
 import imageio_ffmpeg
 
 HOST = "http://127.0.0.1:50021"
-SPEAKER = int(os.environ.get("VV_SPEAKER", "3"))   # 3=ずんだもん(ノーマル)。2=四国めたん, 8=春日部つむぎ 等
+SPEAKER = int(os.environ.get("VV_SPEAKER", "13"))  # 13=青山龍星(ノーマル)。81=熱血, 3=ずんだもん, 2=四国めたん 等
 SPEED = float(os.environ.get("VV_SPEED", "1.05"))  # 少し速めでテンポ良く
 BGM_VOL = float(os.environ.get("BGM_VOL", "0.08"))  # BGM音量(ナレーションに対して大幅に下げる。0.0〜1.0)
 NARR_VOL = float(os.environ.get("NARR_VOL", "2.5"))  # ナレーション増幅(VOICEVOX出力は小さめなので持ち上げる。リミッターで歪み防止)
