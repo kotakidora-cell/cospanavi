@@ -27,8 +27,11 @@ def scene_intro(label):
     ctext(d, W/2, 168, "家電のコスパ比較", font(48), ORANGE)
     ctext(d, W/2, 430, "コスパ", font(170), WHITE, stroke=8, sfill=NAVY)
     ctext(d, W/2, 620, "ランキング", font(150), YEL, stroke=8, sfill=NAVY)
-    rrect(d, [W/2-400, 850, W/2+400, 1000], 40, fill=NAVY)
-    ctext(d, W/2, 872, f"【{label}編】", font(88), WHITE)
+    lbl = f"【{label}編】"
+    fs = 92
+    while tsize(d, lbl, font(fs))[0] > 980 and fs > 48:
+        fs -= 4
+    ctext(d, W/2, 900, lbl, font(fs), WHITE, stroke=7, sfill=NAVY)
     ctext(d, W/2, 1080, "TOP3", font(240), WHITE, stroke=10, sfill=ORANGE)
     ctext(d, W/2, 1420, "安くて満足度が高いのは？", font(56), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 1500, "損しない1台はコレ", font(56), WHITE, stroke=4, sfill=NAVY)

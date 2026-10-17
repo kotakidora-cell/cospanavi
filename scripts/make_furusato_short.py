@@ -109,8 +109,11 @@ def scene_intro(cat):
     ctext(d, W/2, 168, "楽天ふるさと納税", font(46), ORANGE)
     ctext(d, W/2, 430, "コスパ", font(170), WHITE, stroke=8, sfill=NAVY)
     ctext(d, W/2, 620, "ランキング", font(150), YEL, stroke=8, sfill=NAVY)
-    rrect(d, [W/2-360, 850, W/2+360, 1000], 40, fill=NAVY)
-    ctext(d, W/2, 872, f"【{cat['title']}編】", font(96), WHITE)
+    lbl = f"【{cat['title']}編】"
+    fs = 96
+    while tsize(d, lbl, font(fs))[0] > 980 and fs > 48:
+        fs -= 4
+    ctext(d, W/2, 900, lbl, font(fs), WHITE, stroke=7, sfill=NAVY)
     ctext(d, W/2, 1080, "TOP3", font(240), WHITE, stroke=10, sfill=ORANGE)
     ctext(d, W/2, 1420, f"1{cat['unit']}あたりの価格で選ぶ！", font(56), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 1500, "損しない返礼品はコレ", font(56), WHITE, stroke=4, sfill=NAVY)
