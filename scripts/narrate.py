@@ -7,7 +7,8 @@ import imageio_ffmpeg
 HOST = "http://127.0.0.1:50021"
 SPEAKER = int(os.environ.get("VV_SPEAKER", "3"))   # 3=ずんだもん(ノーマル)。2=四国めたん, 8=春日部つむぎ 等
 SPEED = float(os.environ.get("VV_SPEED", "1.05"))  # 少し速めでテンポ良く
-BGM_VOL = float(os.environ.get("BGM_VOL", "0.20"))  # BGM音量(ナレーションに対して下げる。0.0〜1.0)
+BGM_VOL = float(os.environ.get("BGM_VOL", "0.08"))  # BGM音量(ナレーションに対して大幅に下げる。0.0〜1.0)
+NARR_VOL = float(os.environ.get("NARR_VOL", "1.8"))  # ナレーション増幅(VOICEVOX出力は小さめなので持ち上げる)
 PAD = 0.45      # 各ナレーション末尾の余白(秒)
 MIN_DUR = 2.0   # 1シーンの最短表示(秒)
 FF = imageio_ffmpeg.get_ffmpeg_exe()
@@ -81,12 +82,14 @@ def build_narrated_video(pngs, texts, out, bgm=None, speaker=None, bgm_vol=None)
     _run([FF, "-y", "-f", "concat", "-safe", "0", "-i", alst, "-c:a", "pcm_s16le", "-ar", "44100", "-ac", "2", narr])
     # ミックス: ナレーション + 音量を下げたBGM
     if bgm and os.path.exists(bgm):
+        # ナレーションを増幅＋BGMを大幅に下げ、amixの自動正規化を切って(normalize=0)声を主役に。最後にリミッターで歪み防止。
         _run([FF, "-y", "-i", vid, "-i", narr, "-stream_loop", "-1", "-i", bgm,
               "-filter_complex",
-              f"[2:a]volume={bgm_vol}[bg];[1:a][bg]amix=inputs=2:duration=first:dropout_transition=0[a]",
+              f"[1:a]volume={NARR_VOL}[v];[2:a]volume={bgm_vol}[bg];"
+              f"[v][bg]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[mx];[mx]alimiter=limit=0.95[a]",
               "-map", "0:v", "-map", "[a]", "-t", f"{total:.3f}",
               "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", out])
     else:
-        _run([FF, "-y", "-i", vid, "-i", narr, "-map", "0:v", "-map", "1:a",
-              "-t", f"{total:.3f}", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", out])
+        _run([FF, "-y", "-i", vid, "-i", narr, "-filter_complex", f"[1:a]volume={NARR_VOL}[a]",
+              "-map", "0:v", "-map", "[a]", "-t", f"{total:.3f}", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", out])
     return total

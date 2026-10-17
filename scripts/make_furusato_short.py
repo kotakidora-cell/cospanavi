@@ -217,14 +217,14 @@ def main():
     scenes[3][0].save(os.path.join(outdir, f"furusato-{slug}-frame1.png"))
     scenes[4][0].save(os.path.join(outdir, f"furusato-{slug}-outro.png"))
     ul = cat.get("unit", "")
-    def u(m):  # 寄付額あたり単価の読み上げ
-        return f"寄付額あたり{round(m['unit']):,}円、1{ul}" if ul else f"{round(m['unit']):,}円"
+    def u(m):  # 1単位あたり単価の読み上げ(例: 1ロールあたり31円)
+        return f"1{ul}あたり{round(m['unit']):,}円" if ul else f"{round(m['unit']):,}円"
     title = cat.get("title", slug)
     texts = [
         f"ふるさと納税、{title}のコスパ最強ランキング、トップ3！実質2000円で一番お得なのはどれ？",
-        f"第3位。{u(top[2])}あたり。コスパ{round(top[2]['cospa'])}です。",
-        f"第2位。{u(top[1])}あたり。コスパ{round(top[1]['cospa'])}。",
-        f"そして第1位は、{u(top[0])}あたりでコスパ{round(top[0]['cospa'])}！実質2000円で一番お得です。",
+        f"第3位。{u(top[2])}、コスパ{round(top[2]['cospa'])}です。",
+        f"第2位。{u(top[1])}、コスパ{round(top[1]['cospa'])}。",
+        f"そして第1位は、{u(top[0])}でコスパ{round(top[0]['cospa'])}！実質2000円で一番お得です。",
         "全順位とコスパ比較はコスパナビで。概要欄のリンクからどうぞ。",
     ]
     import narrate
