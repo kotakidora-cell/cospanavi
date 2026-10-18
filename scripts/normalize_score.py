@@ -16,16 +16,17 @@ slug = sys.argv[1] if len(sys.argv) > 1 else "robot-cleaner"
 raw = json.load(open(os.path.join(DATA, slug + "_raw.json"), encoding="utf-8"))
 for r in raw:
     r.setdefault("mall", "rakuten")
-# Yahoo取得分があれば統合（複数モール最安値比較）
-_yahoo = os.path.join(DATA, slug + "_yahoo_raw.json")
-if os.path.exists(_yahoo):
-    _yr = json.load(open(_yahoo, encoding="utf-8"))
-    raw += _yr
-    print(f"Yahoo統合: +{len(_yr)}件")
-
 # 付属品除外語・ブランド正規化はカテゴリ毎に異なるためcategories.pyから取得
 from categories import CATEGORIES
 _cat = CATEGORIES[slug]
+# Yahoo取得分があれば統合（複数モール最安値比較）。ただし rakuten_only のカテゴリ(日用品)は楽天のみで集計
+_yahoo = os.path.join(DATA, slug + "_yahoo_raw.json")
+if _cat.get("rakuten_only"):
+    print("rakuten_only: Yahoo統合をスキップ(楽天のみで集計)")
+elif os.path.exists(_yahoo):
+    _yr = json.load(open(_yahoo, encoding="utf-8"))
+    raw += _yr
+    print(f"Yahoo統合: +{len(_yr)}件")
 EXCLUDE = _cat["exclude"]
 BRANDS = _cat["brands"]
 def brand_of(nm):
@@ -51,7 +52,8 @@ def model_key(brand, nm):
     return brand + "|" + tok
 
 # --- 機種にまとめる ---
-items = [r for r in raw if not any(x in r["name"] for x in EXCLUDE) and r["price"] and r["price"] >= 3000]
+_minp = _cat.get("min_price", 3000)   # 価格下限(家電は3000既定、日用品は安いのでカテゴリ毎に引き下げ)
+items = [r for r in raw if not any(x in r["name"] for x in EXCLUDE) and r["price"] and r["price"] >= _minp]
 groups = {}
 for r in items:
     b = brand_of(r["name"]); k = model_key(b, r["name"])

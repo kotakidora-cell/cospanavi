@@ -29,7 +29,7 @@ CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
              "coffee-maker", "kotatsu", "printer", "fan"]
-NICHIYO_ORDER = ["toilet-paper", "rice", "tissue"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
+NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
@@ -38,7 +38,7 @@ CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
 KADEN_CATS = [c for c in CATS if c["section"] == "kaden"]
 NICHIYO_CATS = [c for c in CATS if c["section"] == "nichiyo"]
 COMING = ["ゲーミングチェア", "コーヒーミル", "食洗機"]
-NICHIYO_COMING = ["洗剤", "ゴミ袋", "キッチンペーパー", "ラップ", "乾電池"]
+NICHIYO_COMING = ["ゴミ袋", "キッチンペーパー", "ラップ", "乾電池", "柔軟剤"]
 
 def pid(m):
     # URLは「ブランド+型番」の安定キーから生成（商品名/代表出品が変わってもURLは不変＝SEO安定）。
@@ -96,7 +96,7 @@ CLUSTERS = [
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
     ["hair-dryer", "portable-power"],                        # 生活・その他
-    ["toilet-paper", "rice", "tissue"],                      # 日用品
+    ["toilet-paper", "rice", "tissue", "detergent"],         # 日用品
 ]
 SLUG2CLUSTER = {s: i for i, cl in enumerate(CLUSTERS) for s in cl}
 POPULAR = ["robot-cleaner", "air-purifier", "tablet", "hair-dryer", "microwave"]
@@ -166,10 +166,22 @@ AD = ''
 # 楽天お買い物マラソン告知バナー(トップのふるさと⇔家電の間)。開催中だけTrueにしてビルドするとONになる。
 # お買い物マラソンは不定期(月1-2回/数日間)なので、開催に合わせて MARATHON_ON を切り替える運用。
 MARATHON_ON = True
-MARATHON = ('<a class="mbanner" href="/furusato"><span class="mico">🎉</span>'
+# 楽天アフィリエイトID(hgc手動リンク用の4分割ドット形式)。ローカルはsecrets、CIは環境変数。
+try:
+    from secrets import RAKUTEN_AFFILIATE_ID as _AFFID
+except Exception:
+    _AFFID = os.environ.get("RAKUTEN_AFFILIATE_ID", "")
+def rakuten_afl(url):
+    # 任意の楽天ページを成果計測付きアフィリンクに変換(楽天市場トップへ直リンクでも成果は成立)
+    import urllib.parse as _up
+    e = _up.quote(url, safe="")
+    return f"https://hb.afl.rakuten.co.jp/hgc/{_AFFID}/?pc={e}&m={e}" if _AFFID else url
+# マラソンバナーは内部ページではなく楽天市場へ直接送客(開催中は買い回りで全市場が対象→直リンクでアフィリ成立)
+MARATHON_HREF = rakuten_afl("https://www.rakuten.co.jp/")
+MARATHON = (f'<a class="mbanner" href="{MARATHON_HREF}" target="_blank" rel="nofollow sponsored noopener"><span class="mico">🎉</span>'
             '<span class="mtxt"><span class="mtag">楽天お買い物マラソン 開催中</span>'
             '<span class="mmain">掲載アイテムがお得！<b>最大半額クーポン</b>・買い回りでポイント最大<b>10倍</b></span></span>'
-            '<span class="mgo">お得な返礼品を見る →</span></a>') if MARATHON_ON else ''
+            '<span class="mgo">楽天市場でお得に買う →</span></a>') if MARATHON_ON else ''
 
 def load(slug):
     d = json.load(open(os.path.join(DATA, slug + ".json"), encoding="utf-8"))
