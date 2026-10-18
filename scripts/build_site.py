@@ -632,6 +632,40 @@ def _hubcards(cats, built):
                    f'<div><h3>{c["label"]}<span class="n">{built.get(c["slug"], 0)}{"品" if c["section"]=="nichiyo" else "機種"}</span></h3>'
                    f'<p>{c["desc"]}</p></div></a>' for c in cats)
 
+def _nichiyo_cards(cats, built):
+    # 「選びやすい」リッチカード: 各カテゴリの一番人気(コスパ1位)を画像・最安・評価・コスパ値付きで提示
+    out = []
+    for c in cats:
+        slug = c["slug"]
+        try:
+            data = load(slug)
+        except Exception:
+            data = []
+        n = built.get(slug, len(data))
+        lo = min((m["minPrice"] for m in data), default=0)
+        top = max(data, key=lambda m: m["cospa"]) if data else None
+        href = U(c["file"])
+        if top:
+            nm = H.escape(top["name"][:40])
+            brand = "" if "ノーブランド" in top["brand"] else f'<span class="npbrand">{H.escape(top["brand"])}</span>'
+            star = round(top["review"], 2)
+            pick = (f'<div class="npick"><div class="npimg"><img loading="lazy" src="{H.escape(top.get("image",""))}" alt=""></div>'
+                    f'<div class="npinfo"><span class="nplabel">👑 コスパ1位</span>'
+                    f'{brand}<span class="npname">{nm}</span>'
+                    f'<div class="npmeta"><span class="npstar">★{star}</span><span class="npprice">¥{top["minPrice"]:,}〜</span></div>'
+                    f'<div class="npbar"><i style="width:{min(100,top["cospa"]):.0f}%"></i></div>'
+                    f'<div class="npcospa">コスパ値 <b>{round(top["cospa"])}</b> / 100</div></div></div>')
+            lorow = f'<div class="nlo">最安 <b>¥{lo:,}</b>〜 · <b>{n}品</b>から比較</div>'
+        else:
+            pick, lorow = "", ""
+        out.append(
+            f'<a class="ncard" href="{href}">'
+            f'<div class="nhead"><span class="nicon">{c["icon"]}</span>'
+            f'<div><h3>{c["label"]}</h3><span class="ncount">{n}品を毎日更新</span></div></div>'
+            f'<p class="ndesc">{c["desc"]}</p>{pick}{lorow}'
+            f'<span class="ngo">ランキングを見る →</span></a>')
+    return '<div class="ngrid">' + "".join(out) + '</div>'
+
 def _cmp_section(cats, section_label):
     sec = {c["slug"] for c in cats}
     comps = [c for c in COMPARES if c["category"] in sec]
@@ -665,19 +699,23 @@ def build_hub(built):
         shell("コスパナビ2026｜満足度×価格で選ぶ商品コスパ比較", "レビュー満足度と価格から独自コスパ値で製品をランキング。家電・日用品・ふるさと納税。重視ポイント・予算で最適な1台が選べる。", body, path="index.html"))
 
 def build_nichiyo_hub(built):
-    # 日用品ハブ(/nichiyo)
+    # 日用品ハブ(/nichiyo) — 「選びやすくてかっこいい」リデザイン版(.nv2スコープ)
     coming = "".join(f'<span class="soon">{c}</span>' for c in NICHIYO_COMING)
     body = f"""
+<div class="nv2">
 <nav class="crumb"><a href="/">コスパナビ</a> › 日用品</nav>
-<div class="hero"><h1>日用品コスパ分析<span class="yr">2026</span></h1>
-<p class="lead">トイレットペーパー・米・ティッシュなど<b>毎日使う日用品</b>を、価格とレビュー満足度の<b>独自コスパ値</b>でランキング。<b>まとめ買い・大容量の「本当にお得な1つ」</b>が見つかります。毎日価格を自動更新。</p></div>
-{AD}{FURU_BANNER}{MARATHON}
-<h2 id="ranking">日用品コスパ ランキング</h2>
-<div class="hgrid">{_hubcards(NICHIYO_CATS, built)}</div>
+<div class="nhero"><h1>日用品コスパ分析<span class="yr">2026</span></h1>
+<p>トイレットペーパー・米・ティッシュ・洗剤など<b>毎日使う日用品</b>を、価格×レビュー満足度の独自コスパ値でランキング。<b>まとめ買い・大容量の「本当にお得な1つ」</b>がすぐ見つかります。</p>
+<div class="nbadges"><span>🔄 毎日 価格を自動更新</span><span>🛒 楽天市場で比較</span><span>⭐ レビュー×価格で厳選</span></div></div>
+<h2 id="ranking">カテゴリから選ぶ</h2>
+{_nichiyo_cards(NICHIYO_CATS, built)}
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
+{MARATHON}
 {_cmp_section(NICHIYO_CATS, "日用品")}
-{KADEN_BANNER}
+<h2>ほかのコスパ分析</h2>
+{FURU_BANNER}{KADEN_BANNER}
 {ABOUT_SEC}
+</div>
 """
     bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("日用品", None)])
     bc_head = f'<script type="application/ld+json">{json.dumps(bc, ensure_ascii=False)}</script>'
@@ -843,6 +881,42 @@ table.pk td{border-bottom:1px solid var(--line);padding:8px;font-size:.88rem;ver
 .cmp3 th{text-align:left;color:var(--sub);font-size:.82rem;padding:6px 8px;border-bottom:1px solid var(--line)}
 .cmp3 td{vertical-align:top;font-size:.9rem}.cmp3 td:first-child{color:var(--sub);width:26%}
 @media(max-width:560px){.vs{grid-template-columns:1fr 1fr;gap:8px}.vsbadge{grid-column:1/3;order:-1;padding:2px}.cmp3 td:first-child{width:34%}}
+/* ===== 日用品ハブ リデザイン(.nv2スコープ=このページ限定) ===== */
+.nv2 .nhero{position:relative;overflow:hidden;border-radius:22px;padding:30px 26px;margin:8px 0 22px;background:linear-gradient(135deg,#ff8a4c 0%,#ff5a1f 52%,#ff3d8b 100%);color:#fff;box-shadow:0 14px 34px rgba(255,90,31,.30)}
+.nv2 .nhero::before{content:"";position:absolute;right:-50px;top:-50px;width:210px;height:210px;border-radius:50%;background:rgba(255,255,255,.13)}
+.nv2 .nhero::after{content:"";position:absolute;right:70px;bottom:-70px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.10)}
+.nv2 .nhero h1{position:relative;color:#fff;font-size:1.9rem;font-weight:900;margin:0 0 .35em;letter-spacing:.01em;border:0;padding:0}
+.nv2 .nhero h1 .yr{color:#fff2cc}
+.nv2 .nhero p{position:relative;color:rgba(255,255,255,.96);font-size:.95rem;margin:0;max-width:660px}
+.nv2 .nhero p b{color:#fff;font-weight:800}
+.nv2 .nbadges{position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.nv2 .nbadges span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:6px 14px;font-size:.78rem;font-weight:700}
+.nv2 h2{font-size:1.25rem;border-left:5px solid var(--accent);padding-left:10px;margin:1.4em 0 .6em}
+.nv2 .ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin:16px 0}
+.nv2 .ncard{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 3px 12px rgba(0,0,0,.05);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.nv2 .ncard:hover{transform:translateY(-5px);box-shadow:0 18px 36px rgba(255,90,31,.17);border-color:var(--accent)}
+.nv2 .nhead{display:flex;align-items:center;gap:13px;margin-bottom:10px}
+.nv2 .nicon{width:54px;height:54px;flex:none;display:flex;align-items:center;justify-content:center;font-size:1.75rem;background:linear-gradient(135deg,var(--chip),#fff);border:1px solid var(--line);border-radius:16px}
+.nv2 .nhead h3{margin:0;font-size:1.2rem;font-weight:800}
+.nv2 .ncount{display:inline-block;margin-top:4px;color:var(--accent);font-size:.76rem;font-weight:800}
+.nv2 .ndesc{color:var(--sub);font-size:.84rem;margin:.1em 0 13px;line-height:1.55}
+.nv2 .npick{display:flex;gap:13px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:15px;padding:12px;margin-bottom:12px}
+.nv2 .npimg{width:74px;height:74px;flex:none;background:#fff;border-radius:11px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.nv2 .npimg img{max-width:100%;max-height:100%;object-fit:contain}
+.nv2 .npinfo{min-width:0;flex:1}
+.nv2 .nplabel{display:inline-block;background:linear-gradient(135deg,#ffd23f,#ffab2e);color:#5c3d00;font-weight:800;font-size:.68rem;border-radius:999px;padding:2px 10px}
+.nv2 .npbrand{display:block;color:var(--sub);font-size:.72rem;margin-top:5px}
+.nv2 .npname{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.86rem;font-weight:700;margin:2px 0 5px;line-height:1.35}
+.nv2 .npmeta{display:flex;align-items:center;gap:11px}
+.nv2 .npstar{color:#f5a623;font-weight:700;font-size:.82rem}
+.nv2 .npprice{color:var(--accent);font-weight:900;font-size:1.05rem}
+.nv2 .npbar{height:7px;background:var(--bar);border-radius:5px;overflow:hidden;margin-top:9px}
+.nv2 .npbar i{display:block;height:100%;background:linear-gradient(90deg,#ff9a5c,#ff5a1f);border-radius:5px}
+.nv2 .npcospa{font-size:.72rem;color:var(--sub);margin-top:5px}.nv2 .npcospa b{color:var(--accent);font-size:.9rem}
+.nv2 .nlo{font-size:.82rem;color:var(--sub);margin-bottom:13px}.nv2 .nlo b{color:var(--ink)}
+.nv2 .ngo{margin-top:auto;text-align:center;background:var(--accent);color:#fff;border-radius:13px;padding:11px;font-weight:800;font-size:.92rem;transition:background .15s}
+.nv2 .ncard:hover .ngo{background:#e8440f}
+@media(max-width:560px){.nv2 .nhero{padding:24px 18px;border-radius:18px}.nv2 .nhero h1{font-size:1.55rem}.nv2 .nhero p{font-size:.9rem}.nv2 .ngrid{grid-template-columns:1fr}}
 """
 
 # CSS内容のハッシュでキャッシュバスト(?v=)。CSSを変えるたびURLが変わり、ブラウザが必ず再取得する。
