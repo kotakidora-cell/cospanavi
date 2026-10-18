@@ -705,8 +705,7 @@ def build_nichiyo_hub(built):
 <div class="nv2">
 <nav class="crumb"><a href="/">コスパナビ</a> › 日用品</nav>
 <div class="nhero"><h1>日用品コスパ分析<span class="yr">2026</span></h1>
-<p>トイレットペーパー・米・ティッシュ・洗剤など<b>毎日使う日用品</b>を、価格×レビュー満足度の独自コスパ値でランキング。<b>まとめ買い・大容量の「本当にお得な1つ」</b>がすぐ見つかります。</p>
-<div class="nbadges"><span>🔄 毎日 価格を自動更新</span><span>🛒 楽天市場で比較</span><span>⭐ レビュー×価格で厳選</span></div></div>
+<p>トイレットペーパー・米・ティッシュ・洗剤など<b>毎日使う日用品</b>を、価格×レビュー満足度の独自コスパ値でランキング。<b>まとめ買い・大容量の「本当にお得な1つ」</b>がすぐ見つかります。</p></div>
 <h2 id="ranking">カテゴリから選ぶ</h2>
 {_nichiyo_cards(NICHIYO_CATS, built)}
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
