@@ -25,6 +25,7 @@ SITEMAP = []  # (相対URL, 更新日) を収集してsitemap.xml生成
 from categories import CATEGORIES
 from guides import GUIDES
 from compares import COMPARES
+from recommend import PICKS
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
@@ -624,6 +625,8 @@ FURU_BANNER = ('<a class="fbanner" href="/furusato"><div class="hico">🍚</div>
                '<p>「実質2,000円で本当にお得な返礼品は？」楽天ふるさと納税を<b>寄付額あたりの内容量（円/kg）</b>とレビューでコスパランキング。定期便も総量換算。</p></div><span class="fgo">見る →</span></a>')
 NICHIYO_BANNER = ('<a class="fbanner" href="/nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ分析<span class="n">NEW</span></h3>'
                   '<p>トイレットペーパー・米・ティッシュなど<b>毎日使う日用品</b>を、価格×満足度の独自コスパ値でランキング。まとめ買い・大容量の最適解が分かる。</p></div><span class="fgo">見る →</span></a>')
+ADMIN_BANNER = ('<a class="fbanner" href="/osusume"><div class="hico">🛍️</div><div><h3>イチオシ商品レビュー<span class="n">NEW</span></h3>'
+                '<p>実際に選んだ<b>おすすめの逸品</b>を、写真と本音レビューでピンポイント紹介。「これ気になる！」が見つかる編集コーナー。</p></div><span class="fgo">見る →</span></a>')
 KADEN_BANNER = ('<a class="fbanner" href="/"><div class="hico">🔌</div><div><h3>家電コスパ ランキング</h3>'
                 '<p>ロボット掃除機・空気清浄機・イヤホンなど、満足度×価格の独自コスパ値で家電をランキング。重視ポイントや予算で選べる。</p></div><span class="fgo">見る →</span></a>')
 
@@ -688,7 +691,7 @@ def build_hub(built):
     body = f"""
 <div class="hero"><h1>コスパナビ<span class="yr">2026</span></h1>
 <p class="lead">レビュー満足度と価格から、<b>本当にコスパの良い製品</b>を独自スコアでランキング。<b>重視ポイントや予算を調整</b>して、あなたに最適な1台が見つかります。<b>毎日価格を調査・更新</b>し、現時点で最もコスパの良い商品を選択できます。</p></div>
-{AD}{FURU_BANNER}{NICHIYO_BANNER}{MARATHON}
+{AD}{FURU_BANNER}{NICHIYO_BANNER}{ADMIN_BANNER}{MARATHON}
 <h2 id="ranking">家電コスパ ランキング</h2>
 <div class="hgrid">{_hubcards(KADEN_CATS, built)}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p>{coming}</div>
@@ -712,7 +715,7 @@ def build_nichiyo_hub(built):
 {MARATHON}
 {_cmp_section(NICHIYO_CATS, "日用品")}
 <h2>ほかのコスパ分析</h2>
-{FURU_BANNER}{KADEN_BANNER}
+{ADMIN_BANNER}{FURU_BANNER}{KADEN_BANNER}
 {ABOUT_SEC}
 </div>
 """
@@ -722,6 +725,80 @@ def build_nichiyo_hub(built):
         shell("日用品コスパ分析2026｜トイレットペーパー・米・ティッシュを価格×満足度で比較",
               "毎日使う日用品を独自コスパ値でランキング。トイレットペーパー・米・ティッシュの大容量・まとめ買いのコスパ最強が分かる。毎日自動更新。",
               body, path="nichiyo.html", head=bc_head))
+
+# ================= イチオシ商品（手選びのブログ型レビュー /osusume） =================
+def _pk_buybox(p, big=True):
+    cls = "buy big" if big else "buy"
+    return (f'<div class="pkbuy"><div class="pkprice">¥{p["price"]:,}<span class="pkpn">{p["price_note"]}</span></div>'
+            f'<a class="{cls}" href="{p["affiliate"]}" target="_blank" rel="nofollow sponsored noopener">楽天で見る →</a>'
+            f'<p class="pkpr">※本ページはアフィリエイト広告（#PR）を含みます。価格は掲載時点のものです。</p></div>')
+
+def build_osusume_detail(p):
+    imgdir = f"/osusume/{p['slug']}"
+    tags = "".join(f'<span class="pktag">{H.escape(t)}</span>' for t in p["tags"])
+    blocks = []
+    for kind, val in p["points"]:
+        if kind == "img":
+            blocks.append(f'<img class="pkimg" loading="lazy" src="{imgdir}/{val}" alt="{H.escape(p["title"])}">')
+        elif kind == "h":
+            blocks.append(f'<h2>{H.escape(val)}</h2>')
+        else:
+            blocks.append(f'<p>{H.escape(val)}</p>')
+    body = f"""
+<div class="nv2">
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/osusume">イチオシ商品</a> › {H.escape(p["title"])}</nav>
+<article class="pkpost">
+<span class="pkbadge">🛍️ イチオシ商品</span>
+<h1 class="pktitle">{H.escape(p["title"])}</h1>
+<p class="pkcatch">{H.escape(p["catch"])}</p>
+<div class="pktags">{tags}<span class="pkshop">{H.escape(p["shop"])}</span></div>
+<img class="pkhero" src="{imgdir}/{p['images'][0]}" alt="{H.escape(p['title'])}">
+{_pk_buybox(p)}
+<p class="pklead">{H.escape(p["lead"])}</p>
+{''.join(blocks)}
+<div class="pkverdict"><b>まとめ</b>{H.escape(p["verdict"])}</div>
+{_pk_buybox(p)}
+<p class="src"><a href="/osusume">← ほかのイチオシ商品を見る</a></p>
+</article>
+</div>
+"""
+    ld = {"@context": "https://schema.org", "@type": "Product", "name": p["title"],
+          "image": [SITE_URL + f"{imgdir}/{im}" for im in p["images"]], "brand": p["shop"],
+          "offers": {"@type": "Offer", "priceCurrency": "JPY", "price": p["price"],
+                     "availability": "https://schema.org/InStock", "url": SITE_URL + f"/osusume/{p['slug']}"}}
+    bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("イチオシ商品", SITE_URL + "/osusume"), (p["title"], None)])
+    head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in (ld, bc))
+    title = f"{p['title']}レビュー｜{p['catch']}"
+    desc = p["lead"][:110]
+    open(os.path.join(SITE, "osusume", p["slug"] + ".html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, head=head, path=f"osusume/{p['slug']}.html", image=SITE_URL + f"{imgdir}/{p['images'][0]}"))
+
+def build_osusume_hub():
+    cards = []
+    for p in PICKS:
+        cards.append(
+            f'<a class="pkcard" href="/osusume/{p["slug"]}">'
+            f'<div class="pkcimg"><img loading="lazy" src="/osusume/{p["slug"]}/{p["images"][0]}" alt="{H.escape(p["title"])}"></div>'
+            f'<div class="pkcbody"><h3>{H.escape(p["title"])}</h3><p>{H.escape(p["catch"])}</p>'
+            f'<div class="pkcfoot"><span class="pkcprice">¥{p["price"]:,}</span><span class="pkcgo">レビューを見る →</span></div></div></a>')
+    body = f"""
+<div class="nv2">
+<nav class="crumb"><a href="/">コスパナビ</a> › イチオシ商品</nav>
+<div class="nhero"><h1>イチオシ商品レビュー<span class="yr">2026</span></h1>
+<p>ランキングとは別に、<b>実際に選んだおすすめの逸品</b>を写真と本音でピンポイント紹介。「これ気になる！」が見つかる編集コーナーです。</p></div>
+<div class="pkgrid">{''.join(cards)}</div>
+<h2>ほかのコスパ分析</h2>
+{NICHIYO_BANNER}{FURU_BANNER}
+{ABOUT_SEC}
+</div>
+"""
+    bc = breadcrumb_ld([("コスパナビ", SITE_URL + "/"), ("イチオシ商品", None)])
+    bc_head = f'<script type="application/ld+json">{json.dumps(bc, ensure_ascii=False)}</script>'
+    open(os.path.join(SITE, "osusume.html"), "w", encoding="utf-8").write(
+        shell("イチオシ商品レビュー｜編集部が選んだおすすめの逸品", "実際に選んだおすすめ商品を写真と本音レビューでピンポイント紹介。気になる1点が見つかる編集コーナー。",
+              body, path="osusume.html", head=bc_head))
+    for p in PICKS:
+        build_osusume_detail(p)
 
 # ================= about / privacy =================
 def build_static():
@@ -916,6 +993,33 @@ table.pk td{border-bottom:1px solid var(--line);padding:8px;font-size:.88rem;ver
 .nv2 .ngo{margin-top:auto;text-align:center;background:var(--accent);color:#fff;border-radius:13px;padding:11px;font-weight:800;font-size:.92rem;transition:background .15s}
 .nv2 .ncard:hover .ngo{background:#e8440f}
 @media(max-width:560px){.nv2 .nhero{padding:24px 18px;border-radius:18px}.nv2 .nhero h1{font-size:1.55rem}.nv2 .nhero p{font-size:.9rem}.nv2 .ngrid{grid-template-columns:1fr}}
+/* ===== イチオシ商品(ブログ型 /osusume) ===== */
+.pkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin:18px 0}
+.pkcard{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:0 3px 12px rgba(0,0,0,.05);transition:transform .18s,box-shadow .18s}
+.pkcard:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(122,31,61,.14)}
+.pkcimg{aspect-ratio:1/1;background:#fff;overflow:hidden}.pkcimg img{width:100%;height:100%;object-fit:cover}
+.pkcbody{padding:15px 16px;display:flex;flex-direction:column;flex:1}
+.pkcbody h3{margin:.1em 0;font-size:1.05rem;font-weight:800}.pkcbody p{margin:.3em 0 0;color:var(--sub);font-size:.86rem;flex:1}
+.pkcfoot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.pkcprice{font-weight:900;font-size:1.15rem;color:var(--accent)}.pkcgo{font-weight:700;font-size:.85rem;color:#7a1f3d}
+.pkpost{max-width:760px;margin:0 auto}
+.pkbadge{display:inline-block;background:#7a1f3d;color:#fff;border-radius:999px;padding:4px 14px;font-size:.78rem;font-weight:800}
+.pktitle{font-size:1.5rem;margin:.4em 0 .2em;line-height:1.4}
+.pkcatch{color:var(--sub);font-size:1.02rem;font-weight:700;margin:.2em 0 .6em}
+.pktags{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:14px}
+.pktags .pktag{background:var(--chip);color:var(--sub);border-radius:999px;padding:3px 11px;font-size:.76rem;font-weight:700}
+.pktags .pkshop{margin-left:auto;color:var(--sub);font-size:.8rem}
+.pkhero{width:100%;border-radius:16px;margin:4px 0 16px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.pkimg{width:100%;border-radius:14px;margin:14px 0;box-shadow:0 4px 14px rgba(0,0,0,.07)}
+.pkpost h2{font-size:1.2rem;border-left:5px solid #7a1f3d;padding-left:10px;margin:1.3em 0 .4em}
+.pkpost p{line-height:1.8}
+.pklead{font-size:1.02rem}
+.pkverdict{background:var(--chip);border-left:5px solid var(--accent);border-radius:12px;padding:14px 18px;margin:20px 0;font-size:.95rem}.pkverdict b{display:block;color:var(--accent);margin-bottom:4px}
+.pkbuy{background:var(--card);border:2px solid #7a1f3d;border-radius:16px;padding:18px;margin:18px 0;text-align:center}
+.pkprice{font-size:1.9rem;font-weight:900;color:var(--accent)}.pkprice .pkpn{display:inline-block;font-size:.8rem;color:var(--sub);font-weight:700;margin-left:8px}
+.pkbuy .buy.big{background:#7a1f3d;max-width:420px;margin:12px auto 0}
+.pkpr{color:var(--sub);font-size:.74rem;margin:10px 0 0;line-height:1.5}
+@media(max-width:560px){.pkgrid{grid-template-columns:1fr}.pktitle{font-size:1.3rem}}
 """
 
 # CSS内容のハッシュでキャッシュバスト(?v=)。CSSを変えるたびURLが変わり、ブラウザが必ず再取得する。
@@ -936,6 +1040,7 @@ if __name__ == "__main__":
     nbrand = build_brands()
     build_hub(built)
     build_nichiyo_hub(built)
+    build_osusume_hub()
     build_static()
     build_seo()
     # styles.css
