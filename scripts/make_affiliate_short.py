@@ -94,20 +94,31 @@ def scene_price(p):
     ctext(d, W/2, 1430, f"サイズ {p['size']}／選べる2丈", font(52), SUB)
     return bg
 
-def scene_cta(p):
+def scene_cta(p, yt=False):
     bg, d = bgbase()
-    ctext(d, W/2, 320, "気になった人は", font(76), INK)
-    rrect(d, [90, 560, W-90, 980], 50, fill=WINE)
-    ctext(d, W/2, 640, "プロフィールの", font(64), WHITE)
-    ctext(d, W/2, 760, "リンクからチェック", font(64), YEL if False else WHITE)
-    ctext(d, W/2, 1120, "保存して見返してね。", font(58), INK)
-    ctext(d, W/2, 1300, p["handle"], font(56), WINE)
+    if yt:
+        ctext(d, W/2, 300, "詳細はコスパナビの", font(66), INK)
+        ctext(d, W/2, 410, "「イチオシ商品」へ", font(66), WINE)
+        rrect(d, [70, 620, W-70, 980], 50, fill=WINE)
+        ctext(d, W/2, 690, "cospa-navi.com", font(74), WHITE)
+        ctext(d, W/2, 830, "で検索／概要欄リンク", font(50), WHITE)
+        ctext(d, W/2, 1120, "保存して見返してね。", font(58), INK)
+        ctext(d, W/2, 1300, "コスパナビ", font(56), WINE)
+    else:
+        ctext(d, W/2, 320, "気になった人は", font(76), INK)
+        rrect(d, [90, 560, W-90, 980], 50, fill=WINE)
+        ctext(d, W/2, 640, "プロフィールの", font(64), WHITE)
+        ctext(d, W/2, 760, "リンクからチェック", font(64), WHITE)
+        ctext(d, W/2, 1120, "保存して見返してね。", font(58), INK)
+        ctext(d, W/2, 1300, p["handle"], font(56), WINE)
     ctext(d, W/2, 1700, "※アフィリエイトを含みます #PR", font(40), SUB)
     return bg
 
 YEL = (255, 209, 74)
 
 def main():
+    platform = sys.argv[1] if len(sys.argv) > 1 else "threads"
+    yt = platform == "youtube"
     outdir = os.path.join(BASE, "shorts"); os.makedirs(outdir, exist_ok=True)
     SCR = r"C:\Users\kotak\AppData\Local\Temp\claude\c--cabnavi\29de35d7-5401-4de1-8fb7-04625d152bbd\scratchpad"
     P = {
@@ -127,8 +138,10 @@ def main():
          "丈はショートとレギュラーの2タイプから選べて、サイズもMから5Lまで。背の高さや体型に合わせてぴったりが選べます。"),
         (scene_price(P),
          "これで税込3990円、しかも送料無料。たかみえして、楽ちんで、あったかい。コスパ良すぎます。"),
-        (scene_cta(P),
-         "気になった人は、プロフィールのリンクからチェックしてみてください。ピーアールを含みます。"),
+        (scene_cta(P, yt),
+         ("気になった人は、コスパナビのイチオシ商品でチェックしてみてください。概要欄のリンクか、コスパナビで検索してね。ピーアールを含みます。"
+          if yt else
+          "気になった人は、プロフィールのリンクからチェックしてみてください。ピーアールを含みます。")),
     ]
     tmp = tempfile.mkdtemp(); pngs, texts = [], []
     for i, (img, tx) in enumerate(scenes):
@@ -136,7 +149,7 @@ def main():
     # 確認用フレーム
     for i in (0, 1, 4, 5):
         scenes[i][0].save(os.path.join(outdir, f"{P['slug']}-f{i}.png"))
-    out = os.path.join(outdir, f"{P['slug']}.mp4")
+    out = os.path.join(outdir, f"{P['slug']}{'-yt' if yt else ''}.mp4")
     bgm = os.path.join(outdir, "bgm.mp3"); bgmp = bgm if os.path.exists(bgm) else None
     import narrate
     from make_furusato_short import build_video
