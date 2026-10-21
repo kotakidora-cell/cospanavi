@@ -67,7 +67,7 @@ def bgbase():
     bg = vgrad(CREAM1, CREAM2)
     return bg, ImageDraw.Draw(bg)
 
-def scene_intro(v, hero, handle):
+def scene_intro(v, hero, label):
     bg, d = bgbase()
     y = pill(d, W/2, 220, v["intro"]["pill"], font(50), WINE, WHITE)
     big = v["intro"]["big"]
@@ -77,7 +77,7 @@ def scene_intro(v, hero, handle):
         col = WINE if i == len(big)-1 else INK
         yy = ctext(d, W/2, yy, line, font(fs), col) + 24
     place(bg, hero, W/2, 1260, 820, 980)
-    ctext(d, W/2, 1800, handle, font(44), SUB)
+    ctext(d, W/2, 1800, label, font(44), SUB)
     return bg
 
 def scene_shot(img, cap, sub=None):
@@ -140,7 +140,8 @@ def main():
     imgs = {name: Image.open(os.path.join(imgdir, name)).convert("RGB") for name in pick["images"]}
     outdir = os.path.join(BASE, "shorts"); os.makedirs(outdir, exist_ok=True)
 
-    scenes = [(scene_intro(v, imgs[pick["images"][0]], pick["handle"]), v["intro"]["narr"])]
+    intro_label = "コスパナビ" if yt else pick["handle"]   # YouTubeはブランド、Threads/Instagramはペルソナ
+    scenes = [(scene_intro(v, imgs[pick["images"][0]], intro_label), v["intro"]["narr"])]
     for s in v["shots"]:
         scenes.append((scene_shot(imgs[s["img"]], s["cap"], s.get("sub")), s["narr"]))
     scenes.append((scene_price(pick, v), v["price"]["narr"]))
