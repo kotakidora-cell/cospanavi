@@ -1,6 +1,7 @@
-# 楽天アフィリエイト商品を「女子大生ペルソナ」トーンで魅力的に紹介する縦型Short(約60秒)。
-# Threads/Instagram向け。上品な配色＋商品画像カード＋VOICEVOXナレーション。
-# 商品ごとに下部 PRODUCT を書き換えて使う。
+# 楽天アフィリエイト商品を「女子大生ペルソナ」トーンで紹介する縦型Short(約50-60秒)。
+# recommend.py の PICKS["video"] を台本に、商品ごとに使い回せる。
+# 使い方: python make_affiliate_short.py <slug> [threads|youtube]
+#   例) python make_affiliate_short.py ajiro-hairclip youtube
 import os, sys, tempfile
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import imageio_ffmpeg
@@ -13,7 +14,7 @@ FONT2 = "C:/Windows/Fonts/meiryob.ttc"
 
 CREAM1 = (250, 245, 237); CREAM2 = (238, 226, 212)
 WINE = (122, 31, 61); INK = (45, 37, 33); GOLD = (178, 142, 78)
-WHITE = (255, 255, 255); SUB = (120, 104, 94)
+WHITE = (255, 255, 255); SUB = (120, 104, 94); YEL = (255, 209, 74)
 
 def font(sz):
     try: return ImageFont.truetype(FONT, sz)
@@ -43,6 +44,12 @@ def pill(d, cx, y, s, f, bg, fg, padx=40, pady=18):
     d.text((cx-w/2, y+pady-2), s, font=f, fill=fg)
     return y+h+pady*2
 
+def fit_font(d, s, maxw, start=92, floor=48):
+    fs = start
+    while tsize(d, s, font(fs))[0] > maxw and fs > floor:
+        fs -= 4
+    return fs
+
 def place(bg, img, cx, cy, maxw, maxh, rad=36):
     iw, ih = img.size
     s = min(maxw/iw, maxh/ih); w, h = int(iw*s), int(ih*s)
@@ -60,41 +67,46 @@ def bgbase():
     bg = vgrad(CREAM1, CREAM2)
     return bg, ImageDraw.Draw(bg)
 
-def scene_intro(p):
+def scene_intro(v, hero, handle):
     bg, d = bgbase()
-    pill(d, W/2, 230, "秋冬の高見えボトム", font(50), WINE, WHITE)
-    ctext(d, W/2, 400, "正直、優勝でした。", font(92), INK)
-    ctext(d, W/2, 560, "高見えするのに", font(76), INK)
-    y = ctext(d, W/2, 680, "この値段？", font(88), WINE)
-    # 商品画像
-    place(bg, p["imgs"][0], W/2, 1230, 820, 980)
-    ctext(d, W/2, 1800, p["handle"], font(44), SUB)
+    y = pill(d, W/2, 220, v["intro"]["pill"], font(50), WINE, WHITE)
+    big = v["intro"]["big"]
+    yy = 380
+    for i, line in enumerate(big):
+        fs = fit_font(d, line, 960, start=88)
+        col = WINE if i == len(big)-1 else INK
+        yy = ctext(d, W/2, yy, line, font(fs), col) + 24
+    place(bg, hero, W/2, 1260, 820, 980)
+    ctext(d, W/2, 1800, handle, font(44), SUB)
     return bg
 
-def scene_image(p, idx, cap_top, cap_sub=None):
+def scene_shot(img, cap, sub=None):
     bg, d = bgbase()
-    y = pill(d, W/2, 190, cap_top, font(56), WINE, WHITE)
-    if cap_sub:
-        ctext(d, W/2, y+26, cap_sub, font(50), INK)
-    place(bg, p["imgs"][idx], W/2, 1230, 940, 1320)
+    y = pill(d, W/2, 190, cap, font(56), WINE, WHITE)
+    if sub:
+        ctext(d, W/2, y+26, sub, font(50), INK)
+    place(bg, img, W/2, 1230, 940, 1320)
     return bg
 
-def scene_price(p):
+def scene_price(pick, v):
     bg, d = bgbase()
-    pill(d, W/2, 230, "コスパ良すぎ", font(52), WINE, WHITE)
-    ctext(d, W/2, 430, "高見え × 楽ちん", font(78), INK)
-    ctext(d, W/2, 560, "× あったか", font(78), INK)
+    pr = v["price"]
+    pill(d, W/2, 230, pr["pill"], font(52), WINE, WHITE)
+    yy = 430
+    for line in pr["lines"]:
+        fs = fit_font(d, line, 940, start=78)
+        yy = ctext(d, W/2, yy, line, font(fs), INK) + 20
     rrect(d, [120, 820, W-120, 1200], 48, fill=WHITE, outline=WINE, width=6)
-    ctext(d, W/2, 870, "税込・送料無料", font(52), SUB)
-    num = f"{p['price']:,}"
+    ctext(d, W/2, 870, pick["price_note"], font(52), SUB)
+    num = f"{pick['price']:,}"
     ctext(d, W/2, 940, num, font(210), WINE)
     nw, _ = tsize(d, num, font(210))
     d.text((W/2+nw/2+14, 1060), "円", font=font(80), fill=INK)
-    ctext(d, W/2, 1320, "これ一本で、秋冬いけます。", font(56), INK)
-    ctext(d, W/2, 1430, f"サイズ {p['size']}／選べる2丈", font(52), SUB)
+    ctext(d, W/2, 1320, pr["tail1"], font(56), INK)
+    ctext(d, W/2, 1430, pr["tail2"], font(50), SUB)
     return bg
 
-def scene_cta(p, yt=False):
+def scene_cta(pick, yt=False):
     bg, d = bgbase()
     if yt:
         ctext(d, W/2, 300, "詳細はコスパナビの", font(66), INK)
@@ -110,55 +122,48 @@ def scene_cta(p, yt=False):
         ctext(d, W/2, 640, "プロフィールの", font(64), WHITE)
         ctext(d, W/2, 760, "リンクからチェック", font(64), WHITE)
         ctext(d, W/2, 1120, "保存して見返してね。", font(58), INK)
-        ctext(d, W/2, 1300, p["handle"], font(56), WINE)
+        ctext(d, W/2, 1300, pick.get("handle", "miwa_888"), font(56), WINE)
     ctext(d, W/2, 1700, "※アフィリエイトを含みます #PR", font(40), SUB)
     return bg
 
-YEL = (255, 209, 74)
-
 def main():
-    platform = sys.argv[1] if len(sys.argv) > 1 else "threads"
+    if len(sys.argv) < 2:
+        print("使い方: python make_affiliate_short.py <slug> [threads|youtube]"); return
+    slug = sys.argv[1]
+    platform = sys.argv[2] if len(sys.argv) > 2 else "threads"
     yt = platform == "youtube"
+    from recommend import PICKS_BY_SLUG
+    pick = PICKS_BY_SLUG[slug]
+    pick.setdefault("handle", "miwa_888")
+    v = pick["video"]
+    imgdir = os.path.join(BASE, "site", "osusume", slug)
+    imgs = {name: Image.open(os.path.join(imgdir, name)).convert("RGB") for name in pick["images"]}
     outdir = os.path.join(BASE, "shorts"); os.makedirs(outdir, exist_ok=True)
-    SCR = r"C:\Users\kotak\AppData\Local\Temp\claude\c--cabnavi\29de35d7-5401-4de1-8fb7-04625d152bbd\scratchpad"
-    P = {
-        "slug": "belluna-gaucho",
-        "handle": "miwa_888",
-        "price": 3990,
-        "size": "M〜5L",
-        "imgs": [Image.open(os.path.join(SCR, f"pants-{i}.jpg")).convert("RGB") for i in (2, 4, 3)],
-    }
-    scenes = [
-        (scene_intro(P), "秋冬の神ボトム、見つけちゃいました。たかみえするのに、なんと3990円のガウチョパンツです。"),
-        (scene_image(P, 0, "なめらか美ワイド"),
-         "まず、このなめらかなびワイドシルエット。とろんと落ちて脚のラインを拾わないから、一本でたかみえします。カラーも落ち着いた3色展開。"),
-        (scene_image(P, 1, "両面起毛であったか"),
-         "そして嬉しいのが、両面起毛のあったか素材。穿いた瞬間のヒヤッとを抑えてくれるので、寒い季節もこれ一本で乗り切れます。"),
-        (scene_image(P, 2, "選べる2丈", "M〜5L"),
-         "丈はショートとレギュラーの2タイプから選べて、サイズもMから5Lまで。背の高さや体型に合わせてぴったりが選べます。"),
-        (scene_price(P),
-         "これで税込3990円、しかも送料無料。たかみえして、楽ちんで、あったかい。コスパ良すぎます。"),
-        (scene_cta(P, yt),
-         ("気になった人は、コスパナビのイチオシ商品でチェックしてみてください。概要欄のリンクか、コスパナビで検索してね。ピーアールを含みます。"
-          if yt else
-          "気になった人は、プロフィールのリンクからチェックしてみてください。ピーアールを含みます。")),
-    ]
+
+    scenes = [(scene_intro(v, imgs[pick["images"][0]], pick["handle"]), v["intro"]["narr"])]
+    for s in v["shots"]:
+        scenes.append((scene_shot(imgs[s["img"]], s["cap"], s.get("sub")), s["narr"]))
+    scenes.append((scene_price(pick, v), v["price"]["narr"]))
+    cta_narr = ("気になった人は、コスパナビのイチオシ商品でチェックしてみてください。概要欄のリンクか、コスパナビで検索してね。ピーアールを含みます。"
+                if yt else "気になった人は、プロフィールのリンクからチェックしてみてください。ピーアールを含みます。")
+    scenes.append((scene_cta(pick, yt), cta_narr))
+
     tmp = tempfile.mkdtemp(); pngs, texts = [], []
     for i, (img, tx) in enumerate(scenes):
-        pth = os.path.join(tmp, f"s{i}.png"); img.save(pth); pngs.append(pth); texts.append(tx)
+        p = os.path.join(tmp, f"s{i}.png"); img.save(p); pngs.append(p); texts.append(tx)
     # 確認用フレーム
-    for i in (0, 1, 4, 5):
-        scenes[i][0].save(os.path.join(outdir, f"{P['slug']}-f{i}.png"))
-    out = os.path.join(outdir, f"{P['slug']}{'-yt' if yt else ''}.mp4")
+    scenes[0][0].save(os.path.join(outdir, f"{slug}-f0.png"))
+    scenes[-1][0].save(os.path.join(outdir, f"{slug}-cta.png"))
+    out = os.path.join(outdir, f"{slug}{'-yt' if yt else ''}.mp4")
     bgm = os.path.join(outdir, "bgm.mp3"); bgmp = bgm if os.path.exists(bgm) else None
+    speaker = int(os.environ["VV_SPEAKER"]) if os.environ.get("VV_SPEAKER") else v.get("voice", 8)
     import narrate
     from make_furusato_short import build_video
     if narrate.available():
-        total = narrate.build_narrated_video(pngs, texts, out, bgm=bgmp)
-        print(f"生成(ナレーション付): {out}  約{total:.0f}秒")
+        total = narrate.build_narrated_video(pngs, texts, out, bgm=bgmp, speaker=speaker)
+        print(f"生成(ナレーション付 話者{speaker}): {out}  約{total:.0f}秒")
     else:
-        durs = [4.0]*len(pngs)
-        build_video(pngs, durs, out, bgm=bgmp)
+        build_video(pngs, [4.0]*len(pngs), out, bgm=bgmp)
         print(f"生成(BGMのみ/VOICEVOX未起動): {out}")
 
 if __name__ == "__main__":
