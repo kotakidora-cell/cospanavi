@@ -30,7 +30,7 @@ CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
              "coffee-maker", "kotatsu", "printer", "fan"]
-NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent", "coffee"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
+NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
@@ -114,7 +114,7 @@ CLUSTERS = [
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
     ["hair-dryer", "portable-power"],                        # 生活・その他
-    ["toilet-paper", "rice", "tissue", "detergent", "coffee"],  # 日用品
+    ["toilet-paper", "rice", "tissue", "detergent"],         # 日用品
 ]
 SLUG2CLUSTER = {s: i for i, cl in enumerate(CLUSTERS) for s in cl}
 POPULAR = ["robot-cleaner", "air-purifier", "tablet", "hair-dryer", "microwave"]
