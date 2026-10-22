@@ -95,17 +95,30 @@ GO5 = ('<div id="go5bar"></div>'
        'b.innerHTML=\'<a href="/furusato"><span class="gift">🎁</span>本日は<b>5と0のつく日</b>！楽天カードで楽天ふるさと納税がポイントアップ<span class="gbtn">お得な返礼品を見る ▶</span></a>\';}}catch(e){}})();</script>')
 
 def nav():
-    # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。build_siteと同一。
-    return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
-            '<nav class="gnav">'
-            '<span class="ggrp"><span class="gcap">ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
-            '<span class="gdiv"></span>'
-            '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
-            '<span class="gdiv"></span>'
-            '<span class="ggrp"><span class="gcap">日用品</span><a href="/nichiyo#ranking">ランキング</a><a href="/nichiyo#compare">徹底比較</a></span>'
-            '<span class="gdiv"></span>'
-            '<a class="gabout" href="/about">コスパとは</a>'
-            '</nav></div></header>')
+    # 左ドロワー型ドリルダウンナビ(全ページ共通)。build_site.py の DRAWER_NAV と同一HTMLを維持すること。
+    return (
+        '<header class="navwrap"><div class="nav">'
+        '<button class="menubtn" aria-label="メニューを開く" onclick="cnMenu(1)">☰</button>'
+        '<a class="brand" href="/">コスパ<b>ナビ</b></a></div></header>'
+        '<div class="drawer-ov" onclick="cnMenu(0)"></div>'
+        '<aside class="drawer" id="cndrawer">'
+        '<div class="drawer-hd"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
+        '<button class="drawer-x" aria-label="閉じる" onclick="cnMenu(0)">×</button></div>'
+        '<nav class="drawer-nav">'
+        '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">ふるさと納税<span class="darr">▾</span></button>'
+        '<div class="dsub"><a href="/furusato">コスパ分析</a><a href="/furusato#sim">控除上限シミュレーター</a>'
+        '<a href="/furusato-kanpu">実質還元率</a><a href="/furusato-hall">高評価殿堂</a>'
+        '<a href="/furusato-teiki">定期便</a><a href="/furusato-wakeari">訳あり大容量</a></div></div>'
+        '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">家電<span class="darr">▾</span></button>'
+        '<div class="dsub"><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></div></div>'
+        '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">日用品<span class="darr">▾</span></button>'
+        '<div class="dsub"><a href="/nichiyo#ranking">ランキング</a><a href="/nichiyo#compare">徹底比較</a></div></div>'
+        '<a class="dlink" href="/osusume">イチオシ商品</a>'
+        '<a class="dlink" href="/about">コスパとは</a>'
+        '</nav></aside>'
+        '<script>function cnMenu(o){var d=document.getElementById("cndrawer"),v=document.querySelector(".drawer-ov");'
+        'if(!d)return;d.classList.toggle("open",!!o);v.classList.toggle("show",!!o);document.body.style.overflow=o?"hidden":"";}'
+        'function cnTog(b){b.parentNode.classList.toggle("exp");}</script>')
 
 def foot():
     cl = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)

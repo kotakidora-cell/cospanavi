@@ -30,7 +30,7 @@ CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
              "coffee-maker", "kotatsu", "printer", "fan"]
-NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
+NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent", "coffee"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
@@ -68,18 +68,33 @@ def U(file):
     f = file[:-5] if file.endswith(".html") else file
     return "/" + f.lstrip("/")
 
+# 左ドロワー型ドリルダウンナビ(全ページ共通)。タグ増加に対応し、親→子で辿る。build_furusato側と同一HTMLを維持。
+DRAWER_NAV = (
+    '<header class="navwrap"><div class="nav">'
+    '<button class="menubtn" aria-label="メニューを開く" onclick="cnMenu(1)">☰</button>'
+    '<a class="brand" href="/">コスパ<b>ナビ</b></a></div></header>'
+    '<div class="drawer-ov" onclick="cnMenu(0)"></div>'
+    '<aside class="drawer" id="cndrawer">'
+    '<div class="drawer-hd"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
+    '<button class="drawer-x" aria-label="閉じる" onclick="cnMenu(0)">×</button></div>'
+    '<nav class="drawer-nav">'
+    '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">ふるさと納税<span class="darr">▾</span></button>'
+    '<div class="dsub"><a href="/furusato">コスパ分析</a><a href="/furusato#sim">控除上限シミュレーター</a>'
+    '<a href="/furusato-kanpu">実質還元率</a><a href="/furusato-hall">高評価殿堂</a>'
+    '<a href="/furusato-teiki">定期便</a><a href="/furusato-wakeari">訳あり大容量</a></div></div>'
+    '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">家電<span class="darr">▾</span></button>'
+    '<div class="dsub"><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></div></div>'
+    '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">日用品<span class="darr">▾</span></button>'
+    '<div class="dsub"><a href="/nichiyo#ranking">ランキング</a><a href="/nichiyo#compare">徹底比較</a></div></div>'
+    '<a class="dlink" href="/osusume">イチオシ商品</a>'
+    '<a class="dlink" href="/about">コスパとは</a>'
+    '</nav></aside>'
+    '<script>function cnMenu(o){var d=document.getElementById("cndrawer"),v=document.querySelector(".drawer-ov");'
+    'if(!d)return;d.classList.toggle("open",!!o);v.classList.toggle("show",!!o);document.body.style.overflow=o?"hidden":"";}'
+    'function cnTog(b){b.parentNode.classList.toggle("exp");}</script>')
+
 def nav(base=""):
-    # 全ページ共通のグローバルナビ(スマホは横スクロール・上部固定)。主要セクションへ即移動。
-    return ('<header class="navwrap"><div class="nav"><a class="brand" href="/">コスパ<b>ナビ</b></a>'
-            '<nav class="gnav">'
-            '<span class="ggrp"><span class="gcap">ふるさと納税</span><a href="/furusato">コスパ分析</a><a href="/furusato-kanpu">実質還元率</a></span>'
-            '<span class="gdiv"></span>'
-            '<span class="ggrp"><span class="gcap">家電</span><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></span>'
-            '<span class="gdiv"></span>'
-            '<span class="ggrp"><span class="gcap">日用品</span><a href="/nichiyo#ranking">ランキング</a><a href="/nichiyo#compare">徹底比較</a></span>'
-            '<span class="gdiv"></span>'
-            '<a class="gabout" href="/about">コスパとは</a>'
-            '</nav></div></header>')
+    return DRAWER_NAV
 
 def foot(base=""):
     catlinks = "".join(f'<a href="{U(c["file"])}">{c["label"]}</a>' for c in CATS)
@@ -97,7 +112,7 @@ CLUSTERS = [
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
     ["hair-dryer", "portable-power"],                        # 生活・その他
-    ["toilet-paper", "rice", "tissue", "detergent"],         # 日用品
+    ["toilet-paper", "rice", "tissue", "detergent", "coffee"],  # 日用品
 ]
 SLUG2CLUSTER = {s: i for i, cl in enumerate(CLUSTERS) for s in cl}
 POPULAR = ["robot-cleaner", "air-purifier", "tablet", "hair-dryer", "microwave"]
@@ -861,6 +876,25 @@ a{color:var(--accent2)}
 .gcap{flex:none;font-size:.7rem;color:var(--sub);font-weight:800;white-space:nowrap;letter-spacing:.03em}
 .gnav a{flex:none;white-space:nowrap;text-decoration:none;color:var(--ink);font-size:.92rem;font-weight:700;padding:4px 0;transition:color .15s}
 .gnav a:hover{color:var(--accent)}
+/* 左ドロワー型ドリルダウンナビ */
+.menubtn{flex:none;background:none;border:0;font-size:1.6rem;line-height:1;cursor:pointer;color:var(--ink);padding:2px 8px 2px 0}
+.drawer-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;visibility:hidden;transition:opacity .2s;z-index:60}
+.drawer-ov.show{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;left:0;height:100%;width:300px;max-width:85vw;background:var(--card);box-shadow:3px 0 24px rgba(0,0,0,.22);transform:translateX(-102%);transition:transform .25s ease;z-index:61;overflow-y:auto}
+.drawer.open{transform:none}
+.drawer-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}
+.drawer-hd .brand{font-size:1.2rem}
+.drawer-x{background:none;border:0;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--sub)}
+.drawer-nav{padding:6px 0 30px}
+.dpar{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:0;padding:15px 20px;font-size:1.02rem;font-weight:800;color:var(--ink);cursor:pointer;font-family:inherit;text-align:left}
+.darr{color:var(--sub);font-size:.9rem;transition:transform .2s}
+.dgrp.exp .darr{transform:rotate(180deg)}.dgrp.exp>.dpar{color:var(--accent)}
+.dsub{display:none;background:var(--bg);padding:2px 0 8px}
+.dgrp.exp .dsub{display:block}
+.dsub a{display:block;padding:11px 20px 11px 38px;color:var(--sub);text-decoration:none;font-size:.95rem;font-weight:600}
+.dsub a:hover{color:var(--accent)}
+.dlink{display:block;padding:15px 20px;color:var(--ink);text-decoration:none;font-size:1.02rem;font-weight:800;border-top:1px solid var(--line)}
+.dlink:hover{color:var(--accent)}
 .gdiv{flex:none;width:1px;height:20px;background:var(--line);margin:0 18px}
 .gabout{color:var(--sub);font-size:.88rem;font-weight:700}
 .go5{background:linear-gradient(90deg,#e0242b,#ff6a3d);box-shadow:0 3px 12px rgba(224,36,43,.28)}

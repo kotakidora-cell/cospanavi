@@ -56,7 +56,7 @@ def _kopt():
 
 def simulator_html():
     return (
-        '<section class="simbox">'
+        '<section class="simbox" id="sim">'
         '<h2>💰 控除上限シミュレーター</h2>'
         '<p class="simlead">年収と家族構成を選ぶと、<b>実質2,000円で寄付できる上限額の目安</b>が分かります。そのままお得な返礼品も探せます。</p>'
         '<div class="simgrid">'

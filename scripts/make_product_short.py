@@ -21,7 +21,7 @@ def bg_scene(c1, c2):
     img = vgrad(c1, c2)
     return img, ImageDraw.Draw(img)
 
-def scene_intro(label, sec_label="家電"):
+def scene_intro(label, sec_label="家電", unit="台"):
     img, d = bg_scene((255, 138, 76), (255, 92, 138))
     rrect(d, [W/2-260, 150, W/2+260, 250], 50, fill=WHITE)
     ctext(d, W/2, 168, f"{sec_label}のコスパ比較", font(48), ORANGE)
@@ -34,7 +34,7 @@ def scene_intro(label, sec_label="家電"):
     ctext(d, W/2, 900, lbl, font(fs), WHITE, stroke=7, sfill=NAVY)
     ctext(d, W/2, 1080, "TOP3", font(240), WHITE, stroke=10, sfill=ORANGE)
     ctext(d, W/2, 1420, "安くて満足度が高いのは？", font(56), WHITE, stroke=4, sfill=NAVY)
-    ctext(d, W/2, 1500, "損しない1台はコレ", font(56), WHITE, stroke=4, sfill=NAVY)
+    ctext(d, W/2, 1500, f"損しない1{unit}はコレ", font(56), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 1760, "コスパナビ", font(60), WHITE, stroke=4, sfill=NAVY)
     return img
 
@@ -95,13 +95,14 @@ def main():
     except Exception:
         label, sec = PCATS.get(slug, slug), "kaden"
     sec_label = "日用品" if sec == "nichiyo" else "家電"
+    unit = "つ" if sec == "nichiyo" else "台"   # 飲料・日用品は「1台」が不自然なので「1つ」に
     data = json.load(open(os.path.join(DATA, f"{slug}.json"), encoding="utf-8"))
     top = sorted(data, key=lambda z: -z["cospa"])[:3]
     for m in top:
         m["name"] = html.unescape(m["name"])   # Yahoo由来の &lt; 等を実体化
         m["brand"] = html.unescape(m["brand"])
         m["_img"] = dl_image(m.get("image", ""))
-    scenes = [(scene_intro(label, sec_label), 3.0),
+    scenes = [(scene_intro(label, sec_label, unit), 3.0),
               (scene_rank(3, top[2]), 5.0), (scene_rank(2, top[1]), 5.0),
               (scene_rank(1, top[0]), 7.0), (scene_outro(label, slug, sec_label), 5.0)]
     tmp = tempfile.mkdtemp(); pngs, durs = [], []

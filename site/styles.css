@@ -14,6 +14,25 @@ a{color:var(--accent2)}
 .gcap{flex:none;font-size:.7rem;color:var(--sub);font-weight:800;white-space:nowrap;letter-spacing:.03em}
 .gnav a{flex:none;white-space:nowrap;text-decoration:none;color:var(--ink);font-size:.92rem;font-weight:700;padding:4px 0;transition:color .15s}
 .gnav a:hover{color:var(--accent)}
+/* 左ドロワー型ドリルダウンナビ */
+.menubtn{flex:none;background:none;border:0;font-size:1.6rem;line-height:1;cursor:pointer;color:var(--ink);padding:2px 8px 2px 0}
+.drawer-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;visibility:hidden;transition:opacity .2s;z-index:60}
+.drawer-ov.show{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;left:0;height:100%;width:300px;max-width:85vw;background:var(--card);box-shadow:3px 0 24px rgba(0,0,0,.22);transform:translateX(-102%);transition:transform .25s ease;z-index:61;overflow-y:auto}
+.drawer.open{transform:none}
+.drawer-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}
+.drawer-hd .brand{font-size:1.2rem}
+.drawer-x{background:none;border:0;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--sub)}
+.drawer-nav{padding:6px 0 30px}
+.dpar{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:0;padding:15px 20px;font-size:1.02rem;font-weight:800;color:var(--ink);cursor:pointer;font-family:inherit;text-align:left}
+.darr{color:var(--sub);font-size:.9rem;transition:transform .2s}
+.dgrp.exp .darr{transform:rotate(180deg)}.dgrp.exp>.dpar{color:var(--accent)}
+.dsub{display:none;background:var(--bg);padding:2px 0 8px}
+.dgrp.exp .dsub{display:block}
+.dsub a{display:block;padding:11px 20px 11px 38px;color:var(--sub);text-decoration:none;font-size:.95rem;font-weight:600}
+.dsub a:hover{color:var(--accent)}
+.dlink{display:block;padding:15px 20px;color:var(--ink);text-decoration:none;font-size:1.02rem;font-weight:800;border-top:1px solid var(--line)}
+.dlink:hover{color:var(--accent)}
 .gdiv{flex:none;width:1px;height:20px;background:var(--line);margin:0 18px}
 .gabout{color:var(--sub);font-size:.88rem;font-weight:700}
 .go5{background:linear-gradient(90deg,#e0242b,#ff6a3d);box-shadow:0 3px 12px rgba(224,36,43,.28)}
