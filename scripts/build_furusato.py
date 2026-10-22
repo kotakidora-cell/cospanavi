@@ -469,6 +469,7 @@ def build_local():
 <h1>ふるさと納税で「現地で使える」体験を全国から探す<span class="yr">2026</span></h1>
 <p class="lead">寄付先の<b>現地で使える</b>食事券・宿泊券・温泉・レジャー施設・ゴルフ・利用券などの返礼品を、<b>全国{total:,}件</b>から都道府県別に探せます。旅行や帰省の予定に合わせて、行き先の自治体に寄付すれば“現地で楽しめる”のが魅力です。<b>地図から県を選ぶ</b>と、その県で使える返礼品が一覧表示されます。</p>
 {AD}
+<a class="fbanner" href="/furusato-nasu-plan"><div class="hico">📝</div><div><h3>栃木・那須 モデルプラン<span class="n">おすすめ</span></h3><p><b>ふるさと納税で“贅沢家族旅行”</b>——りんどう湖・南ヶ丘牧場・ステーキ豪遊まで、1泊2日の回り方を実例プランで紹介。</p></div><span class="fgo">プランを見る →</span></a>
 <div class="jpmap">{region_html}</div>
 <div id="localres">
   <div class="lbar"><h2 id="lhead">県を選んでください</h2><div class="lchips">{type_chips}</div></div>
@@ -1203,7 +1204,7 @@ def add_to_sitemap():
         return
     xml = open(sp, encoding="utf-8").read()
     add = ""
-    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html", "furusato-wakeari.html", "furusato-kanpu.html"] + [c["file"] for c in CATS]:
+    for path in ["furusato.html", "furusato-sites.html", "furusato-local.html", "furusato-nasu-plan.html", "furusato-hall.html", "furusato-teiki.html", "furusato-nichiyo.html", "furusato-wakeari.html", "furusato-kanpu.html"] + [c["file"] for c in CATS]:
         loc = f"{SITE_URL}{U(path)}"
         if loc not in xml:
             add += f"<url><loc>{loc}</loc><lastmod>{UPDATED}</lastmod></url>"
@@ -1211,12 +1212,78 @@ def add_to_sitemap():
         xml = xml.replace("</urlset>", add + "</urlset>")
         open(sp, "w", encoding="utf-8").write(xml)
 
+def build_nasu_plan():
+    # ふるさと納税で巡る栃木・那須 1泊2日の贅沢家族旅行モデルプラン（ブログ型）。現地体験ページから誘導。
+    import urllib.parse as _up
+    AFFID = "55d96cc9.e01ab438.55d96cca.e7a28f00"
+    def afl(pc):
+        e = _up.quote(pc, safe="")
+        return f"https://hb.afl.rakuten.co.jp/hgc/{AFFID}/?pc={e}&m={e}"
+    L_RINDO = ("https://hb.afl.rakuten.co.jp/hgc/g00t89pn.tiw95bdc.g00t89pn.tiw96df5/?pc=https%3A%2F%2F"
+               "item.rakuten.co.jp%2Ff094072-nasu%2F11637-30042400%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2F"
+               "f094072-nasu%2Fi%2F10000368%2F&rafcid=wsc_i_is_7a1a1d42-44ad-416c-bf63-23e4934bd306")
+    L_MINAMI = afl("https://item.rakuten.co.jp/f094072-nasu/11699-30074093/")
+    L_AKAU = afl("https://item.rakuten.co.jp/f094072-nasu/11618-30015034/")
+    IMG = "/local/nasu"
+    body = f"""
+<div class="trip">
+<nav class="crumb"><a href="/">コスパナビ</a> › <a href="/furusato">ふるさと納税</a> › <a href="/furusato-local">現地で使える体験</a> › 栃木・那須モデルプラン</nav>
+<div class="thero" style="background-image:url('{IMG}/rindo.jpg')"><div class="thov">
+<span class="tpill">栃木・那須 1泊2日モデルプラン</span>
+<h1>ふるさと納税で“贅沢”家族旅行</h1>
+<p class="tsub">〜父の威厳を取り戻せ〜 ／ 世帯年収1,000万・家族4人想定</p></div></div>
+<p class="tlead">遊びも食事も<b>ふるさと納税の返礼品</b>でまかなって、栃木・那須を1泊2日で“超贅沢”に回る家族旅行プラン。実質2,000円の自己負担で、ワンランク上の体験が楽しめます。<b>コツは「遊び・食事はふるさと納税、ホテルは現金」。</b></p>
+<div class="tnote"><b>💡 最重要ポイント</b>ホテル・宿泊費には<b>ふるさと納税を使わない</b>こと。宿泊に使うと控除上限をすぐ使い切り、現地で“豪遊”できなくなります。宿泊は現金・ポイントで確保しましょう。</div>
+
+<div class="tday">1日目</div>
+<article class="tstop"><img loading="lazy" src="{IMG}/rindo.jpg" alt="那須高原りんどう湖ファミリー牧場 乗り放題付ペア入園券">
+<div class="tbody"><span class="tspot">スポット①</span><h2>那須高原りんどう湖ファミリー牧場</h2>
+<div class="tmeta"><span class="tbadge">乗り放題付ペア入園券</span><span class="tdon">寄付 30,000円 × 2 ＝ 60,000円</span></div>
+<p>ペア券×2で<b>家族4名ぶん</b>。乗り物も乗り放題付きで、<b>一日ここだけで十分楽しめます</b>。文句なしの鉄板スポットです。</p>
+<a class="tbtn" href="{L_RINDO}" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る →</a></div></article>
+<div class="tarrow">↓ このあとホテルへ（宿泊は現金で）</div>
+
+<div class="tday">2日目</div>
+<article class="tstop"><img loading="lazy" src="{IMG}/minamigaoka.jpg" alt="南ヶ丘牧場">
+<div class="tbody"><span class="tspot">スポット②</span><h2>南ヶ丘牧場</h2>
+<div class="tmeta"><span class="tbadge">利用券 6,000円分</span><span class="tdon">寄付 10,000円 × 2 ＝ 20,000円</span></div>
+<p><b>あゆ釣り・お土産・手作りDIYコーナー</b>、すべてチケットが使えます。お土産はここで贅沢にまとめ買いするのがおすすめ。</p>
+<a class="tbtn" href="{L_MINAMI}" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る →</a></div></article>
+<div class="tarrow">↓</div>
+
+<article class="tstop"><img loading="lazy" src="{IMG}/tsp.jpg" alt="トレジャーストーンパーク 宝石探し">
+<div class="tbody"><span class="tspot tspot-x">スポット③（ふるさと納税 対象外）</span><h2>トレジャーストーンパーク</h2>
+<div class="tmeta"><span class="tbadge tbadge-x">現地払い</span></div>
+<p><b>クリスタルリバー</b>がおすすめ。宝石探しに子どもが夢中になります。<b>当日受付のみ</b>なので、着いたら先に受付を済ませてから昼食へ向かいましょう。</p>
+<a class="tbtn tbtn-x" href="http://www.treasurestonepark.com/" target="_blank" rel="nofollow noopener">公式サイトを見る →</a></div></article>
+<div class="tarrow">↓ 受付後、昼食へ</div>
+
+<article class="tstop tstop-hero"><img loading="lazy" src="{IMG}/akauhard.jpg" alt="ダイニングキッチン あ・かうはーど お食事券">
+<div class="tbody"><span class="tspot">スポット④ — ここで豪遊！</span><h2>ダイニングキッチン あ・かうはーど</h2>
+<div class="tmeta"><span class="tbadge">お食事券 39,000円分</span><span class="tdon">寄付 10,000円 × 13 ＝ 130,000円</span></div>
+<p>4万円近いお食事券で、<b>ワンランク上のステーキ＋デザートを金額を気にせず</b>楽しめます。目安は一人1万円ほど。ステーキハウス寿楽の食事券もありますが、<b>店が広く清潔なこちらがおすすめ</b>。さらに<b>あいだみつを那須ギャラリーの入場券</b>も付くので、待ち時間や食後にも楽しめます。</p>
+<a class="tbtn" href="{L_AKAU}" target="_blank" rel="nofollow sponsored noopener">楽天ふるさと納税で見る →</a></div></article>
+
+<div class="tsum"><h2>まとめ：寄付額の合計</h2>
+<p>りんどう湖 60,000 ＋ 南ヶ丘牧場 20,000 ＋ あ・かうはーど 130,000 ＝ <b>寄付 合計 210,000円</b></p>
+<p>これで1泊2日の那須旅行が<b>超贅沢</b>に過ごせて、<b>父親尊敬度もアップ</b>！ 遊びと食事をふるさと納税でまかなうのがコツです。</p>
+<p class="tact"><a href="/furusato#sim">▶ 自分の控除上限を確認（シミュレーター）</a><a href="/furusato-local">▶ 他の県の現地体験を探す</a></p></div>
+<p class="note">※寄付額・返礼品内容・利用条件は変更される場合があります。申込前に各返礼品ページをご確認ください。控除上限額は年収・家族構成で異なります。トレジャーストーンパークはふるさと納税対象外（現地払い）です。本ページはアフィリエイト広告（#PR）を含みます。</p>
+</div>
+"""
+    title = "ふるさと納税で“贅沢”家族旅行｜栃木・那須 1泊2日モデルプラン"
+    desc = "ふるさと納税の返礼品で巡る栃木・那須の1泊2日モデルプラン。りんどう湖ファミリー牧場・南ヶ丘牧場・ステーキ食事券で、実質2,000円で贅沢家族旅行。"
+    open(os.path.join(SITE, "furusato-nasu-plan.html"), "w", encoding="utf-8").write(
+        shell(title, desc, body, "furusato-nasu-plan.html", head=bc_furusato("栃木・那須モデルプラン")))
+    print("  栃木・那須モデルプラン: furusato-nasu-plan.html")
+
 if __name__ == "__main__":
     counts = {}
     for c in CATS:
         counts[c["slug"]] = build_cat(c)
     build_guide()
     nloc = build_local()
+    build_nasu_plan()
     nhall = build_hall()
     nteiki = build_teiki()
     nnichi = build_nichiyo()
