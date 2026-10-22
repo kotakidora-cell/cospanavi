@@ -74,7 +74,9 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .cname{display:block;font-weight:700;text-decoration:none;color:var(--ink);font-size:.92rem;margin:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cname:hover{color:var(--accent2)}
 .cstars{color:#f5a623;font-size:.85rem}.cstars .muted{color:var(--sub)}
-.cprice{font-weight:800;font-size:1.05rem;margin:2px 0}.cprice .muted{font-weight:400;font-size:.75rem}
+.cunit{display:flex;align-items:baseline;gap:7px;margin:3px 0 1px}.cunit .culab{font-size:.74rem;color:var(--sub);font-weight:700}.cunit b{font-size:1.15rem;font-weight:900;color:var(--accent)}
+.cprice{font-weight:700;font-size:.92rem;margin:1px 0;color:var(--sub)}.cprice .muted{font-weight:400;font-size:.72rem}
+.uhl{color:var(--accent)}
 .malls{display:flex;flex-wrap:wrap;gap:4px 8px;margin:2px 0}.malls span{font-size:.72rem;color:var(--sub)}.malls .mlow{color:var(--accent);font-weight:700}
 .buy.sm{padding:4px 12px;font-size:.8rem;margin:0}
 .cmp th{text-align:left;color:var(--sub);font-size:.8rem;padding:6px 8px;border-bottom:1px solid var(--line)}

@@ -1,5 +1,29 @@
 # raw listing → 機種正規化(ブランド+型番) → 満足度コスパ値算出 → data/<slug>.json
-import json, os, sys, re, math, statistics as st, urllib.parse
+import json, os, sys, re, math, statistics as st, urllib.parse, unicodedata
+
+# 内容量(総ロール/総kg/総箱)を商品名から抽出 → 1単位あたり単価。unit指定カテゴリ(日用品)で使用。
+def _norm(s): return unicodedata.normalize("NFKC", s)
+_KG_MUL = re.compile(r"(\d+(?:\.\d+)?)\s*kg\s*[×xX＊*]\s*(\d+)")
+_G_MUL = re.compile(r"(\d+(?:\.\d+)?)\s*g\s*[×xX＊*]\s*(\d+)")
+_KG = re.compile(r"(\d+(?:\.\d+)?)\s*kg")
+_G = re.compile(r"(\d+(?:\.\d+)?)\s*g")
+def amt_weight(name):   # → 総kg
+    n = _norm(name)
+    m = _KG_MUL.findall(n)
+    if m: return max(float(a) * int(b) for a, b in m)
+    m = _G_MUL.findall(n)
+    if m: return max(float(a) * int(b) for a, b in m) / 1000
+    kgs = {round(float(x), 3) for x in _KG.findall(n) if 0.3 <= float(x) <= 60}
+    gs = {round(float(x) / 1000, 3) for x in _G.findall(n) if 100 <= float(x) <= 60000}
+    vals = sorted(kgs | gs)
+    return vals[0] if len(vals) == 1 else None   # 複数重量(選べる等)は曖昧→スキップ
+def amt_count(name, noun):   # → 総数(ロール/箱 等)。「8ロール×8」「60箱(5箱×12)」等に対応
+    n = _norm(name)
+    mul = re.findall(rf"(\d+)\s*{noun}\s*(?:入り|入|巻)?\s*[×xX＊*]\s*(\d+)", n)
+    mul += re.findall(rf"(\d+)\s*{noun}\s*入り?\s*[（(]\s*(\d+)\s*(?:個|袋|箱|梱|ケース|パック|セット|Ｐ|P)", n)
+    if mul: return max(int(a) * int(b) for a, b in mul)
+    cnts = sorted({int(x) for x in re.findall(rf"(\d+)\s*{noun}", n)})
+    return cnts[-1] if cnts else None
 
 # Yahoo!ショッピングのアフィリ化(バリューコマース MyLink)。生Yahoo URLをVC計測URLに変換して成果を発生させる。
 VC_YAHOO_SID, VC_YAHOO_PID = "3776612", "892664780"
@@ -92,21 +116,38 @@ for k, g in groups.items():
 # レビューが極端に少ない/無い機種は除外（信頼性）
 models = [m for m in models if m["reviewCount"] >= 5]
 
+# --- 単価(1ロール/1kg/1箱あたり)算出: unit指定カテゴリ(日用品)のみ。これが他サイトとの差別化軸 ---
+_unit = _cat.get("unit")
+if _unit:
+    _noun = _cat.get("count_noun", "個")
+    _lo_u, _hi_u = _cat.get("min_unit", 0), _cat.get("max_unit", 10 ** 9)
+    _kept = []
+    for m in models:
+        amt = amt_weight(m["name"]) if _unit == "weight" else amt_count(m["name"], _noun)
+        if not amt:
+            continue
+        up = m["minPrice"] / amt
+        if up < _lo_u or up > _hi_u:   # 単価が非現実的（内容量抽出ミス）は除外
+            continue
+        m["amt"] = round(amt, 1)
+        m["unit"] = round(up)   # 1単位あたり単価（円/ロール・円/kg 等）
+        _kept.append(m)
+    models = _kept
+
 # --- 満足度コスパ算出 ---
+# 「お得さ」の軸は、unit指定カテゴリ(日用品)では“1単位あたり単価”、それ以外(家電)は最安値を使う
+def _pv(m): return m["unit"] if _unit else m["minPrice"]
 C = st.mean([m["review"] for m in models]); M = 50  # ベイズの事前
 def bayes(m):
     v, R = m["reviewCount"], m["review"]
     return (v / (v + M)) * R + (M / (v + M)) * C
-prices = [math.log10(m["minPrice"]) for m in models]
+prices = [math.log10(_pv(m)) for m in models]
 pm, ps = st.mean(prices), (st.pstdev(prices) or 1)
 bs = [bayes(m) for m in models]
 bmin, bmax = min(bs), max(bs)
 for m in models:
     sat = (bayes(m) - bmin) / (bmax - bmin) * 100 if bmax > bmin else 50   # 満足度0-100
-    cheap = max(0, min(100, 50 - 10 * (math.log10(m["minPrice"]) - pm) / ps + 50 - 50))  # placeholder
-    cheap = max(0, min(100, 50 - 10 * (math.log10(m["minPrice"]) - pm) / ps))  # 安いほど高い(逆偏差値)
-    cheap = cheap + 50  # 偏差値中心を50に
-    cheap = max(0, min(100, 100 - (50 + 10 * (math.log10(m["minPrice"]) - pm) / ps)))  # 明快版:高価格ほど低い
+    cheap = max(0, min(100, 100 - (50 + 10 * (math.log10(_pv(m)) - pm) / ps)))  # 単価/価格が安いほど高い(逆偏差値)
     m["sat"] = round(sat, 1)
     m["cheap"] = round(cheap, 1)
     m["cospa"] = round(0.6 * sat + 0.4 * cheap, 1)

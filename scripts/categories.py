@@ -603,6 +603,8 @@ CATEGORIES = {
     "toilet-paper": {
         "label": "トイレットペーパー", "genre": "日用品", "icon": "🧻", "section": "nichiyo",
         "rakuten_only": True,   # 日用品は楽天市場のみで集計(Yahoo取得・統合をスキップ)
+        "unit": "count", "count_noun": "ロール", "unit_label": "円/ロール", "unit_suffix": "ロール",
+        "min_unit": 15, "max_unit": 150,   # 1ロールあたり単価の妥当レンジ
         "rakuten_genre": 501098, "yahoo_genre": "34852", "rakuten_query": "トイレットペーパー",
         "desc": "エリエール・スコッティ・ネピアなど、トイレットペーパーをロール数・長さ・価格で比較。大容量・まとめ買いのコスパ最強を厳選。",
         "brands": [
@@ -619,6 +621,8 @@ CATEGORIES = {
     "rice": {
         "label": "米", "genre": "日用品", "icon": "🍚", "section": "nichiyo",
         "rakuten_only": True,
+        "unit": "weight", "unit_label": "円/kg", "unit_suffix": "kg",
+        "min_unit": 300, "max_unit": 2000,   # 1kgあたり単価の妥当レンジ
         "rakuten_genre": 201184, "yahoo_genre": "1244", "rakuten_query": "米",
         "desc": "コシヒカリ・あきたこまち・ゆめぴりかなど、お米を銘柄・内容量・価格で比較。無洗米・大容量のコスパ最強を厳選。",
         "brands": [
@@ -634,6 +638,8 @@ CATEGORIES = {
     "tissue": {
         "label": "ティッシュペーパー", "genre": "日用品", "icon": "🤧", "section": "nichiyo",
         "rakuten_only": True,
+        "unit": "count", "count_noun": "箱", "unit_label": "円/箱", "unit_suffix": "箱",
+        "min_unit": 25, "max_unit": 250,   # 1箱あたり単価の妥当レンジ
         "rakuten_genre": 100670, "yahoo_genre": "34850", "rakuten_query": "ティッシュ",
         "desc": "エリエール・スコッティ・ネピア・鼻セレブなど、ボックスティッシュを箱数・枚数・価格で比較。まとめ買い・大容量のコスパ最強を厳選。",
         "brands": [
@@ -649,6 +655,8 @@ CATEGORIES = {
     "detergent": {
         "label": "洗濯洗剤", "genre": "日用品", "icon": "🧴", "section": "nichiyo",
         "rakuten_only": True,
+        "unit": "weight", "unit_label": "円/kg", "unit_suffix": "kg",
+        "min_unit": 200, "max_unit": 6000,   # 1kgあたり単価(粉・液体はg/kg表記の商品を対象)
         "min_price": 500,   # 日用品は家電前提の下限3000では消えるため引き下げ(まとめ買い/大容量を主に拾う)
         "rakuten_genre": 210182, "yahoo_genre": "", "rakuten_query": None,
         "desc": "アタック・アリエール・ナノックス・ボールドなど、衣料用洗濯洗剤を容量・価格で比較。詰め替え大容量・まとめ買いのコスパ最強を厳選。",

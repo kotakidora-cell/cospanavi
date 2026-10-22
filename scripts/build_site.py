@@ -264,7 +264,8 @@ def build_category(cfg):
     slim = [{"id": m["id"], "brand": m["brand"], "name": m["name"], "sat": m["sat"],
              "cheap": m["cheap"], "review": m["review"], "rc": m["reviewCount"],
              "price": m["minPrice"], "img": m["image"], "aff": m["affiliate"],
-             "offers": [{"m": o["mall"], "p": o["price"], "a": o["affiliate"]} for o in m.get("offers", [])]}
+             "offers": [{"m": o["mall"], "p": o["price"], "a": o["affiliate"]} for o in m.get("offers", [])],
+             **({"u": m["unit"]} if m.get("unit") else {})}
             for m in data]
     DATA_JSON = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
@@ -272,15 +273,22 @@ def build_category(cfg):
     lo, med, q1, q3 = price_stats(data)
     sec = CATEGORIES[cfg["slug"]].get("section", "kaden")
     unit = "品" if sec == "nichiyo" else "機種"
+    ucfg = CATEGORIES[cfg["slug"]]
+    usuf = ucfg.get("unit_suffix", "")      # 1ロール/1kg/1箱あたり表示用の単位
+    ulabel = ucfg.get("unit_label", "")
+    # 単価レンジ（1単位あたり）＝他サイトにない「本当にお得か」の指標
+    _us = sorted(m["unit"] for m in data if m.get("unit"))
+    uline = (f'<br><b class="uhl">1{usuf}あたり</b> 最安 <b>¥{_us[0]:,}</b> ／ 中央値 <b>¥{_us[len(_us)//2]:,}</b>'
+             f'（{ulabel}）' if _us else "")
     soba = (f'<div class="soba"><span class="sicon">💰</span><div><b>{cfg["label"]}の価格相場</b>'
             f'<span class="smt">（{UPDATED}時点・{len(data)}{unit}の実売最安値より）</span><br>'
-            f'最安 <b>¥{lo:,}</b> ／ 相場（中央値） <b>¥{med:,}</b> ／ ボリュームゾーン <b>¥{q1:,}〜¥{q3:,}</b></div></div>')
+            f'最安 <b>¥{lo:,}</b> ／ 相場（中央値） <b>¥{med:,}</b> ／ ボリュームゾーン <b>¥{q1:,}〜¥{q3:,}</b>{uline}</div></div>')
     crumb = ('<a href="/">コスパナビ</a> › <a href="/nichiyo">日用品</a> › ' + cfg["label"]) if sec == "nichiyo" \
             else ('<a href="/">コスパナビ</a> › ' + cfg["label"])
     body = f"""
 <nav class="crumb">{crumb}</nav>
 <h1>{cfg['label']} コスパ最強ランキング＆価格相場<span class="yr">2026</span></h1>
-<p class="lead">{cfg['desc']} <b>{len(data)}{unit}</b>を、価格相場と満足度から比較。<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
+<p class="lead">{cfg['desc']} <b>{len(data)}{unit}</b>を、価格相場と満足度から比較。{f'<b>1{usuf}あたりの単価</b>で並べるから、「量が多いだけ」「安いだけ」ではない“本当にお得”な1つが分かります。' if usuf else ''}<b>スライダーで「満足度重視／価格重視」を調整</b>すると、あなた基準のランキングに変わります。</p>
 {soba}
 {render_compare_box(cfg['slug'])}
 {render_brand_links(cfg['slug'])}
@@ -295,7 +303,7 @@ def build_category(cfg):
   </div>
   <div class="ctl"><label>並び替え</label>
     <div class="sorts">
-      <button data-s="cospa" class="on">コスパ順</button><button data-s="price">安い順</button>
+      <button data-s="cospa" class="on">コスパ順</button>{'<button data-s="unit">単価が安い順</button>' if usuf else ''}<button data-s="price">安い順</button>
       <button data-s="sat">満足度順</button><button data-s="rc">レビュー数順</button>
     </div>
   </div>
@@ -309,7 +317,7 @@ def build_category(cfg):
 {GUIDE_HTML}
 {render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
-<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};</script>
+<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};window.USUF={json.dumps(usuf, ensure_ascii=False)};</script>
 <script>{TOOL_JS}</script>
 """
     title = f"{cfg['label']}のコスパ最強ランキング2026｜価格相場・安い順に比較"
@@ -352,6 +360,7 @@ function render(){
  document.getElementById('btxt').textContent=yen(budget)+'以下';
  let a=D.filter(x=>x.price<=budget).map(x=>({...x,cospa:wsat*x.sat+wch*x.cheap}));
  if(sortKey==='cospa')a.sort((p,q)=>q.cospa-p.cospa);
+ else if(sortKey==='unit')a.sort((p,q)=>(p.u||p.price)-(q.u||q.price));
  else if(sortKey==='price')a.sort((p,q)=>p.price-q.price);
  else if(sortKey==='sat')a.sort((p,q)=>q.sat-p.sat);
  else if(sortKey==='rc')a.sort((p,q)=>q.rc-p.rc);
@@ -362,6 +371,7 @@ function render(){
    '<div class="cbody"><div class="ctop"><span class="crank">#'+(i+1)+'</span><span class="cbrand">'+x.brand+'</span></div>'+
    '<a class="cname" href="/product/'+x.id+'">'+x.name+'</a>'+
    '<div class="cstars">'+starHtml(x.review)+' <span class="muted">'+x.review.toFixed(2)+'（'+x.rc.toLocaleString()+'件）</span></div>'+
+   (x.u?'<div class="cunit"><span class="culab">1'+(window.USUF||'')+'あたり</span><b>'+yen(x.u)+'</b></div>':'')+
    '<div class="cprice">'+yen(x.price)+'<span class="muted">〜（最安）</span></div>'+
    mallsHtml(x.offers)+
    '<div class="ccospa">コスパ <b>'+x.cospa.toFixed(0)+'</b><span class="bar"><i style="width:'+Math.max(3,x.cospa)+'%"></i></span></div>'+
@@ -663,19 +673,29 @@ def _nichiyo_cards(cats, built):
             data = []
         n = built.get(slug, len(data))
         lo = min((m["minPrice"] for m in data), default=0)
+        usuf = CATEGORIES[slug].get("unit_suffix", "")
+        _us = sorted(m["unit"] for m in data if m.get("unit"))
         top = max(data, key=lambda m: m["cospa"]) if data else None
         href = U(c["file"])
         if top:
             nm = H.escape(top["name"][:40])
             brand = "" if "ノーブランド" in top["brand"] else f'<span class="npbrand">{H.escape(top["brand"])}</span>'
             star = round(top["review"], 2)
+            # 単価があればそれを主役に（1ロール/1kg/1箱あたり）、無ければ最安値
+            if top.get("unit"):
+                price_html = f'<span class="npprice">1{usuf} ¥{top["unit"]:,}</span>'
+            else:
+                price_html = f'<span class="npprice">¥{top["minPrice"]:,}〜</span>'
             pick = (f'<div class="npick"><div class="npimg"><img loading="lazy" src="{H.escape(top.get("image",""))}" alt=""></div>'
                     f'<div class="npinfo"><span class="nplabel">👑 コスパ1位</span>'
                     f'{brand}<span class="npname">{nm}</span>'
-                    f'<div class="npmeta"><span class="npstar">★{star}</span><span class="npprice">¥{top["minPrice"]:,}〜</span></div>'
+                    f'<div class="npmeta"><span class="npstar">★{star}</span>{price_html}</div>'
                     f'<div class="npbar"><i style="width:{min(100,top["cospa"]):.0f}%"></i></div>'
                     f'<div class="npcospa">コスパ値 <b>{round(top["cospa"])}</b> / 100</div></div></div>')
-            lorow = f'<div class="nlo">最安 <b>¥{lo:,}</b>〜 · <b>{n}品</b>から比較</div>'
+            if _us:
+                lorow = f'<div class="nlo">1{usuf}あたり 最安 <b>¥{_us[0]:,}</b>〜 · <b>{n}品</b>から比較</div>'
+            else:
+                lorow = f'<div class="nlo">最安 <b>¥{lo:,}</b>〜 · <b>{n}品</b>から比較</div>'
         else:
             pick, lorow = "", ""
         out.append(
@@ -938,7 +958,9 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .cname{display:block;font-weight:700;text-decoration:none;color:var(--ink);font-size:.92rem;margin:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cname:hover{color:var(--accent2)}
 .cstars{color:#f5a623;font-size:.85rem}.cstars .muted{color:var(--sub)}
-.cprice{font-weight:800;font-size:1.05rem;margin:2px 0}.cprice .muted{font-weight:400;font-size:.75rem}
+.cunit{display:flex;align-items:baseline;gap:7px;margin:3px 0 1px}.cunit .culab{font-size:.74rem;color:var(--sub);font-weight:700}.cunit b{font-size:1.15rem;font-weight:900;color:var(--accent)}
+.cprice{font-weight:700;font-size:.92rem;margin:1px 0;color:var(--sub)}.cprice .muted{font-weight:400;font-size:.72rem}
+.uhl{color:var(--accent)}
 .malls{display:flex;flex-wrap:wrap;gap:4px 8px;margin:2px 0}.malls span{font-size:.72rem;color:var(--sub)}.malls .mlow{color:var(--accent);font-weight:700}
 .buy.sm{padding:4px 12px;font-size:.8rem;margin:0}
 .cmp th{text-align:left;color:var(--sub);font-size:.8rem;padding:6px 8px;border-bottom:1px solid var(--line)}
