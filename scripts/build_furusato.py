@@ -108,7 +108,9 @@ def nav():
         '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">ふるさと納税<span class="darr">▾</span></button>'
         '<div class="dsub"><a href="/furusato">コスパ分析</a><a href="/furusato#sim">控除上限シミュレーター</a>'
         '<a href="/furusato-kanpu">実質還元率</a><a href="/furusato-hall">高評価殿堂</a>'
-        '<a href="/furusato-teiki">定期便</a><a href="/furusato-wakeari">訳あり大容量</a></div></div>'
+        '<a href="/furusato-teiki">定期便</a><a href="/furusato-wakeari">訳あり大容量</a>'
+        '<a href="/furusato-nichiyo">日用品特集</a><a href="/furusato-local">現地で使える体験</a>'
+        '<a href="/furusato-sites">サイト選び方</a></div></div>'
         '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">家電<span class="darr">▾</span></button>'
         '<div class="dsub"><a href="/#ranking">ランキング</a><a href="/#compare">徹底比較</a></div></div>'
         '<div class="dgrp"><button class="dpar" onclick="cnTog(this)">日用品<span class="darr">▾</span></button>'
@@ -1176,6 +1178,7 @@ def build_hub(counts):
 <div class="hero"><h1>ふるさと納税 コスパ分析<span class="yr">2026</span></h1>
 <p class="lead">「実質2,000円で本当にお得な返礼品は？」——楽天ふるさと納税の返礼品を、<b>寄付額あたりの内容量（円/kg等）</b>とレビュー満足度から独自コスパ値でランキング。<b>定期便も総量に換算</b>して、量あたり本当にお得な返礼品を選べます。</p></div>
 {AD}
+<div class="hgrid">{cards}</div>
 {simulator_html()}
 <a class="fbanner" href="/furusato-hall"><div class="hico">🏆</div><div><h3>高評価殿堂 — 失敗しない返礼品<span class="n">NEW</span></h3><p>全カテゴリ約23,000件から<b>★4.7以上・レビュー多数</b>の鉄板返礼品だけを厳選。<b>迷ったらここから選べば外さない</b>横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-teiki"><div class="hico">🔁</div><div><h3>定期便特集 — 毎月・全〇回で届く<span class="n">NEW</span></h3><p>1回の寄付で<b>毎月・隔月・全〇回</b>に分けて届く定期便を厳選。米・お肉・ビール・トイレットペーパーなど、<b>使い切る前に次が届く</b>返礼品をジャンル別に。</p></div><span class="fgo">見る →</span></a>
@@ -1183,7 +1186,6 @@ def build_hub(counts):
 <a class="fbanner" href="/furusato-wakeari"><div class="hico">🏷️</div><div><h3>訳あり・大容量コスパ特集 — まとめ買いで得<span class="n">NEW</span></h3><p>味や品質はそのまま、<b>不揃い・簡易包装で“お得”な訳あり・大容量</b>を円/kgのコスパ順に。むき海老・切り落とし肉・豚こま・干物など、<b>家庭用まとめ買いで一番おトク</b>な返礼品を横断ランキング。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-nichiyo"><div class="hico">🧻</div><div><h3>日用品コスパ特集 — 実質節約<span class="n">NEW</span></h3><p>トイレットペーパー・ティッシュ・洗剤・水など<b>必ず使う消耗品</b>を円/ロール・円/kgのコスパ順に。<b>実質2,000円で生活必需品</b>が手に入る家計防衛術。</p></div><span class="fgo">見る →</span></a>
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
-<div class="hgrid">{cards}</div>
 <div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">調味料</span><span class="soon">コーヒー</span><span class="soon">はちみつ</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="/about">コスパ値とは</a>。</p>
