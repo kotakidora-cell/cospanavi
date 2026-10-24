@@ -29,7 +29,7 @@ from recommend import PICKS
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
-             "coffee-maker", "kotatsu", "printer", "fan"]
+             "coffee-maker", "kotatsu", "printer", "fan", "gaming-chair"]
 NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
@@ -113,6 +113,7 @@ CLUSTERS = [
     ["air-purifier", "humidifier"],                          # 空気・季節
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
+    ["gaming-chair", "monitor"],                             # ゲーミング/PC周り
     ["hair-dryer", "portable-power"],                        # 生活・その他
     ["toilet-paper", "rice", "tissue", "detergent"],         # 日用品
 ]

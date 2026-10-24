@@ -95,6 +95,10 @@ def main():
     except Exception:
         label, sec = PCATS.get(slug, slug), "kaden"
     sec_label = "日用品" if sec == "nichiyo" else "家電"
+    try:
+        sec_label = CATEGORIES[slug].get("short_sec", sec_label)   # カテゴリ別の見出し上書き(例:ゲーミング家具)
+    except Exception:
+        pass
     unit = "つ" if sec == "nichiyo" else "台"   # 飲料・日用品は「1台」が不自然なので「1つ」に
     data = json.load(open(os.path.join(DATA, f"{slug}.json"), encoding="utf-8"))
     top = sorted(data, key=lambda z: -z["cospa"])[:3]

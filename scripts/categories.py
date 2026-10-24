@@ -599,6 +599,23 @@ CATEGORIES = {
                     "クリップ", "ミニファン", "ベビーカー", "ペット用",
                     "お弁当", "クールファン", "粗熱", "産業扇", "業務用扇", "工場扇", "排気", "換気扇", "送風機 工事"],
     },
+    "gaming-chair": {
+        "label": "ゲーミングチェア", "genre": "家電", "icon": "🪑",
+        "rakuten_only": True,
+        "short_sec": "ゲーミング家具",   # ショート動画の見出し(家電だと不自然なため)
+        "rakuten_genre": 566790, "yahoo_genre": "", "rakuten_query": "ゲーミングチェア",
+        "desc": "Dowinx・GTRACING・AKRacingなど、ゲーミングチェアをリクライニング・オットマン・素材・価格で比較。長時間でも疲れにくいコスパ最強を厳選。",
+        "brands": [
+            (["Dowinx"], "Dowinx"), (["GTRACING", "GTPLAYER", "GTレーシング"], "GTRACING"),
+            (["AKRacing", "エーケーレーシング"], "AKRacing"), (["Bauhutte", "バウヒュッテ"], "Bauhutte"),
+            (["DXRacer"], "DXRacer"), (["Contieaks", "コンティークス"], "Contieaks"),
+            (["noblechairs", "ノーブルチェアーズ"], "noblechairs"), (["AutoFull", "オートフル"], "AutoFull"),
+            (["KARNOX"], "KARNOX"), (["サンワ", "SANWA"], "サンワサプライ"), (["ニトリ"], "ニトリ"),
+        ],
+        "exclude": ["チェアマット", "マット", "カバー", "座面カバー", "中古", "パーツ", "キャスター", "ガスシリンダー",
+                    "肘 単品", "オットマン単品", "クッション単品", "足置き単品", "交換用", "補修", "座椅子", "キッズ",
+                    "子供用", "ペット", "デスク 単品", "テーブル"],
+    },
     # ================= 日用品(section=nichiyo)。家電と別ハブ /nichiyo に出す =================
     "toilet-paper": {
         "label": "トイレットペーパー", "genre": "日用品", "icon": "🧻", "section": "nichiyo",
