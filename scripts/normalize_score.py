@@ -78,9 +78,19 @@ def model_key(brand, nm):
 # --- 機種にまとめる ---
 _minp = _cat.get("min_price", 3000)   # 価格下限(家電は3000既定、日用品は安いのでカテゴリ毎に引き下げ)
 items = [r for r in raw if not any(x in r["name"] for x in EXCLUDE) and r["price"] and r["price"] >= _minp]
+_unit = _cat.get("unit")
+_noun = _cat.get("count_noun", "個")
+def _parse_amt(nm):
+    return amt_weight(nm) if _unit == "weight" else amt_count(nm, _noun)
 groups = {}
 for r in items:
     b = brand_of(r["name"]); k = model_key(b, r["name"])
+    if _unit:
+        a = _parse_amt(r["name"])
+        if not a:
+            continue   # 内容量が読めないlistingはunitカテゴリでは集計対象外
+        r["_amt"] = a
+        k += "|a" + str(round(a, 2))   # 内容量をキーに含め、5kgと10kg等を別モデルに分離(価格↔重量の不一致=単価二重カウントを防ぐ)
     g = groups.setdefault(k, {"brand": b, "listings": []})
     g["listings"].append(r)
 
@@ -108,22 +118,24 @@ for k, g in groups.items():
     best = offer_list[0]   # 全モール横断の最安（アフィリ主導線）
     # 代表画像は楽天優先（画像URLが安定）→無ければ最初
     img = next((l["image"] for l in ls if l.get("mall") == "rakuten" and l.get("image")), rep.get("image", ""))
-    models.append({"brand": g["brand"], "name": clean(rep["name"])[:60], "minPrice": best["price"],
-                   "review": round(avg, 2), "reviewCount": tot_rc,
-                   "affiliate": best["affiliate"], "image": img, "url": best["url"],
-                   "offers": offer_list, "key": k})   # key=ブランド+型番の安定キー(URL生成用。商品名変更に影響されない)
+    _m = {"brand": g["brand"], "name": clean(rep["name"])[:60], "minPrice": best["price"],
+          "review": round(avg, 2), "reviewCount": tot_rc,
+          "affiliate": best["affiliate"], "image": img, "url": best["url"],
+          "offers": offer_list, "key": k}   # key=ブランド+型番(+内容量)の安定キー
+    if _unit and ls[0].get("_amt"):
+        _m["amt"] = round(ls[0]["_amt"], 1)   # グループ内は同一内容量。価格(最安listing)と重量を一致させ単価を正しく算出
+    models.append(_m)
 
 # レビューが極端に少ない/無い機種は除外（信頼性）
 models = [m for m in models if m["reviewCount"] >= 5]
 
 # --- 単価(1ロール/1kg/1箱あたり)算出: unit指定カテゴリ(日用品)のみ。これが他サイトとの差別化軸 ---
-_unit = _cat.get("unit")
+# 内容量はグルーピング時にm["amt"]へ格納済み(価格=最安listingと同一内容量)。ここでは単価化と妥当レンジ判定のみ。
 if _unit:
-    _noun = _cat.get("count_noun", "個")
     _lo_u, _hi_u = _cat.get("min_unit", 0), _cat.get("max_unit", 10 ** 9)
     _kept = []
     for m in models:
-        amt = amt_weight(m["name"]) if _unit == "weight" else amt_count(m["name"], _noun)
+        amt = m.get("amt") or _parse_amt(m["name"])
         if not amt:
             continue
         up = m["minPrice"] / amt
