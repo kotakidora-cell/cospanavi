@@ -29,7 +29,7 @@ from recommend import PICKS
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
-             "coffee-maker", "kotatsu", "printer", "fan", "gaming-chair"]
+             "coffee-maker", "kotatsu", "printer", "fan", "dishwasher", "gaming-chair"]
 NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
@@ -38,7 +38,7 @@ CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "desc": CATEGORIES[s]["desc"]} for s in ALL_ORDER]
 KADEN_CATS = [c for c in CATS if c["section"] == "kaden"]
 NICHIYO_CATS = [c for c in CATS if c["section"] == "nichiyo"]
-COMING = ["ゲーミングチェア", "コーヒーミル", "食洗機"]
+COMING = ["コーヒーミル", "昇降デスク", "モバイルモニター"]
 NICHIYO_COMING = ["ゴミ袋", "キッチンペーパー", "ラップ", "乾電池", "柔軟剤"]
 
 def pid(m):
@@ -109,7 +109,7 @@ CAT_MAP = {c["slug"]: c for c in CATS}
 # 関連カテゴリ（トピッククラスター）＝内部リンクで関連ページ群の評価を底上げ（SEO）
 CLUSTERS = [
     ["robot-cleaner", "stick-cleaner", "canister-cleaner"],  # 掃除機
-    ["microwave", "rice-cooker", "kettle"],                  # キッチン家電
+    ["microwave", "rice-cooker", "kettle", "dishwasher"],    # キッチン家電
     ["air-purifier", "humidifier"],                          # 空気・季節
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV

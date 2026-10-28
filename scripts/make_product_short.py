@@ -72,7 +72,7 @@ def scene_rank(rank, m):
     ctext(d, W/2, 1722, f"コスパ {round(m['cospa'])}", font(50), YEL)
     return img
 
-def scene_outro(label, slug, sec_label="家電"):
+def scene_outro(label, slug, sec_label="家電", yt=True):
     img, d = bg_scene((255, 138, 76), (255, 92, 138))
     ctext(d, W/2, 300, f"全順位＆他の{sec_label}も", font(64), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 400, "コチラ！", font(120), WHITE, stroke=6, sfill=NAVY)
@@ -80,13 +80,15 @@ def scene_outro(label, slug, sec_label="家電"):
     ctext(d, W/2, 700, "コスパナビ", font(72), NAVY)
     ctext(d, W/2, 810, "cospa-navi.com", font(100), ORANGE)
     rrect(d, [W/2-470, 1150, W/2+470, 1300], 40, fill=NAVY)
-    ctext(d, W/2, 1178, "▼ リンクは 概要欄・コメント欄", font(50), YEL)
+    link = "▼ リンクは 概要欄・コメント欄" if yt else "▼ リンクは プロフィール・スレッド"
+    ctext(d, W/2, 1178, link, font(50), YEL)
     ctext(d, W/2, 1420, "満足度×価格で選べる", font(58), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 1500, "調整できるコスパ比較ツール", font(52), WHITE, stroke=4, sfill=NAVY)
     return img
 
 def main():
     slug = sys.argv[1] if len(sys.argv) > 1 else "microwave"
+    yt = (sys.argv[2] if len(sys.argv) > 2 else "youtube") != "threads"   # 既定=YouTube。threads指定でプロフィール誘導
     outdir = os.path.join(BASE, "shorts"); os.makedirs(outdir, exist_ok=True)
     try:
         from categories import CATEGORIES
@@ -108,12 +110,12 @@ def main():
         m["_img"] = dl_image(m.get("image", ""))
     scenes = [(scene_intro(label, sec_label, unit), 3.0),
               (scene_rank(3, top[2]), 5.0), (scene_rank(2, top[1]), 5.0),
-              (scene_rank(1, top[0]), 7.0), (scene_outro(label, slug, sec_label), 5.0)]
+              (scene_rank(1, top[0]), 7.0), (scene_outro(label, slug, sec_label, yt), 5.0)]
     tmp = tempfile.mkdtemp(); pngs, durs = [], []
     for i, (im, du) in enumerate(scenes):
         p = os.path.join(tmp, f"s{i}.png"); im.save(p); pngs.append(p); durs.append(du)
     bgm = os.path.join(outdir, "bgm.mp3")
-    out = os.path.join(outdir, f"{slug}-top3.mp4")
+    out = os.path.join(outdir, f"{slug}-top3{'' if yt else '-threads'}.mp4")
     bgmp = bgm if os.path.exists(bgm) else None
     scenes[3][0].save(os.path.join(outdir, f"{slug}-frame1.png"))
     def bp(m):  # ブランド読み上げ(ノーブランドは省略)
@@ -123,7 +125,7 @@ def main():
         f"第3位。{bp(top[2])}最安{top[2]['minPrice']:,}円、コスパ{round(top[2]['cospa'])}。",
         f"第2位。{bp(top[1])}最安{top[1]['minPrice']:,}円、コスパ{round(top[1]['cospa'])}。",
         f"そして第1位は、{bp(top[0])}最安{top[0]['minPrice']:,}円、コスパ{round(top[0]['cospa'])}！これが今いちばんお得です。",
-        "全順位とコスパ比較はコスパナビで。概要欄のリンクからどうぞ。",
+        "全順位とコスパ比較はコスパナビで。" + ("概要欄のリンクからどうぞ。" if yt else "プロフィールのリンクからどうぞ。"),
     ]
     import narrate
     if narrate.available():
