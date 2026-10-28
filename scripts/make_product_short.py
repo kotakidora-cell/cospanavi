@@ -127,10 +127,12 @@ def main():
         f"そして第1位は、{bp(top[0])}最安{top[0]['minPrice']:,}円、コスパ{round(top[0]['cospa'])}！これが今いちばんお得です。",
         "全順位とコスパ比較はコスパナビで。" + ("概要欄のリンクからどうぞ。" if yt else "プロフィールのリンクからどうぞ。"),
     ]
+    # 声の出し分け: YouTube=青山龍星(男,13) / Threads=春日部つむぎ(女,8)。VV_SPEAKER指定時はそれを優先
+    speaker = int(os.environ["VV_SPEAKER"]) if os.environ.get("VV_SPEAKER") else (13 if yt else 8)
     import narrate
     if narrate.available():
-        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp)
-        print(f"生成(ナレーション付): {out}")
+        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp, speaker=speaker)
+        print(f"生成(ナレーション付 話者{speaker}): {out}")
     else:
         build_video(pngs, durs, out, bgm=bgmp)
         print(f"生成(BGMのみ/VOICEVOX未起動): {out} ({sum(durs):.0f}秒)")
