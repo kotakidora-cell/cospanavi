@@ -1,6 +1,19 @@
 # robot-cleaner.json 等から静的サイト生成（ハブ＋カテゴリランキング＋商品ページ）。
 # 目玉: クライアント側で「満足度⇄価格の重み」を動かすとコスパ値が即再計算されるツール。
-import json, os, sys, html as H, hashlib, datetime
+import json, os, sys, html as H, hashlib, datetime, re
+
+# 商品名から1本あたりの容量(ml)を抽出(お茶・ドリンクの容量フィルター用)。最初の妥当な ml/L を1本容量とみなす。
+def parse_vol(name):
+    n = name.lower().replace("ℓ", "l").replace("リットル", "l")
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(ml|l)\b", n):
+        v = float(m.group(1)) * (1000 if m.group(2) == "l" else 1)
+        if 100 <= v <= 2200:
+            return int(v)
+    return None
+
+# 容量フィルターのバケット(ラベル, 下限ml, 上限ml未満)
+VOL_BUCKETS = [("〜350ml", 0, 400), ("500ml", 400, 560), ("600〜700ml", 560, 760),
+               ("1L前後", 760, 1200), ("1.5〜2L", 1200, 2200)]
 
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -262,11 +275,13 @@ def render_picks(cfg, data):
 # ================= カテゴリランキングページ（ツール付き） =================
 def build_category(cfg):
     data = load(cfg["slug"])
+    _volflag = CATEGORIES[cfg["slug"]].get("volume_filter")
     slim = [{"id": m["id"], "brand": m["brand"], "name": m["name"], "sat": m["sat"],
              "cheap": m["cheap"], "review": m["review"], "rc": m["reviewCount"],
              "price": m["minPrice"], "img": m["image"], "aff": m["affiliate"],
              "offers": [{"m": o["mall"], "p": o["price"], "a": o["affiliate"]} for o in m.get("offers", [])],
-             **({"u": m["unit"]} if m.get("unit") else {})}
+             **({"u": m["unit"]} if m.get("unit") else {}),
+             **({"v": parse_vol(m["name"])} if _volflag and parse_vol(m["name"]) else {})}
             for m in data]
     DATA_JSON = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
     maxp = ((max(m["minPrice"] for m in data) + 999) // 1000) * 1000  # step1000に切り上げ（最高額機種も含める）
@@ -287,6 +302,16 @@ def build_category(cfg):
                             for i, (lbl, kw) in enumerate(varieties))
                   + '</div></div>')
     VARIETIES_JSON = json.dumps([{"kw": kw} for lbl, kw in varieties], ensure_ascii=False) if varieties else "null"
+    # 容量フィルター(お茶・ドリンク等): 500ml/1L/2L で絞り、同じ容量同士で正しく比較
+    volflag = ucfg.get("volume_filter")
+    vol_chips = ""
+    if volflag:
+        vol_chips = ('<div class="ctl"><label>容量で絞る</label><div class="vchips volc">'
+                     '<button class="volchip on" data-vl="">すべて</button>'
+                     + "".join(f'<button class="volchip" data-vl="{i}">{lbl}</button>'
+                               for i, (lbl, lo2, hi2) in enumerate(VOL_BUCKETS))
+                     + '</div></div>')
+    VOLS_JSON = json.dumps([[lo2, hi2] for lbl, lo2, hi2 in VOL_BUCKETS], ensure_ascii=False) if volflag else "null"
     # 単価レンジ（1単位あたり）＝他サイトにない「本当にお得か」の指標
     _us = sorted(m["unit"] for m in data if m.get("unit"))
     uline = (f'<br><b class="uhl">1{usuf}あたり</b> 最安 <b>¥{_us[0]:,}</b> ／ 中央値 <b>¥{_us[len(_us)//2]:,}</b>'
@@ -306,6 +331,7 @@ def build_category(cfg):
 {AD}
 <div class="tool">
   {vchips}
+  {vol_chips}
   <div class="ctl"><label>重視ポイント</label>
     <div class="slrow"><span>価格</span><input type="range" id="w" min="0" max="100" value="60"><span>満足度</span></div>
     <div class="wlabel"><span id="wtxt">満足度60% / 価格40%</span></div>
@@ -329,7 +355,7 @@ def build_category(cfg):
 {GUIDE_HTML}
 {render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
-<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};window.USUF={json.dumps(usuf, ensure_ascii=False)};window.VARIETIES={VARIETIES_JSON};</script>
+<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};window.USUF={json.dumps(usuf, ensure_ascii=False)};window.VARIETIES={VARIETIES_JSON};window.VOLS={VOLS_JSON};</script>
 <script>{TOOL_JS}</script>
 """
     title = f"{cfg['label']}のコスパ最強ランキング2026｜価格相場・安い順に比較"
@@ -366,6 +392,7 @@ function buyLabel(offers){
 const wEl=document.getElementById('w'),bEl=document.getElementById('b');
 let sortKey='cospa';
 let vkey='';   // 種類フィルター(お茶・ドリンク等)。''=すべて
+let volkey=''; // 容量フィルター(500ml/1L/2L)。''=すべて
 function starHtml(v){let s='';for(let i=1;i<=5;i++){s+= v>=i?'★':(v>=i-0.5?'⯨':'☆');}return s;}
 function render(){
  const wsat=(+wEl.value)/100, wch=1-wsat, budget=+bEl.value;
@@ -373,6 +400,7 @@ function render(){
  document.getElementById('btxt').textContent=yen(budget)+'以下';
  let a=D.filter(x=>x.price<=budget).map(x=>({...x,cospa:wsat*x.sat+wch*x.cheap}));
  if(vkey!==''&&window.VARIETIES){const V=window.VARIETIES[+vkey];if(V)a=a.filter(x=>V.kw.some(k=>x.name.includes(k)));}
+ if(volkey!==''&&window.VOLS){const R=window.VOLS[+volkey];if(R)a=a.filter(x=>x.v&&x.v>=R[0]&&x.v<R[1]);}
  if(sortKey==='cospa')a.sort((p,q)=>q.cospa-p.cospa);
  else if(sortKey==='unit')a.sort((p,q)=>(p.u||p.price)-(q.u||q.price));
  else if(sortKey==='price')a.sort((p,q)=>p.price-q.price);
@@ -397,6 +425,8 @@ document.querySelectorAll('.sorts button').forEach(b=>b.onclick=()=>{sortKey=b.d
  document.querySelectorAll('.sorts button').forEach(x=>x.classList.toggle('on',x.dataset.s===sortKey));render();});
 document.querySelectorAll('.vchip').forEach(b=>b.onclick=()=>{vkey=b.dataset.v;
  document.querySelectorAll('.vchip').forEach(x=>x.classList.toggle('on',x.dataset.v===vkey));render();});
+document.querySelectorAll('.volchip').forEach(b=>b.onclick=()=>{volkey=b.dataset.vl;
+ document.querySelectorAll('.volchip').forEach(x=>x.classList.toggle('on',x.dataset.vl===volkey));render();});
 render();
 """
 
@@ -965,8 +995,8 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .sorts button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:5px 12px;font-size:.85rem;cursor:pointer}
 .sorts button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .vchips{display:flex;flex-wrap:wrap;gap:6px}
-.vchips .vchip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:6px 13px;font-size:.85rem;cursor:pointer;font-weight:700}
-.vchips .vchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.vchips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:6px 13px;font-size:.85rem;cursor:pointer;font-weight:700}
+.vchips button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .cnt{font-weight:700;font-size:.9rem;margin:.4em 0}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .card{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:hidden}

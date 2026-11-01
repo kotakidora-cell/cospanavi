@@ -691,6 +691,7 @@ CATEGORIES = {
         "unit": "count", "count_noun": "本", "unit_label": "円/本", "unit_suffix": "本",
         "min_unit": 30, "max_unit": 400,   # 1本あたり単価の妥当レンジ
         "min_price": 1500,
+        "volume_filter": True,   # 500ml/1L/2L で絞れる容量フィルター(容量差で単価がフリにならないように)
         "rakuten_genre": [304902, 567850, 201351], "yahoo_genre": "", "rakuten_query": None,  # お茶+紅茶+水を横断
         "desc": "午後の紅茶・水・ウーロン茶・緑茶・麦茶など、ペットボトル飲料を1本あたりの価格で比較。種類で絞って、ケース買いのコスパ最強が分かる。",
         "varieties": [
