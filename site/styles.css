@@ -64,6 +64,9 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .sorts{display:flex;flex-wrap:wrap;gap:6px}
 .sorts button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:5px 12px;font-size:.85rem;cursor:pointer}
 .sorts button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.vchips{display:flex;flex-wrap:wrap;gap:6px}
+.vchips .vchip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:6px 13px;font-size:.85rem;cursor:pointer;font-weight:700}
+.vchips .vchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .cnt{font-weight:700;font-size:.9rem;margin:.4em 0}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .card{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:hidden}

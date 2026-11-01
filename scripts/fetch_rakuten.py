@@ -56,6 +56,14 @@ if __name__ == "__main__":
     q = cfg.get("rakuten_query")  # ジャンルが他カテゴリと共通の時にキーワード併用で絞る(例:紙パック掃除機)
     pages = int(sys.argv[2]) if len(sys.argv) > 2 else 20
     print(f"取得(楽天): {slug} genreId={genreId} query={q} pages={pages}")
-    items = fetch(q, pages=pages, genreId=genreId)
+    if isinstance(genreId, (list, tuple)):   # 複数ジャンル横断(例:お茶・ドリンク=お茶+紅茶+水)
+        items, seen = [], set()
+        for g in genreId:
+            for it in fetch(q, pages=pages, genreId=g):
+                key = it.get("itemCode") or it["url"]
+                if key and key not in seen:
+                    seen.add(key); items.append(it)
+    else:
+        items = fetch(q, pages=pages, genreId=genreId)
     json.dump(items, open(os.path.join(DATA, slug + "_raw.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"保存: {slug}_raw.json  {len(items)}件")

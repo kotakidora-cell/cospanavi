@@ -30,7 +30,7 @@ CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
              "coffee-maker", "kotatsu", "printer", "fan", "dishwasher", "gaming-chair"]
-NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
+NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent", "beverage"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "label": CATEGORIES[s]["label"], "genre": CATEGORIES[s]["genre"],
@@ -115,7 +115,7 @@ CLUSTERS = [
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
     ["gaming-chair", "monitor"],                             # ゲーミング/PC周り
     ["hair-dryer", "portable-power"],                        # 生活・その他
-    ["toilet-paper", "rice", "tissue", "detergent"],         # 日用品
+    ["toilet-paper", "rice", "tissue", "detergent", "beverage"],  # 日用品
 ]
 SLUG2CLUSTER = {s: i for i, cl in enumerate(CLUSTERS) for s in cl}
 POPULAR = ["robot-cleaner", "air-purifier", "tablet", "hair-dryer", "microwave"]
@@ -277,6 +277,16 @@ def build_category(cfg):
     ucfg = CATEGORIES[cfg["slug"]]
     usuf = ucfg.get("unit_suffix", "")      # 1ロール/1kg/1箱あたり表示用の単位
     ulabel = ucfg.get("unit_label", "")
+    # 種類フィルター(お茶・ドリンク等): 午後の紅茶ミルクティー/水/ウーロン茶 などで絞り込める
+    varieties = ucfg.get("varieties")
+    vchips = ""
+    if varieties:
+        vchips = ('<div class="ctl"><label>種類で絞る</label><div class="vchips">'
+                  '<button class="vchip on" data-v="">すべて</button>'
+                  + "".join(f'<button class="vchip" data-v="{i}">{H.escape(lbl)}</button>'
+                            for i, (lbl, kw) in enumerate(varieties))
+                  + '</div></div>')
+    VARIETIES_JSON = json.dumps([{"kw": kw} for lbl, kw in varieties], ensure_ascii=False) if varieties else "null"
     # 単価レンジ（1単位あたり）＝他サイトにない「本当にお得か」の指標
     _us = sorted(m["unit"] for m in data if m.get("unit"))
     uline = (f'<br><b class="uhl">1{usuf}あたり</b> 最安 <b>¥{_us[0]:,}</b> ／ 中央値 <b>¥{_us[len(_us)//2]:,}</b>'
@@ -295,6 +305,7 @@ def build_category(cfg):
 {render_brand_links(cfg['slug'])}
 {AD}
 <div class="tool">
+  {vchips}
   <div class="ctl"><label>重視ポイント</label>
     <div class="slrow"><span>価格</span><input type="range" id="w" min="0" max="100" value="60"><span>満足度</span></div>
     <div class="wlabel"><span id="wtxt">満足度60% / 価格40%</span></div>
@@ -318,7 +329,7 @@ def build_category(cfg):
 {GUIDE_HTML}
 {render_related(cfg['slug'])}
 <script id="data" type="application/json">{DATA_JSON}</script>
-<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};window.USUF={json.dumps(usuf, ensure_ascii=False)};</script>
+<script>window.UNIT={json.dumps(unit, ensure_ascii=False)};window.USUF={json.dumps(usuf, ensure_ascii=False)};window.VARIETIES={VARIETIES_JSON};</script>
 <script>{TOOL_JS}</script>
 """
     title = f"{cfg['label']}のコスパ最強ランキング2026｜価格相場・安い順に比較"
@@ -354,12 +365,14 @@ function buyLabel(offers){
 }
 const wEl=document.getElementById('w'),bEl=document.getElementById('b');
 let sortKey='cospa';
+let vkey='';   // 種類フィルター(お茶・ドリンク等)。''=すべて
 function starHtml(v){let s='';for(let i=1;i<=5;i++){s+= v>=i?'★':(v>=i-0.5?'⯨':'☆');}return s;}
 function render(){
  const wsat=(+wEl.value)/100, wch=1-wsat, budget=+bEl.value;
  document.getElementById('wtxt').textContent='満足度'+Math.round(wsat*100)+'% / 価格'+Math.round(wch*100)+'%';
  document.getElementById('btxt').textContent=yen(budget)+'以下';
  let a=D.filter(x=>x.price<=budget).map(x=>({...x,cospa:wsat*x.sat+wch*x.cheap}));
+ if(vkey!==''&&window.VARIETIES){const V=window.VARIETIES[+vkey];if(V)a=a.filter(x=>V.kw.some(k=>x.name.includes(k)));}
  if(sortKey==='cospa')a.sort((p,q)=>q.cospa-p.cospa);
  else if(sortKey==='unit')a.sort((p,q)=>(p.u||p.price)-(q.u||q.price));
  else if(sortKey==='price')a.sort((p,q)=>p.price-q.price);
@@ -382,6 +395,8 @@ function render(){
 wEl.oninput=render; bEl.oninput=render;
 document.querySelectorAll('.sorts button').forEach(b=>b.onclick=()=>{sortKey=b.dataset.s;
  document.querySelectorAll('.sorts button').forEach(x=>x.classList.toggle('on',x.dataset.s===sortKey));render();});
+document.querySelectorAll('.vchip').forEach(b=>b.onclick=()=>{vkey=b.dataset.v;
+ document.querySelectorAll('.vchip').forEach(x=>x.classList.toggle('on',x.dataset.v===vkey));render();});
 render();
 """
 
@@ -949,6 +964,9 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 .sorts{display:flex;flex-wrap:wrap;gap:6px}
 .sorts button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:5px 12px;font-size:.85rem;cursor:pointer}
 .sorts button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.vchips{display:flex;flex-wrap:wrap;gap:6px}
+.vchips .vchip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:6px 13px;font-size:.85rem;cursor:pointer;font-weight:700}
+.vchips .vchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .cnt{font-weight:700;font-size:.9rem;margin:.4em 0}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .card{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:hidden}
