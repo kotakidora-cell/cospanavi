@@ -42,7 +42,7 @@ from recommend import PICKS
 CAT_ORDER = ["robot-cleaner", "air-purifier", "portable-power", "stick-cleaner",
              "microwave", "hair-dryer", "monitor", "earbuds", "humidifier", "kettle",
              "refrigerator", "washer", "rice-cooker", "canister-cleaner", "tv", "tablet", "smartwatch",
-             "coffee-maker", "kotatsu", "printer", "fan", "dishwasher", "gaming-chair"]
+             "coffee-maker", "kotatsu", "printer", "fan", "dishwasher", "gaming-chair", "mobile-monitor"]
 NICHIYO_ORDER = ["toilet-paper", "rice", "tissue", "detergent", "beverage"]   # 日用品(section=nichiyo)。別ハブ /nichiyo に出す
 ALL_ORDER = CAT_ORDER + NICHIYO_ORDER
 CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
@@ -51,7 +51,7 @@ CATS = [{"slug": s, "file": s + ".html", "icon": CATEGORIES[s]["icon"],
          "desc": CATEGORIES[s]["desc"]} for s in ALL_ORDER]
 KADEN_CATS = [c for c in CATS if c["section"] == "kaden"]
 NICHIYO_CATS = [c for c in CATS if c["section"] == "nichiyo"]
-COMING = ["コーヒーミル", "昇降デスク", "モバイルモニター"]
+COMING = ["コーヒーミル", "昇降デスク", "オフィスチェア"]
 NICHIYO_COMING = ["ゴミ袋", "キッチンペーパー", "ラップ", "乾電池", "柔軟剤"]
 
 def pid(m):
@@ -126,7 +126,7 @@ CLUSTERS = [
     ["air-purifier", "humidifier"],                          # 空気・季節
     ["refrigerator", "washer"],                              # 大型家電
     ["monitor", "tablet", "tv", "earbuds"],                  # デジタル・AV
-    ["gaming-chair", "monitor"],                             # ゲーミング/PC周り
+    ["gaming-chair", "monitor", "mobile-monitor"],           # ゲーミング/PC周り
     ["hair-dryer", "portable-power"],                        # 生活・その他
     ["toilet-paper", "rice", "tissue", "detergent", "beverage"],  # 日用品
 ]
