@@ -157,7 +157,7 @@ def scene_rank(cat, rank, m, img):
     ctext(d, W/2, 1802, f"コスパ {round(m['cospa'])}", font(48), YEL)
     return bg
 
-def scene_outro(cat):
+def scene_outro(cat, yt=True):
     bg = vgrad((255, 138, 76), (255, 92, 138))
     d = ImageDraw.Draw(bg)
     ctext(d, W/2, 300, "全順位＆他カテゴリは", font(66), WHITE, stroke=4, sfill=NAVY)
@@ -166,9 +166,10 @@ def scene_outro(cat):
     rrect(d, [50, 650, W-50, 1010], 50, fill=WHITE)
     ctext(d, W/2, 700, "コスパナビ", font(72), NAVY)
     ctext(d, W/2, 810, "cospa-navi.com", font(100), ORANGE)
-    # リンク誘導(検索NG→概要欄/コメントの直リンク)
+    # リンク誘導(検索NG→概要欄/コメント or プロフィールの直リンク)
     rrect(d, [W/2-470, 1150, W/2+470, 1300], 40, fill=NAVY)
-    ctext(d, W/2, 1178, "▼ リンクは 概要欄・コメント欄", font(50), YEL)
+    link = "▼ リンクは 概要欄・コメント欄" if yt else "▼ リンクは プロフィール・スレッド"
+    ctext(d, W/2, 1178, link, font(50), YEL)
     ctext(d, W/2, 1420, "タップして今すぐチェック！", font(60), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 1600, "円/kgで選ぶ、損しない", font(54), WHITE, stroke=4, sfill=NAVY)
     ctext(d, W/2, 1676, "ふるさと納税コスパ比較", font(54), WHITE, stroke=4, sfill=NAVY)
@@ -198,7 +199,9 @@ def build_video(pngs, durs, out, bgm=None, xf=0.45):
 
 def main():
     slug = sys.argv[1] if len(sys.argv) > 1 else "rice"
-    outdir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(BASE, "shorts")
+    plat = sys.argv[2] if len(sys.argv) > 2 else "youtube"   # youtube/threads
+    yt = plat != "threads"
+    outdir = os.path.join(BASE, "shorts")
     os.makedirs(outdir, exist_ok=True)
     cat = CATS.get(slug, {"title": slug, "unit": "", "unitlabel": "円", "emoji": ""})
     data = json.load(open(os.path.join(DATA, f"furusato-{slug}.json"), encoding="utf-8"))
@@ -209,11 +212,11 @@ def main():
               (scene_rank(cat, 3, top[2], imgs[2]), 5.0),
               (scene_rank(cat, 2, top[1], imgs[1]), 5.0),
               (scene_rank(cat, 1, top[0], imgs[0]), 7.0),
-              (scene_outro(cat), 5.0)]
+              (scene_outro(cat, yt), 5.0)]
     pngs, durs = [], []
     for i, (img, dur) in enumerate(scenes):
         p = os.path.join(tmp, f"s{i}.png"); img.save(p); pngs.append(p); durs.append(dur)
-    out = os.path.join(outdir, f"furusato-{slug}-top3.mp4")
+    out = os.path.join(outdir, f"furusato-{slug}-top3{'' if yt else '-threads'}.mp4")
     bgm = os.path.join(BASE, "shorts", "bgm.mp3")
     bgmp = bgm if os.path.exists(bgm) else None
     # 確認用に1位・CTAフレームも書き出し
@@ -228,12 +231,13 @@ def main():
         f"第3位。{u(top[2])}、コスパ{round(top[2]['cospa'])}です。",
         f"第2位。{u(top[1])}、コスパ{round(top[1]['cospa'])}。",
         f"そして第1位は、{u(top[0])}でコスパ{round(top[0]['cospa'])}！実質2000円で一番お得です。",
-        "全順位とコスパ比較はコスパナビで。概要欄のリンクからどうぞ。",
+        "全順位とコスパ比較はコスパナビで。" + ("概要欄のリンクからどうぞ。" if yt else "プロフィールのリンクからどうぞ。"),
     ]
+    speaker = int(os.environ["VV_SPEAKER"]) if os.environ.get("VV_SPEAKER") else (13 if yt else 8)  # YT=青山龍星(男)/Threads=春日部つむぎ(女)
     import narrate
     if narrate.available():
-        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp)
-        print(f"生成(ナレーション付): {out}")
+        narrate.build_narrated_video(pngs, texts, out, bgm=bgmp, speaker=speaker)
+        print(f"生成(ナレーション付 話者{speaker}): {out}")
     else:
         build_video(pngs, durs, out, bgm=bgmp)
         print(f"生成(BGMのみ/VOICEVOX未起動): {out} ({sum(durs):.0f}秒)")

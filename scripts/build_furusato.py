@@ -71,10 +71,10 @@ VC_320_OVERLAY = ''
 
 ICON = {"rice": "🍚", "beef": "🥩", "pork": "🐖", "chicken": "🍗", "hamburg": "🍔", "seafood": "🦐",
         "egg": "🥚", "fruit": "🍇", "sweets": "🍰", "frozen": "🥟", "beer": "🍺", "drink": "🥤",
-        "cheese": "🧀", "sake": "🍶", "vegetable": "🥬", "bread": "🍞", "coffee": "☕",
+        "cheese": "🧀", "sake": "🍶", "vegetable": "🥬", "bread": "🍞", "coffee": "☕", "ham": "🥓",
         "toilet-paper": "🧻", "kitchen-paper": "📄", "tissue": "🤧", "detergent": "🧴", "diaper": "👶"}
 # ジャンル順(主食・肉→魚介・卵→野菜・果物・菓子・パン→冷凍→乳製品→酒・飲料→日用品)でユーザーが探しやすく
-CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "seafood", "egg", "vegetable", "fruit", "sweets",
+CAT_ORDER = ["rice", "beef", "pork", "chicken", "hamburg", "ham", "seafood", "egg", "vegetable", "fruit", "sweets",
              "bread", "frozen", "cheese", "coffee", "sake", "beer", "drink", "toilet-paper", "kitchen-paper", "tissue", "detergent", "diaper"]
 CATS = [{"slug": s, "file": f"furusato-{s}.html", "label": FCATS[s]["label"], "icon": ICON.get(s, "🎁"),
          "unit_label": FCATS[s]["unit_label"], "suffix": FCATS[s]["suffix"],
@@ -1187,7 +1187,7 @@ def build_hub(counts):
 <a class="fbanner" href="/furusato-local"><div class="hico">🗾</div><div><h3>現地で使える体験を全国から探す<span class="n">NEW</span></h3><p>食事券・宿泊・温泉・レジャー施設・ゴルフ・利用券など、<b>旅行や帰省先の現地で使える</b>返礼品を都道府県別に探せます。地図から県を選ぶだけ。</p></div><span class="fgo">見る →</span></a>
 <div class="hgrid">{cards}</div>
 {simulator_html()}
-<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">調味料</span><span class="soon">はちみつ</span><span class="soon">ハム・ソーセージ</span></div>
+<div class="soonbox"><p class="lead">今後追加予定：</p><span class="soon">調味料</span><span class="soon">はちみつ</span><span class="soon">乳製品</span></div>
 <h2>ふるさと納税のコスパの考え方</h2>
 <p>ふるさと納税は寄付額のうち自己負担2,000円を除いた分が控除されるため、<b>「いかに安く返礼品を得るか」ではなく「同じ寄付額でどれだけ量・質の良い返礼品がもらえるか」</b>がコスパの本質です。当サイトは返礼品の<b>内容量あたりの寄付額（円/kg など）</b>を軸に、レビュー満足度と組み合わせて独自にランキングしています。控除上限額はご自身の年収・家族構成で異なります。詳しくは<a href="/about">コスパ値とは</a>。</p>
 <div class="scallout">📢 <b>2025年10月からふるさと納税のポイント付与は廃止されました。</b>今のお得なサイトの選び方は <a href="/furusato-sites">ふるさと納税サイトの選び方（ポイント廃止後）→</a></div>
