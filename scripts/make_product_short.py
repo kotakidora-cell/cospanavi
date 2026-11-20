@@ -102,6 +102,10 @@ def main():
     except Exception:
         pass
     unit = "つ" if sec == "nichiyo" else "台"   # 飲料・日用品は「1台」が不自然なので「1つ」に
+    try:
+        unit = CATEGORIES[slug].get("short_unit", unit)   # カテゴリ別の助数詞上書き(例:スマホケース=個)
+    except Exception:
+        pass
     data = json.load(open(os.path.join(DATA, f"{slug}.json"), encoding="utf-8"))
     top = sorted(data, key=lambda z: -z["cospa"])[:3]
     for m in top:
