@@ -77,7 +77,10 @@ def model_key(brand, nm):
 
 # --- 機種にまとめる ---
 _minp = _cat.get("min_price", 3000)   # 価格下限(家電は3000既定、日用品は安いのでカテゴリ毎に引き下げ)
-items = [r for r in raw if not any(x in r["name"] for x in EXCLUDE) and r["price"] and r["price"] >= _minp]
+_INC = _cat.get("include")            # 必須キーワード(いずれか必須)。ニッチ絞り込み用(例:お風呂スマホケース)
+items = [r for r in raw
+         if (not _INC or any(x in r["name"] for x in _INC))
+         and not any(x in r["name"] for x in EXCLUDE) and r["price"] and r["price"] >= _minp]
 _unit = _cat.get("unit")
 _noun = _cat.get("count_noun", "個")
 def _parse_amt(nm):
